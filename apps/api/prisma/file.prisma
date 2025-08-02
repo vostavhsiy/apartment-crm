@@ -1,0 +1,13 @@
+model File {
+  id    String @id @default(cuid())
+  url   String
+  order Int?
+
+	apartmentId String
+	apartment   Apartment @relation(fields: [apartmentId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("files")
+}

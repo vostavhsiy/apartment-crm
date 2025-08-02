@@ -1,0 +1,11 @@
+model ApartmentCollection {
+  id           String     @id @default(cuid())
+  apartment    Apartment  @relation(fields: [apartmentId], references: [id])
+  apartmentId  String
+  collection   Collection @relation(fields: [collectionId], references: [id])
+  collectionId String
+  order        Int?
+
+  @@unique([apartmentId, collectionId])
+  @@map("apartment_collections")
+}

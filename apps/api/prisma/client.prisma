@@ -1,0 +1,20 @@
+model Client {
+  id        String  @id @default(cuid())
+  name      String
+  email     String? @unique
+  phone     String?
+  address   String?
+  avatarUrl String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  collectionsLinks CollectionClient[]
+
+  likes ApartmentClient[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("clients")
+}

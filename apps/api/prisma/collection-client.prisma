@@ -1,0 +1,13 @@
+model CollectionClient {
+  id           String     @id @default(cuid())
+  collection   Collection @relation(fields: [collectionId], references: [id])
+  collectionId String
+  client       Client     @relation(fields: [clientId], references: [id])
+  clientId     String
+
+  createdAt       DateTime   @default(now())
+	updatedAt       DateTime   @updatedAt
+
+  @@unique([collectionId, clientId])
+	@@map("collection_clients")
+}

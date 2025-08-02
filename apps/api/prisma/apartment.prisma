@@ -1,0 +1,24 @@
+model Apartment {
+  id          String  @id @default(cuid())
+  title       String
+  subtitle    String?
+  description String?
+  address     String?
+  price       String?
+  features    String?
+  published   Boolean @default(false)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  files File[]
+
+  collectionsLinks ApartmentCollection[]
+
+	clientsLikes ApartmentClient[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("apartments")
+}
