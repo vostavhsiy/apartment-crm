@@ -60,6 +60,18 @@
     }
   ],
   "targetDefaults": {
+    "dev-up": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          "npm run db:up",
+          "node scripts/wait-for-db.js",
+          "nx run api:migrate",
+          "nx run api:serve"
+        ],
+        "parallel": false
+      }
+    },
     "test": {
       "dependsOn": [
         "^build"
