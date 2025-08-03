@@ -1,0 +1,80 @@
+import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets'
+import { Server, Socket } from 'socket.io'
+import { Inject, Logger } from '@nestjs/common'
+import { WebsocketsAuthMiddleware } from './websockets.middleware'
+
+import { JwtService } from '@nestjs/jwt'
+import { CACHE_MANAGER } from '@nestjs/cache-manager'
+import { type Cache } from 'cache-manager'
+import { ClientSocketInfo } from './websockets.types'
+
+@WebSocketGateway({
+  cors: {
+    credentials: true,
+    origin: ['http://localhost:3000'],
+  },
+  namespace: "ws"
+})
+export class WebsocketsGateway {
+
+	@WebSocketServer() server!: Server
+  private logger: Logger = new Logger('WebSocketGateway');
+
+  constructor(
+    @Inject(CACHE_MANAGER) private redisService: Cache,
+    private readonly jwtService: JwtService,
+  ) {}
+
+  afterInit(server: Server) {
+    this.logger.log('WebSocket Gateway initialized');
+    const middleware = WebsocketsAuthMiddleware(this.jwtService);
+    server.use(middleware);
+  }
+
+  async handleConnection(client: Socket) {
+    const userId = client.handshake.auth.user?.id;
+    if (!userId) {
+      client.disconnect(true);
+      return;
+    }
+
+    await this.redisService.set(`user:${userId}:socket`, client.id);
+    await this.redisService.set(`socket:${client.id}:info`, {
+      userId,
+      connectedAt: new Date().toISOString(),
+    });
+
+    this.logger.log(`Client connected: ${client.id}, User ID: ${userId}`);
+  }
+
+  async handleDisconnect(client: Socket) {
+    const socketInfo = await this.redisService.get<ClientSocketInfo | undefined>(`socket:${client.id}:info`);
+    if (socketInfo?.userId) {
+      await this.redisService.del(`user:${socketInfo.userId}:socket` );
+      await this.redisService.del(`socket:${client.id}:info`);
+    }
+
+    this.logger.log(`Client disconnected: ${client.id}`);
+  }
+
+  async sendToUser(userId: string, event: string, data: any) {
+    const socketId = await this.redisService.get<string | undefined>(`user:${userId}:socket`);
+    
+    if(socketId) {
+      const socket = this.server.sockets.sockets.get(socketId);
+      if (socket) {
+        socket.emit(event, data);
+      }
+    }
+  }
+
+  async sendToUsers(userIds: string[], event: string, data: any) {
+    for (const userId of userIds) {
+      await this.sendToUser(userId, event, data);
+    }
+  }
+
+  async broadcast(event: string, data: any) {
+    this.server.emit(event, data);
+  }
+}

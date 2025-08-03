@@ -9,6 +9,8 @@ import { Keyv } from "keyv"
 import { AppController } from "./app.controller"
 import { AppService } from "./app.service"
 import { DbModule } from "./db/db.module"
+import { WebsocketsModule } from './websockets/websockets.module'
+import { JwtModule } from '@nestjs/jwt'
 
 @Module({
   imports: [
@@ -34,7 +36,11 @@ import { DbModule } from "./db/db.module"
         };
       },
     }),
+    JwtModule.register({
+      global: true,
+    }),
     DbModule,
+    WebsocketsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

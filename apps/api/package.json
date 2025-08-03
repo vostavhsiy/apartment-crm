@@ -51,11 +51,13 @@
         ],
         "command": "docker build -f apps/api/Dockerfile . -t apartment-crm-api"
       },
-      
       "migrate": {
         "executor": "nx:run-commands",
         "options": {
-          "commands": ["npx prisma generate", "npx prisma migrate deploy"],
+          "commands": [
+            "npx prisma generate",
+            "npx prisma migrate deploy"
+          ],
           "parallel": false,
           "cwd": "apps/api"
         }
@@ -63,6 +65,8 @@
     }
   },
   "dependencies": {
+    "@nestjs/jwt": "^11.0.0",
+    "@nestjs/mapped-types": "*",
     "@prisma/client": "^6.13.0"
   }
 }
