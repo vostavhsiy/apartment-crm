@@ -1,0 +1,12 @@
+{
+  "importOrder": ["^react$", "^@core/(.*)$", "^@ui/(.*)$", "^[./]"],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "importOrderCaseInsensitive": true,
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "importOrderParserPlugins": [
+    "typescript",
+    "decorators-legacy",
+    "classProperties"
+  ]
+}

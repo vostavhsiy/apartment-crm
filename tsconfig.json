@@ -20,6 +20,9 @@
     },
     {
       "path": "./libs/shared/lib/constants"
+    },
+    {
+      "path": "./libs/shared/lib/helpers"
     }
   ]
 }

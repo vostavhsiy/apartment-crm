@@ -2,10 +2,7 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "defaultBase": "master",
   "namedInputs": {
-    "default": [
-      "{projectRoot}/**/*",
-      "sharedGlobals"
-    ],
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
     "production": [
       "default",
       "!{projectRoot}/.eslintrc.json",
@@ -37,7 +34,9 @@
       },
       "exclude": [
         "libs/shared/lib/types/*",
-        "libs/shared/lib/constants/*"
+        "libs/shared/lib/constants/*",
+        "libs/shared/lib/helpers/*",
+        "libs/shared/lib/envs/*"
       ]
     },
     {
@@ -61,9 +60,7 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": [
-        "apps/api-e2e/**/*"
-      ]
+      "exclude": ["apps/api-e2e/**/*"]
     },
     {
       "plugin": "@nx/next/plugin",
@@ -89,7 +86,9 @@
       "plugin": "@nx/js/typescript",
       "include": [
         "libs/shared/lib/types/*",
-        "libs/shared/lib/constants/*"
+        "libs/shared/lib/constants/*",
+        "libs/shared/lib/helpers/*",
+        "libs/shared/lib/envs/*"
       ],
       "options": {
         "typecheck": {
@@ -112,9 +111,7 @@
       }
     },
     "test": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     }
   },
   "generators": {
