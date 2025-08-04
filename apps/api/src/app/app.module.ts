@@ -9,6 +9,7 @@ import { CacheModule } from "./cache/cache.module";
 import { DbModule } from "./db/db.module";
 import { UsersModule } from "./users/users.module";
 import { WebsocketsModule } from "./websockets/websockets.module";
+import { S3Module } from './s3/s3.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { WebsocketsModule } from "./websockets/websockets.module";
     WebsocketsModule,
     AuthModule,
     UsersModule,
+    S3Module,
   ],
   controllers: [AppController],
   providers: [AppService],
