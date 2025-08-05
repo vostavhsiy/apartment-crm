@@ -7,13 +7,15 @@ import { AppService } from "./app.service";
 import { AuthModule } from "./auth/auth.module";
 import { CacheModule } from "./cache/cache.module";
 import { DbModule } from "./db/db.module";
+import { MailModule } from "./mail/mail.module";
+import { S3Module } from "./s3/s3.module";
 import { UsersModule } from "./users/users.module";
 import { WebsocketsModule } from "./websockets/websockets.module";
-import { S3Module } from './s3/s3.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      isGlobal: true,
       envFilePath: [
         `.env.${process.env.NODE_ENV}.local`,
         `.env.${process.env.NODE_ENV}`,
@@ -30,6 +32,7 @@ import { S3Module } from './s3/s3.module';
     AuthModule,
     UsersModule,
     S3Module,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

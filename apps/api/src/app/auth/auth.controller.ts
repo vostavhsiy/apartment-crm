@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Req, Res } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  Res,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { type Request, type Response } from "express";
 
 import { AuthService } from "./auth.service";
@@ -30,7 +39,29 @@ export class AuthController {
     return this.authService.refreshTokens(req, res);
   }
 
-  @Auth()
+  @Get("activate/:token")
+  async activate(@Res() res: Response, @Param("token") token: string) {
+    const result = await this.authService.activateAccount(token);
+    if (result.ok) {
+      return res.redirect(
+        `${process.env.CLIENT_URL}/dashboard/activation/success`,
+      );
+    } else {
+      return res.redirect(
+        `${process.env.CLIENT_URL}/dashboard/activation/failure`,
+      );
+    }
+  }
+
+  @Auth({ checkActivation: false })
+  @Post("activation-mail")
+  sendActivationmail(@Req() req: any) {
+    const userId = req?.user?.sub;
+    if (!userId) throw new UnauthorizedException();
+    return this.authService.generateActivationToken(userId);
+  }
+
+  @Auth({ checkActivation: false })
   @Get("profile")
   getProfile(@Req() req: Request) {
     return this.authService.getProfile(req);

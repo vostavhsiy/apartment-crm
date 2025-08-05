@@ -12,6 +12,9 @@ model User {
   collections Collection[]
   clients     Client[]
 
+  isActive         Boolean           @default(false)
+  activationTokens ActivationToken[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

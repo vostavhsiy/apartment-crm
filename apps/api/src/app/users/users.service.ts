@@ -30,10 +30,6 @@ export class UsersService {
     }
   }
 
-  async findAll() {
-    return `This action returns all users`;
-  }
-
   async findById(id: string) {
     try {
       const user = await this.dbService.user.findUnique({
@@ -62,10 +58,30 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+    try {
+      const user = await this.dbService.user.update({
+        where: { id },
+        data: updateUserDto,
+        include: UsersIncludeConfig,
+        omit: { password: true },
+      });
+      return user;
+    } catch (error) {
+      throw new BadRequestException(
+        `Ошибка при обновлении пользователя! Проверьте корректность введенных данных.`,
+      );
+    }
   }
 
   async remove(id: string) {
-    return `This action removes a #${id} user`;
+    try {
+      const user = await this.dbService.user.delete({
+        where: { id },
+        omit: { password: true },
+      });
+      return user;
+    } catch (error) {
+      throw new BadRequestException(`Ошибка при удалении пользователя!`);
+    }
   }
 }

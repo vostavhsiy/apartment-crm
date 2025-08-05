@@ -5,9 +5,13 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
+import cuid from "cuid";
 import { Request, Response } from "express";
 
+import { DbService } from "../db/db.service";
+import { MailService } from "../mail/mail.service";
 import { UsersService } from "../users/users.service";
 import {
   ACCESS_TOKEN_MAX_AGE,
@@ -24,6 +28,9 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private mailService: MailService,
+    private db: DbService,
+    private configService: ConfigService,
   ) {}
 
   async signUp(dto: SignUpDto) {
@@ -38,6 +45,7 @@ export class AuthService {
       throw new BadRequestException("Введите другой пароль!");
     }
     const user = await this.usersService.create({ ...dto, password });
+    await this.generateActivationToken(user.id);
     return user;
   }
 
@@ -50,7 +58,11 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new BadRequestException("Неверный пароль!");
     }
-    const tokens = await this.generateTokens({ sub: user.id, role: user.role });
+    const tokens = await this.generateTokens({
+      sub: user.id,
+      role: user.role,
+      isActive: user.isActive,
+    });
     if (!tokens) {
       throw new InternalServerErrorException();
     }
@@ -81,6 +93,7 @@ export class AuthService {
       const tokens = await this.generateTokens({
         sub: payload.sub,
         role: payload.role,
+        isActive: !!payload.isActive,
       });
       if (!tokens) {
         throw new UnauthorizedException("Failed to generate new tokens");
@@ -95,6 +108,65 @@ export class AuthService {
       return { accessToken: tokens.accessToken };
     } catch (error) {
       throw new UnauthorizedException();
+    }
+  }
+
+  async generateActivationToken(userId: string) {
+    try {
+      const token = cuid();
+      const date = new Date();
+      date.setDate(date.getHours() + 1);
+      const activationToken = await this.db.activationToken.create({
+        data: {
+          token,
+          userId,
+          expiresAt: date,
+        },
+        include: {
+          user: {
+            select: {
+              email: true,
+              isActive: true,
+            },
+          },
+        },
+      });
+      if (activationToken?.user.isActive) {
+        return { message: "Аккаунт уже активирован!" };
+      }
+      const domainUrl = this.configService.get<string>("DOMAIN_URL");
+      this.mailService.sendMail(
+        activationToken.user.email,
+        "Активация аккаунта",
+        `<p>Ваш токен активации: <a href="${domainUrl}/api/auth/activate/${activationToken.token}">${activationToken.token}</a></p>`,
+      );
+      return { token: activationToken.token };
+    } catch (error) {
+      return null;
+    }
+  }
+
+  async activateAccount(token: string) {
+    try {
+      const activationToken = await this.db.activationToken.findUnique({
+        where: { token },
+        include: { user: true },
+      });
+      if (!activationToken) {
+        throw new BadRequestException();
+      }
+      if (activationToken.expiresAt < new Date()) {
+        throw new BadRequestException();
+      }
+      await this.usersService.update(activationToken.userId, {
+        isActive: true,
+      });
+      await this.db.activationToken.deleteMany({
+        where: { id: activationToken.id },
+      });
+      return { ok: true };
+    } catch (error) {
+      return { ok: false };
     }
   }
 

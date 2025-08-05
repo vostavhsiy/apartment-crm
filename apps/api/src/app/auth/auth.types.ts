@@ -1,6 +1,9 @@
+import { Role } from "@prisma/client";
+
 export interface JwtPayload {
-  sub: string; // User ID
-  role: string; // User role
-  iat?: number; // Issued at
-  exp?: number; // Expiration time
+  sub: string;
+  role: Role;
+  isActive?: boolean;
+  iat?: number;
+  exp?: number;
 }

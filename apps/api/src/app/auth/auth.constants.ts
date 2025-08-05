@@ -8,3 +8,5 @@ export const REFRESH_TOKEN_NAME = "refreshToken";
 
 export const ACCESS_TOKEN_MAX_AGE = 60 * 60 * 1000; // 1 hour
 export const REFRESH_TOKEN_MAX_AGE = 30 * 24 * 60 * 60 * 1000; // 30 days
+
+export const CLIENT_URL = process.env.CLIENT_URL;
