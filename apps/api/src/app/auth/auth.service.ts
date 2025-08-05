@@ -138,7 +138,7 @@ export class AuthService {
       this.mailService.sendMail(
         activationToken.user.email,
         "Активация аккаунта",
-        `<p>Ваш токен активации: <a href="${domainUrl}/api/auth/activate/${activationToken.token}">${activationToken.token}</a></p>`,
+        `<p>Для активации аккаунта перейдите по <a href="${domainUrl}/api/auth/activate/${activationToken.token}">ссылке</a>.</p>`,
       );
       return { token: activationToken.token };
     } catch (error) {
