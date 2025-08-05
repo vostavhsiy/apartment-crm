@@ -12,6 +12,10 @@ import { type Request, type Response } from "express";
 
 import { AuthService } from "./auth.service";
 import { Auth } from "./decorators/auth.decorator";
+import {
+  ResetPasswordDto,
+  SendResetPasswordEmailDto,
+} from "./dto/reset-password.dto";
 import { SignInDto } from "./dto/sign-in.dto";
 import { SignUpDto } from "./dto/sign-up.dto";
 
@@ -59,6 +63,16 @@ export class AuthController {
     const userId = req?.user?.sub;
     if (!userId) throw new UnauthorizedException();
     return this.authService.generateActivationToken(userId);
+  }
+
+  @Post("reset-password-mail")
+  sendResetPasswordMail(@Body() dto: SendResetPasswordEmailDto) {
+    return this.authService.generateResetPasswordToken(dto.email);
+  }
+
+  @Post("reset-password")
+  resetPassword(@Body() dto: ResetPasswordDto) {
+    return this.authService.resetPassword(dto.token, dto.password);
   }
 
   @Auth({ checkActivation: false })

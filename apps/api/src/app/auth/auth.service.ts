@@ -142,7 +142,7 @@ export class AuthService {
       );
       return { token: activationToken.token };
     } catch (error) {
-      return null;
+      throw new BadRequestException("Ошибка при отправке письма!");
     }
   }
 
@@ -162,11 +162,65 @@ export class AuthService {
         isActive: true,
       });
       await this.db.activationToken.deleteMany({
-        where: { id: activationToken.id },
+        where: { userId: activationToken.userId },
       });
       return { ok: true };
     } catch (error) {
       return { ok: false };
+    }
+  }
+
+  async generateResetPasswordToken(email: string) {
+    try {
+      const user = await this.usersService.findByEmail(email);
+      if (!user) throw new BadRequestException();
+      const token = cuid();
+      const date = new Date();
+      date.setDate(date.getHours() + 1);
+      const resetPasswordToken = await this.db.passwordResetToken.create({
+        data: {
+          token,
+          userId: user.id,
+          expiresAt: date,
+        },
+      });
+      const clientUrl = this.configService.get<string>("CLIENT_URL");
+      this.mailService.sendMail(
+        user.email,
+        "Восстановление пароля",
+        `<p>Для восстановления пароля перейдите по <a href="${clientUrl}/auth/reset-password?token=${resetPasswordToken.token}">ссылке</a>.</p>`,
+      );
+      return { token: resetPasswordToken.token };
+    } catch (error) {
+      throw new BadRequestException("Ошибка при отправке письма!");
+    }
+  }
+
+  async resetPassword(token: string, password: string) {
+    try {
+      const resetToken = await this.db.passwordResetToken.findUnique({
+        where: { token },
+        include: { user: true },
+      });
+      if (!resetToken) {
+        throw new BadRequestException();
+      }
+      if (resetToken.expiresAt < new Date()) {
+        throw new BadRequestException();
+      }
+      const hashedPassword = await hashPassword(password);
+      if (!hashedPassword) throw new BadRequestException();
+
+      await this.db.user.update({
+        where: { id: resetToken.userId },
+        data: { password: hashedPassword },
+      });
+      await this.db.passwordResetToken.deleteMany({
+        where: { userId: resetToken.userId },
+      });
+      return { ok: true };
+    } catch (error) {
+      throw new BadRequestException("Ошибка при восстановлении пароля!");
     }
   }
 
