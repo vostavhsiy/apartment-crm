@@ -73,6 +73,22 @@ export class UsersService {
     }
   }
 
+  async toggleBan(userId: string, isBanned?: boolean) {
+    try {
+      const user = await this.dbService.user.update({
+        where: { id: userId },
+        data: {
+          isBanned: !!isBanned,
+        },
+        include: UsersIncludeConfig,
+        omit: { password: true },
+      });
+      return user;
+    } catch (error) {
+      throw new BadRequestException(`Ошибка при блокировке пользователя!`);
+    }
+  }
+
   async remove(id: string) {
     try {
       const user = await this.dbService.user.delete({
