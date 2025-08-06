@@ -1,9 +1,7 @@
 model Client {
   id        String  @id @default(cuid())
   name      String
-  email     String? @unique
-  phone     String?
-  address   String?
+  phone     String
   avatarUrl String?
 
   userId String

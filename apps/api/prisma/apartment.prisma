@@ -5,17 +5,17 @@ model Apartment {
   description String?
   address     String?
   price       String?
-  features    String?
   published   Boolean @default(false)
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
-  files File[]
+  files    File[]
+  features Feature[]
 
   collectionsLinks ApartmentCollection[]
 
-	clientsLikes ApartmentClient[]
+  clientsLikes ApartmentClient[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

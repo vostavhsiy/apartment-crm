@@ -11,6 +11,8 @@ import { MailModule } from "./mail/mail.module";
 import { S3Module } from "./s3/s3.module";
 import { UsersModule } from "./users/users.module";
 import { WebsocketsModule } from "./websockets/websockets.module";
+import { ApartmentsModule } from './apartments/apartments.module';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -33,6 +35,8 @@ import { WebsocketsModule } from "./websockets/websockets.module";
     UsersModule,
     S3Module,
     MailModule,
+    ApartmentsModule,
+    FilesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
