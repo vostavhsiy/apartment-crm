@@ -1,16 +1,16 @@
-import { paginate, PaginationQueryDto } from "@apartment-crm/helpers"
+import { paginate, PaginationQueryDto } from "@apartment-crm/helpers";
 import {
   BadRequestException,
   Injectable,
   NotFoundException,
-} from "@nestjs/common"
-import { Apartment, Prisma } from "@prisma/client"
+} from "@nestjs/common";
+import { Apartment, Prisma } from "@prisma/client";
 
-import { FilesService } from "../files/files.service"
-import { DbService } from "./../db/db.service"
-import { ApartmentIncludeConfig } from "./apartments.config"
-import { CreateApartmentDto } from "./dto/create-apartment.dto"
-import { UpdateApartmentDto } from "./dto/update-apartment.dto"
+import { FilesService } from "../files/files.service";
+import { DbService } from "./../db/db.service";
+import { ApartmentIncludeConfig } from "./apartments.config";
+import { CreateApartmentDto } from "./dto/create-apartment.dto";
+import { UpdateApartmentDto } from "./dto/update-apartment.dto";
 
 @Injectable()
 export class ApartmentsService {
@@ -77,7 +77,7 @@ export class ApartmentsService {
           where: {
             collectionsLinks: {
               some: {
-                collectionId: collectionId,
+                collectionId,
               },
             },
           },
@@ -118,7 +118,11 @@ export class ApartmentsService {
         });
         if (!apartment) throw new Error();
         if (files?.length) {
-          await this.filesService.removeFromApartment(apartment.id, userId, prisma);
+          await this.filesService.removeFromApartment(
+            apartment.id,
+            userId,
+            prisma,
+          );
           for (let index = 0; index < files.length; index++) {
             const file = files[index];
             if (!file) throw new Error();

@@ -4,7 +4,7 @@ model ApartmentClient {
   clientId    String
   apartment   Apartment @relation(fields: [apartmentId], references: [id])
   apartmentId String
-  liked       Boolean   @default(false)
+  liked       Boolean   @default(true)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
