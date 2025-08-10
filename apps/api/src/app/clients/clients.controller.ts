@@ -32,7 +32,7 @@ export class ClientsController {
 
   @Auth()
   @Get()
-  findAll(@Req() req: any, @Pagination() pagination: PaginationQueryDto) {
+  findForUser(@Req() req: any, @Pagination() pagination: PaginationQueryDto) {
     const userId = req?.user?.sub;
     if (!userId) throw new UnauthorizedException();
     return this.clientsService.findForUser(userId, pagination);

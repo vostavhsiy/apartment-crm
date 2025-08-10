@@ -14,6 +14,7 @@ import { WebsocketsModule } from "./websockets/websockets.module";
 import { ApartmentsModule } from './apartments/apartments.module';
 import { FilesModule } from './files/files.module';
 import { ClientsModule } from './clients/clients.module';
+import { CollectionsModule } from './collections/collections.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { ClientsModule } from './clients/clients.module';
     ApartmentsModule,
     FilesModule,
     ClientsModule,
+    CollectionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
