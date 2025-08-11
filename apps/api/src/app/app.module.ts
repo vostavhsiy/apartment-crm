@@ -15,6 +15,7 @@ import { ApartmentsModule } from './apartments/apartments.module';
 import { FilesModule } from './files/files.module';
 import { ClientsModule } from './clients/clients.module';
 import { CollectionsModule } from './collections/collections.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { CollectionsModule } from './collections/collections.module';
     FilesModule,
     ClientsModule,
     CollectionsModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

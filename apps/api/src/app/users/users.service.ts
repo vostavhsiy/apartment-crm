@@ -7,7 +7,7 @@ import {
 import { DbService } from "../db/db.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { UsersIncludeConfig } from "./users.config";
+import { UserIncludeConfig } from "./users.config";
 
 @Injectable()
 export class UsersService {
@@ -17,7 +17,7 @@ export class UsersService {
     try {
       const user = await this.dbService.user.create({
         data: createUserDto,
-        include: UsersIncludeConfig,
+        include: UserIncludeConfig,
         omit: {
           password: true,
         },
@@ -34,7 +34,7 @@ export class UsersService {
     try {
       const user = await this.dbService.user.findUnique({
         where: { id },
-        include: UsersIncludeConfig,
+        include: UserIncludeConfig,
         omit: {
           password: true,
         },
@@ -49,7 +49,7 @@ export class UsersService {
     try {
       const user = await this.dbService.user.findUnique({
         where: { email },
-        include: UsersIncludeConfig,
+        include: UserIncludeConfig,
       });
       return user;
     } catch (error) {
@@ -62,7 +62,7 @@ export class UsersService {
       const user = await this.dbService.user.update({
         where: { id },
         data: updateUserDto,
-        include: UsersIncludeConfig,
+        include: UserIncludeConfig,
         omit: { password: true },
       });
       return user;
@@ -80,7 +80,7 @@ export class UsersService {
         data: {
           isBanned: !!isBanned,
         },
-        include: UsersIncludeConfig,
+        include: UserIncludeConfig,
         omit: { password: true },
       });
       return user;

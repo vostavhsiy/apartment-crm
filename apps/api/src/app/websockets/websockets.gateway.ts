@@ -1,24 +1,24 @@
-import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets'
-import { Server, Socket } from 'socket.io'
-import { Inject, Logger } from '@nestjs/common'
-import { WebsocketsAuthMiddleware } from './websockets.middleware'
+import { WebSocketEvents } from "@apartment-crm/types";
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
+import { Inject, Logger } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { type Cache } from "cache-manager";
+import { Server, Socket } from "socket.io";
 
-import { JwtService } from '@nestjs/jwt'
-import { CACHE_MANAGER } from '@nestjs/cache-manager'
-import { type Cache } from 'cache-manager'
-import { ClientSocketInfo } from './websockets.types'
+import { WebsocketsAuthMiddleware } from "./websockets.middleware";
+import { ClientSocketInfo } from "./websockets.types";
 
 @WebSocketGateway({
   cors: {
     credentials: true,
-    origin: ['http://localhost:3000'],
+    origin: ["http://localhost:3000"],
   },
-  namespace: "ws"
+  namespace: "ws",
 })
 export class WebsocketsGateway {
-
-	@WebSocketServer() server!: Server
-  private logger: Logger = new Logger('WebSocketGateway');
+  @WebSocketServer() server!: Server;
+  private logger: Logger = new Logger("WebSocketGateway");
 
   constructor(
     @Inject(CACHE_MANAGER) private redisService: Cache,
@@ -26,7 +26,7 @@ export class WebsocketsGateway {
   ) {}
 
   afterInit(server: Server) {
-    this.logger.log('WebSocket Gateway initialized');
+    this.logger.log("WebSocket Gateway initialized");
     const middleware = WebsocketsAuthMiddleware(this.jwtService);
     server.use(middleware);
   }
@@ -48,19 +48,23 @@ export class WebsocketsGateway {
   }
 
   async handleDisconnect(client: Socket) {
-    const socketInfo = await this.redisService.get<ClientSocketInfo | undefined>(`socket:${client.id}:info`);
+    const socketInfo = await this.redisService.get<
+      ClientSocketInfo | undefined
+    >(`socket:${client.id}:info`);
     if (socketInfo?.userId) {
-      await this.redisService.del(`user:${socketInfo.userId}:socket` );
+      await this.redisService.del(`user:${socketInfo.userId}:socket`);
       await this.redisService.del(`socket:${client.id}:info`);
     }
 
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 
-  async sendToUser(userId: string, event: string, data: any) {
-    const socketId = await this.redisService.get<string | undefined>(`user:${userId}:socket`);
-    
-    if(socketId) {
+  async sendToUser(userId: string, event: WebSocketEvents, data: any) {
+    const socketId = await this.redisService.get<string | undefined>(
+      `user:${userId}:socket`,
+    );
+
+    if (socketId) {
       const socket = this.server.sockets.sockets.get(socketId);
       if (socket) {
         socket.emit(event, data);
@@ -68,13 +72,13 @@ export class WebsocketsGateway {
     }
   }
 
-  async sendToUsers(userIds: string[], event: string, data: any) {
+  async sendToUsers(userIds: string[], event: WebSocketEvents, data: any) {
     for (const userId of userIds) {
       await this.sendToUser(userId, event, data);
     }
   }
 
-  async broadcast(event: string, data: any) {
+  async broadcast(event: WebSocketEvents, data: any) {
     this.server.emit(event, data);
   }
 }

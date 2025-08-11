@@ -1,4 +1,5 @@
 import { comparePasswords, hashPassword } from "@apartment-crm/helpers";
+import { WebSocketEvents } from "@apartment-crm/types";
 import {
   BadRequestException,
   Injectable,
@@ -13,6 +14,8 @@ import { Request, Response } from "express";
 import { DbService } from "../db/db.service";
 import { MailService } from "../mail/mail.service";
 import { UsersService } from "../users/users.service";
+import { WebsocketsGateway } from "../websockets/websockets.gateway";
+import { NotificationsService } from "./../notifications/notifications.service";
 import {
   ACCESS_TOKEN_MAX_AGE,
   ACCESS_TOKEN_NAME,
@@ -30,6 +33,8 @@ export class AuthService {
     private jwtService: JwtService,
     private mailService: MailService,
     private db: DbService,
+    private webSocketsGateway: WebsocketsGateway,
+    private notificationsService: NotificationsService,
     private configService: ConfigService,
   ) {}
 
@@ -164,6 +169,19 @@ export class AuthService {
       await this.db.activationToken.deleteMany({
         where: { userId: activationToken.userId },
       });
+      try {
+        await this.notificationsService.create(activationToken.userId, {
+          title: "Активация аккаунта",
+          body: "Ваш аккаунт был успешно активирован!",
+        });
+        this.webSocketsGateway.sendToUser(
+          activationToken.userId,
+          WebSocketEvents.MESSAGE,
+          {
+            message: "Ваш аккаунт был успешно активирован!",
+          },
+        );
+      } catch (error) {}
       return { ok: true };
     } catch (error) {
       return { ok: false };
@@ -218,6 +236,19 @@ export class AuthService {
       await this.db.passwordResetToken.deleteMany({
         where: { userId: resetToken.userId },
       });
+      try {
+        await this.notificationsService.create(resetToken.userId, {
+          title: "Восстановление пароля",
+          body: "Ваш пароль был успешно восстановлен!",
+        });
+        this.webSocketsGateway.sendToUser(
+          resetToken.userId,
+          WebSocketEvents.MESSAGE,
+          {
+            message: "Ваш пароль был успешно восстановлен!",
+          },
+        );
+      } catch (error) {}
       return { ok: true };
     } catch (error) {
       throw new BadRequestException("Ошибка при восстановлении пароля!");

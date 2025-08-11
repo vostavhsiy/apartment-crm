@@ -12,9 +12,10 @@ model User {
   activationTokens    ActivationToken[]
   passwordResetTokens PasswordResetToken[]
 
-  apartments  Apartment[]
-  collections Collection[]
-  clients     Client[]
+  notifications Notification[]
+  apartments    Apartment[]
+  collections   Collection[]
+  clients       Client[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

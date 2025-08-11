@@ -1,4 +1,5 @@
 import { paginate, PaginationQueryDto } from "@apartment-crm/helpers";
+import { WebSocketEvents } from "@apartment-crm/types";
 import {
   BadRequestException,
   Injectable,
@@ -6,6 +7,9 @@ import {
 } from "@nestjs/common";
 import { Client, Prisma } from "@prisma/client";
 
+import { CLIENT_URL } from "../auth/auth.constants";
+import { NotificationsService } from "../notifications/notifications.service";
+import { WebsocketsGateway } from "../websockets/websockets.gateway";
 import { DbService } from "./../db/db.service";
 import { ClientIncludeConfig } from "./clients.config";
 import { CreateClientDto } from "./dto/create-client.dto";
@@ -13,7 +17,11 @@ import { UpdateClientDto } from "./dto/update-client.dto";
 
 @Injectable()
 export class ClientsService {
-  constructor(private dbService: DbService) {}
+  constructor(
+    private dbService: DbService,
+    private webSocketsGateway: WebsocketsGateway,
+    private notificationsService: NotificationsService,
+  ) {}
 
   async create(userId: string, createClientDto: CreateClientDto) {
     try {
@@ -118,12 +126,26 @@ export class ClientsService {
       });
       if (!client) throw new Error();
       if (connect) {
-        await this.dbService.apartmentClient.create({
-          data: {
-            apartmentId,
-            clientId,
-          },
-        });
+        const apartmentClientRelation =
+          await this.dbService.apartmentClient.create({
+            data: {
+              apartmentId,
+              clientId,
+            },
+            include: {
+              apartment: true,
+            },
+          });
+        try {
+          await this.notificationsService.create(userId, {
+            title: apartmentClientRelation.apartment.title,
+            body: `Клиенту "${client.name}" понравилась квартира "${apartmentClientRelation.apartment.title}"`,
+            link: `${CLIENT_URL}/ap/${apartmentId}`,
+          });
+          this.webSocketsGateway.sendToUser(userId, WebSocketEvents.MESSAGE, {
+            message: `Клиенту "${client.name}" понравилась квартира "${apartmentClientRelation.apartment.title}"`,
+          });
+        } catch (error) {}
       } else {
         await this.dbService.apartmentClient.deleteMany({
           where: {
