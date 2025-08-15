@@ -81,6 +81,7 @@ export class ApartmentsService {
               },
             },
           },
+          include: ApartmentIncludeConfig,
         },
       );
       return data;

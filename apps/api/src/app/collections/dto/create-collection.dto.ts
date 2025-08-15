@@ -7,9 +7,6 @@ export class CreateCollectionDto {
   title!: string;
 
   @ApiProperty()
-  userId!: string;
-
-  @ApiProperty()
   @IsOptional()
   description?: string;
 }

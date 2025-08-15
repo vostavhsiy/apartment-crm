@@ -15,10 +15,13 @@ import { UpdateCollectionDto } from "./dto/update-collection.dto";
 export class CollectionsService {
   constructor(private dbService: DbService) {}
 
-  async create(createCollectionDto: CreateCollectionDto) {
+  async create(userId: string, createCollectionDto: CreateCollectionDto) {
     try {
       const collection = await this.dbService.collection.create({
-        data: createCollectionDto,
+        data: {
+          ...createCollectionDto,
+          userId,
+        },
         include: CollectionIncludeConfig,
       });
       return collection;
@@ -34,6 +37,7 @@ export class CollectionsService {
         paginationQuery,
         {
           where: { userId },
+          include: CollectionIncludeConfig,
         },
       );
       return data;

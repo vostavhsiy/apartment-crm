@@ -21,9 +21,12 @@ import { UpdateCollectionDto } from "./dto/update-collection.dto";
 export class CollectionsController {
   constructor(private readonly collectionsService: CollectionsService) {}
 
+  @Auth()
   @Post()
-  create(@Body() createCollectionDto: CreateCollectionDto) {
-    return this.collectionsService.create(createCollectionDto);
+  create(@Req() req: any, @Body() createCollectionDto: CreateCollectionDto) {
+    const userId = req?.user?.sub;
+    if (!userId) throw new UnauthorizedException();
+    return this.collectionsService.create(userId, createCollectionDto);
   }
 
   @Auth()
