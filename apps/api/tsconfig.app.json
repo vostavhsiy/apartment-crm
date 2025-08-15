@@ -25,6 +25,9 @@
       "path": "../../libs/shared/lib/types/tsconfig.lib.json"
     },
     {
+      "path": "../../libs/shared/lib/constants/tsconfig.lib.json"
+    },
+    {
       "path": "../../libs/shared/lib/helpers/tsconfig.lib.json"
     }
   ]

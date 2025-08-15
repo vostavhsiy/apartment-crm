@@ -1,5 +1,9 @@
+import {
+  ACCESS_TOKEN_NAME,
+  REFRESH_TOKEN_NAME,
+} from "@apartment-crm/constants";
 import { comparePasswords, hashPassword } from "@apartment-crm/helpers";
-import { WebSocketEvents } from "@apartment-crm/types";
+import { JwtPayload, WebSocketEvents } from "@apartment-crm/types";
 import {
   BadRequestException,
   Injectable,
@@ -16,13 +20,7 @@ import { MailService } from "../mail/mail.service";
 import { UsersService } from "../users/users.service";
 import { WebsocketsGateway } from "../websockets/websockets.gateway";
 import { NotificationsService } from "./../notifications/notifications.service";
-import {
-  ACCESS_TOKEN_MAX_AGE,
-  ACCESS_TOKEN_NAME,
-  REFRESH_TOKEN_MAX_AGE,
-  REFRESH_TOKEN_NAME,
-} from "./auth.constants";
-import { JwtPayload } from "./auth.types";
+import { ACCESS_TOKEN_MAX_AGE, REFRESH_TOKEN_MAX_AGE } from "./auth.constants";
 import { SignInDto } from "./dto/sign-in.dto";
 import { SignUpDto } from "./dto/sign-up.dto";
 

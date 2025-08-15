@@ -7,6 +7,9 @@
       "path": "../../libs/shared/lib/types"
     },
     {
+      "path": "../../libs/shared/lib/constants"
+    },
+    {
       "path": "../../libs/shared/lib/helpers"
     },
     {

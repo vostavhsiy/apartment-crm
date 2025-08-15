@@ -1,3 +1,5 @@
+import { ACCESS_TOKEN_NAME } from "@apartment-crm/constants";
+import { JwtPayload } from "@apartment-crm/types";
 import {
   CanActivate,
   ExecutionContext,
@@ -8,8 +10,7 @@ import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
 
-import { ACCESS_TOKEN_NAME, jwtConstants } from "../auth.constants";
-import { JwtPayload } from "../auth.types";
+import { jwtConstants } from "../auth.constants";
 import { IS_PUBLIC_KEY } from "../decorators/is-public.decorator";
 
 @Injectable()

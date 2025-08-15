@@ -44,7 +44,10 @@ export class AuthController {
   }
 
   @Get("activate/:token")
-  async activate(@Res() res: Response, @Param("token") token: string) {
+  async activate(
+    @Res({ passthrough: true }) res: Response,
+    @Param("token") token: string,
+  ) {
     const result = await this.authService.activateAccount(token);
     if (result.ok) {
       return res.redirect(
