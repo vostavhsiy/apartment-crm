@@ -48,7 +48,6 @@ export class AuthService {
       throw new BadRequestException("Введите другой пароль!");
     }
     const user = await this.usersService.create({ ...dto, password });
-    await this.generateActivationToken(user.id);
     return user;
   }
 
@@ -104,7 +103,7 @@ export class AuthService {
 
       res.cookie(ACCESS_TOKEN_NAME, tokens.accessToken, {
         httpOnly: true,
-        sameSite: "strict",
+        secure: true,
         maxAge: ACCESS_TOKEN_MAX_AGE,
       });
 
@@ -118,7 +117,7 @@ export class AuthService {
     try {
       const token = cuid();
       const date = new Date();
-      date.setDate(date.getHours() + 1);
+      date.setHours(date.getHours() + 1);
       const activationToken = await this.db.activationToken.create({
         data: {
           token,
@@ -138,7 +137,7 @@ export class AuthService {
         return { message: "Аккаунт уже активирован!" };
       }
       const domainUrl = this.configService.get<string>("DOMAIN_URL");
-      this.mailService.sendMail(
+      const mail = await this.mailService.sendMail(
         activationToken.user.email,
         "Активация аккаунта",
         `<p>Для активации аккаунта перейдите по <a href="${domainUrl}/api/auth/activate/${activationToken.token}">ссылке</a>.</p>`,
@@ -150,6 +149,7 @@ export class AuthService {
   }
 
   async activateAccount(token: string) {
+    let userId;
     try {
       const activationToken = await this.db.activationToken.findUnique({
         where: { token },
@@ -159,7 +159,10 @@ export class AuthService {
         throw new BadRequestException();
       }
       if (activationToken.expiresAt < new Date()) {
-        throw new BadRequestException();
+        await this.db.activationToken.deleteMany({
+          where: { userId: activationToken.userId },
+        });
+        return { ok: false, message: "Срок действия письма истек!" };
       }
       await this.usersService.update(activationToken.userId, {
         isActive: true,
@@ -167,6 +170,7 @@ export class AuthService {
       await this.db.activationToken.deleteMany({
         where: { userId: activationToken.userId },
       });
+      userId = activationToken.userId;
       try {
         await this.notificationsService.create(activationToken.userId, {
           title: "Активация аккаунта",
@@ -182,6 +186,9 @@ export class AuthService {
       } catch (error) {}
       return { ok: true };
     } catch (error) {
+      await this.db.activationToken.deleteMany({
+        where: { userId },
+      });
       return { ok: false };
     }
   }
@@ -192,7 +199,7 @@ export class AuthService {
       if (!user) throw new BadRequestException();
       const token = cuid();
       const date = new Date();
-      date.setDate(date.getHours() + 1);
+      date.setHours(date.getHours() + 1);
       const resetPasswordToken = await this.db.passwordResetToken.create({
         data: {
           token,
@@ -201,7 +208,7 @@ export class AuthService {
         },
       });
       const clientUrl = this.configService.get<string>("CLIENT_URL");
-      this.mailService.sendMail(
+      const mail = await this.mailService.sendMail(
         user.email,
         "Восстановление пароля",
         `<p>Для восстановления пароля перейдите по <a href="${clientUrl}/auth/reset-password?token=${resetPasswordToken.token}">ссылке</a>.</p>`,
@@ -284,12 +291,12 @@ export class AuthService {
   ) {
     res.cookie(ACCESS_TOKEN_NAME, tokens.accessToken, {
       httpOnly: true,
-      sameSite: "strict",
+      secure: true,
       maxAge: ACCESS_TOKEN_MAX_AGE,
     });
     res.cookie(REFRESH_TOKEN_NAME, tokens.refreshToken, {
       httpOnly: true,
-      sameSite: "strict",
+      secure: true,
       maxAge: REFRESH_TOKEN_MAX_AGE,
     });
   }
@@ -297,11 +304,11 @@ export class AuthService {
   private async removeAuthCookies(res: Response) {
     res.clearCookie(ACCESS_TOKEN_NAME, {
       httpOnly: true,
-      sameSite: "strict",
+      secure: true,
     });
     res.clearCookie(REFRESH_TOKEN_NAME, {
       httpOnly: true,
-      sameSite: "strict",
+      secure: true,
     });
   }
 }

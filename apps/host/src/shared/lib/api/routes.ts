@@ -19,7 +19,7 @@ export const ROUTES = {
       path: "/api/auth/send-activation-mail",
     },
     sendResetPasswordEmail: {
-      path: "/api/auth/reset-password-main",
+      path: "/api/auth/reset-password-mail",
     },
     resetPassword: {
       path: "/api/auth/reset-password",

@@ -16,8 +16,6 @@ export function getTokens(request: NextRequest) {
 export const isAuthorized = async (request: NextRequest) => {
   const { accessToken, refreshToken } = getTokens(request);
 
-  if (!accessToken) return false;
-
   const payload = await verifyToken(String(accessToken));
 
   if (payload) return true;
@@ -25,6 +23,7 @@ export const isAuthorized = async (request: NextRequest) => {
   if (!refreshToken) return false;
 
   const newAccessToken = await refreshAccessToken(refreshToken);
+
   if (newAccessToken) return true;
 
   return false;

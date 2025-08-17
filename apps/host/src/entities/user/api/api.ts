@@ -13,7 +13,10 @@ export interface SignUpDto {
 
 export interface SignUpResponse extends UserWithRelations {}
 
-export interface SignInDto extends UserWithRelations {}
+export interface SignInDto {
+  email: string;
+  password: string;
+}
 
 export interface SignInResponse {
   accessToken: string;

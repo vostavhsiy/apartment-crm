@@ -1,8 +1,6 @@
-import { z } from "zod";
+const settings = {
+  NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+  JWT_SECRET: process.env.JWT_SECRET,
+};
 
-const envSchema = z.object({
-  NEXT_PUBLIC_API_URL: z.string(),
-  JWT_SECRET: z.string(),
-});
-
-export const settings = envSchema.parse(process.env);
+export { settings };

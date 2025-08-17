@@ -51,11 +51,11 @@ export class AuthController {
     const result = await this.authService.activateAccount(token);
     if (result.ok) {
       return res.redirect(
-        `${process.env.CLIENT_URL}/dashboard/activation/success`,
+        `${process.env.CLIENT_URL}/auth/activation/success?message=${result.message || ""}`,
       );
     } else {
       return res.redirect(
-        `${process.env.CLIENT_URL}/dashboard/activation/failure`,
+        `${process.env.CLIENT_URL}/auth/activation/failure?message=${result.message || ""}`,
       );
     }
   }
