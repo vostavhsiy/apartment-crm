@@ -24,7 +24,7 @@ import { useMemo } from "react";
 
 const formSchema = z.object({
   email: z.string().email("Некорректный email"),
-  password: z.string().min(6, "Пароль должен содержать минимум 6 символов"),
+  password: z.string(),
 });
 
 export const SignInForm = () => {

@@ -17,24 +17,29 @@ export const AuthPagesLayout: FC<Props> = ({ children }) => {
     <BaseLayout
       headerContentSlot={
         <>
-          <Link
-            href={PublicRoutes.HOME}
-            className="h-full flex gap-5 items-center "
-          >
-            <Logo className="h-full" />
-            <Button className="max-md:hidden" variant={"secondary"}>
-              Главная
-            </Button>
-          </Link>
-          <Separator orientation="vertical" className="max-md:hidden" />
-          <div className="max-md:hidden flex items-center gap-5">
-            <Button asChild variant={"outline"}>
-              <Link href={PublicRoutes.SIGN_IN}>Войти</Link>
-            </Button>
-            <Button asChild variant={"outline"}>
-              <Link href={PublicRoutes.SIGN_UP}>Зарегистрироваться</Link>
-            </Button>
-            <ThemeButton />
+          <div className="w-full h-full flex items-center gap-5 justify-between">
+            <Link
+              href={PublicRoutes.HOME}
+              className="h-full flex gap-5 items-center "
+            >
+              <Logo className="h-full" />
+              <Button className="max-md:hidden" variant={"secondary"}>
+                Главная
+              </Button>
+            </Link>
+            <div className="flex items-center gap-5">
+              <Button className="max-md:hidden" asChild variant={"outline"}>
+                <Link href={PublicRoutes.SIGN_IN}>Войти</Link>
+              </Button>
+              <Button className="max-md:hidden" asChild variant={"outline"}>
+                <Link href={PublicRoutes.SIGN_UP}>Зарегистрироваться</Link>
+              </Button>
+              <Separator
+                orientation="vertical"
+                className="!h-10 max-md:hidden"
+              />
+              <ThemeButton />
+            </div>
           </div>
         </>
       }

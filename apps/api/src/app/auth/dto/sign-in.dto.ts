@@ -8,6 +8,5 @@ export class SignInDto {
   email!: string;
 
   @ApiProperty()
-  @MinLength(6)
   password!: string;
 }

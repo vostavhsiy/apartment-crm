@@ -6,7 +6,6 @@ import { FC, ReactNode, useState } from "react";
 
 import { MenuBurger } from "../menu/menu-burger";
 import { MenuDrawer } from "../menu/menu-drawer";
-import { ThemeButton } from "../theme-button/theme-button";
 
 interface Props {
   contentSlot: ReactNode;
@@ -28,8 +27,7 @@ export const BaseHeader: FC<Props> = ({
         {withSidebar && (
           <SidebarTrigger className="max-md:hidden absolute top-1/2 left-3 -translate-y-1/2 " />
         )}
-        <div className="min-md:hidden flex items-center gap-3">
-          <ThemeButton className="min-md:hidden" />
+        <div className="min-md:hidden">
           {!withSidebar ? (
             <MenuBurger open={open} setOpen={setOpen} />
           ) : (
