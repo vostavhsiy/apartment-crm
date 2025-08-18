@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { FC, ReactNode, useState } from "react";
 
+import { ThemeProvider } from "./theme.provider";
+
 interface Props {
   children: ReactNode;
 }
@@ -14,8 +16,10 @@ export const Providers: FC<Props> = ({ children }) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {children}
-      <Toaster />
+      <ThemeProvider attribute="class" defaultTheme="light">
+        {children}
+        <Toaster />
+      </ThemeProvider>
     </QueryClientProvider>
   );
 };

@@ -1,4 +1,4 @@
-import { FullScreenContainer } from "@/shared/ui/fullscreen-container";
+import { AuthPagesLayout } from "@/widgets/auth-pages-layout/auth-pages-layout";
 
 export const metadata = {
   title: "Welcome to host",
@@ -10,9 +10,5 @@ export default function AuthLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <FullScreenContainer className="flex items-center justify-center py-10 px-5">
-      {children}
-    </FullScreenContainer>
-  );
+  return <AuthPagesLayout>{children}</AuthPagesLayout>;
 }
