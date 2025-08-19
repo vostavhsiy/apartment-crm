@@ -1,5 +1,6 @@
 import { ROUTES } from "@/shared/lib/api/routes";
 import { authInstance, publicInstance } from "@/shared/lib/axios";
+import { getFormDataFromObject } from "@/shared/lib/utils";
 import { PaginatedResult } from "@apartment-crm/helpers";
 import { Prisma } from "@prisma/client";
 
@@ -17,7 +18,7 @@ export interface CreateApartmentDto {
 
   price?: string;
 
-  features?: Prisma.FeatureCreateInput[];
+  features?: Omit<Prisma.FeatureUncheckedCreateInput, "apartmentId">[];
 
   files?: File[];
 }
@@ -47,9 +48,10 @@ export interface DeleteApartmentResponse extends Apartment {}
 
 export class ApartmentApi {
   static async createApartment(data: CreateApartmentDto) {
+    const formData = getFormDataFromObject(data);
     const res = await authInstance.post<CreateApartmentResponse>(
       ROUTES.apartments.create.path,
-      data,
+      formData,
     );
     return res.data;
   }

@@ -15,7 +15,7 @@ export class CreateApartmentDto {
 
   @ApiProperty()
   @IsOptional()
-  @MaxLength(200)
+  @MaxLength(5000)
   description?: string;
 
   @ApiProperty()
@@ -30,7 +30,7 @@ export class CreateApartmentDto {
 
   @ApiProperty()
   @IsOptional()
-  features?: Prisma.FeatureCreateInput[];
+  features?: Omit<Prisma.FeatureUncheckedCreateInput, "apartmentId">[];
 
   @ApiProperty()
   @IsOptional()

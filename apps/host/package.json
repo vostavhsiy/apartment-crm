@@ -20,5 +20,9 @@
         }
       }
     }
+  },
+  "devDependencies": {
+    "@types/lodash.throttle": "^4.1.9",
+    "sass": "^1.90.0"
   }
 }

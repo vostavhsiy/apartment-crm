@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "../shared/ui/tiptap-templates/simple/_variables.scss";
+@import "../shared/ui/tiptap-templates/simple/_keyframe-animations.scss";
 
 @custom-variant dark (&:is(.dark *));
 
