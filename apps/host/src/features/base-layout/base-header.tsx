@@ -6,6 +6,7 @@ import { FC, ReactNode, useState } from "react";
 
 import { MenuBurger } from "../menu/menu-burger";
 import { MenuDrawer } from "../menu/menu-drawer";
+import { cn } from '@/shared/lib/utils'
 
 interface Props {
   contentSlot: ReactNode;
@@ -21,7 +22,7 @@ export const BaseHeader: FC<Props> = ({
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="fixed z-50 top-0 left-0 w-full h-header-height py-2 px-5 flex items-center border-b bg-background/60 backdrop-blur-xs">
+    <header className={cn("fixed z-50 top-0 left-0 w-full h-header-height py-2 px-5 flex items-center border-b bg-background/60 backdrop-blur-xs", withSidebar && "min-md:pl-14")}>
       <div className="h-full flex max-md:justify-between justify-center items-center gap-5 w-full max-w-5xl mx-auto">
         {contentSlot}
         {withSidebar && (
