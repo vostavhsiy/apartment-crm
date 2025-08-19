@@ -11,7 +11,7 @@ export const getLCItem = (key: string, isExpired?: boolean) => {
     try {
       const item = localStorage.getItem(key);
       if (isExpired && item) {
-        const itemDate = new Date(item);
+        const itemDate = new Date(JSON.parse(item));
         if (itemDate < new Date()) {
           localStorage.removeItem(key);
           return null;

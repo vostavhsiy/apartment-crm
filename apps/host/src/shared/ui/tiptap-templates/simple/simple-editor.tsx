@@ -62,7 +62,7 @@ import { HighlighterIcon } from "./tiptap-icons/highlighter-icon";
 import { LinkIcon } from "./tiptap-icons/link-icon";
 import { ListDropdownMenu } from "./tiptap-ui/list-dropdown-menu";
 
-export const LC_EDITOR_NAME = "editorContent";
+export const LC_EDITOR_NAME = "LC_EDITOR_CONTENT";
 
 const MainToolbarContent = ({
   onHighlighterClick,

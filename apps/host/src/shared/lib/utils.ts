@@ -2,6 +2,10 @@ import { type ClassValue, clsx } from "clsx";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
+
+
+
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -99,6 +103,17 @@ export function getFormDataFromObject(obj: Record<string, any>): FormData {
   });
 
   return formData;
+}
+
+export function getMMSSfromSeconds(seconds: number) {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+
+  // Pad with leading zeros
+  const formattedMinutes = minutes.toString().padStart(2, "0");
+  const formattedSeconds = remainingSeconds.toString().padStart(2, "0");
+
+  return `${formattedMinutes}:${formattedSeconds}`;
 }
 
 export const TIPTAP_EMPTY_DOC =
