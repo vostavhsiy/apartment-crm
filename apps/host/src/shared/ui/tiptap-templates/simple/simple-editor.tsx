@@ -211,8 +211,12 @@ export function SimpleEditor(props: Props) {
     ],
     onCreate(data) {
       const content = getLCItem(LC_EDITOR_NAME);
-      const value = props.value ? JSON.parse(props.value) : null;
-      data.editor.commands.setContent(content || value);
+      try {
+        const value = props.value ? JSON.parse(props.value) : null;
+        data.editor.commands.setContent(content || value);
+      } catch {
+        data.editor.commands.setContent(content || props.value);
+      }
     },
     onUpdate(data) {
       const content = data.editor.getJSON();
@@ -226,8 +230,12 @@ export function SimpleEditor(props: Props) {
 
   React.useEffect(() => {
     const content = getLCItem(LC_EDITOR_NAME);
-    const value = props.value ? JSON.parse(props.value) : null;
-    editor?.commands.setContent(content || value);
+    try {
+      const value = props.value ? JSON.parse(props.value) : null;
+      editor?.commands.setContent(content || value);
+    } catch {
+      editor?.commands.setContent(content || props.value);
+    }
   }, [props.value]);
 
   const rect = useCursorVisibility({

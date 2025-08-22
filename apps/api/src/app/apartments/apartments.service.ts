@@ -1,22 +1,34 @@
 import { paginate, PaginationQueryDto } from "@apartment-crm/helpers";
+import { GetApartmentInfoFromAiResponse } from "@apartment-crm/types";
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import {
   BadRequestException,
+  Inject,
   Injectable,
+  Logger,
   NotFoundException,
 } from "@nestjs/common";
 import { Apartment, Prisma } from "@prisma/client";
+import axios from "axios";
+import { type Cache } from "cache-manager";
 
 import { FilesService } from "../files/files.service";
+import { AiService } from "./../ai/ai.service";
 import { DbService } from "./../db/db.service";
 import { ApartmentIncludeConfig } from "./apartments.config";
+import { SCRAPER_API_KEY } from "./apartments.constants";
 import { CreateApartmentDto } from "./dto/create-apartment.dto";
 import { UpdateApartmentDto } from "./dto/update-apartment.dto";
 
 @Injectable()
 export class ApartmentsService {
+  private logger = new Logger(ApartmentsService.name, { timestamp: true });
+
   constructor(
     private dbService: DbService,
     private filesService: FilesService,
+    private aiService: AiService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async create(
@@ -207,6 +219,68 @@ export class ApartmentsService {
     } catch (error) {
       console.error("Error removing apartment:", error);
       throw new BadRequestException("Не удалось удалить квартиру!");
+    }
+  }
+
+  async getApartmentInfoFromAi(
+    url: string,
+  ): Promise<GetApartmentInfoFromAiResponse> {
+    try {
+      const cachedApartmentInfo: string | undefined =
+        await this.cacheManager.get(url);
+
+      if (cachedApartmentInfo) {
+        try {
+          return JSON.parse(cachedApartmentInfo);
+        } catch (error) {}
+      }
+      const urlPageBlob = await this.getPageHtml(url);
+
+      if (!urlPageBlob) throw new Error();
+      const apartmentInfo = await this.aiService.ask(
+        [
+          {
+            type: "text",
+            text: "Извлеки информацию о жилье из текста:\n" + urlPageBlob,
+          },
+        ],
+        `Ты - парсер, тебе нужно извлечь информацию о жилье - title (Название, которое указано в тексте), subtitle (Дополнительная информация в тексте к названию), description (Описание из текста, приведенное к виду ht,html разметки для rich editor - обязательно несколько абзацев текста,если возможно, с маркированным списком), address (Адрес из текста), price (Цена квартиры из текста, сразу с валютой, в формате - <цена> <валюта>), features (Характеристики квартиры, вернуть в формате массива объектов {name: <Название характеристики>, value:<Значение характеристики>}).
+        Ты должен вернуть только JSON объект с указанными полями, чтобы с этим объектом можно было вызвать JSON.parse. Без каких-либо лишних символов и форматирования, ответ должен начинаться с { и заканчиваться на }.
+        `,
+      );
+
+      if (!apartmentInfo) throw new Error();
+
+      await this.cacheManager.set(
+        url,
+        JSON.stringify(apartmentInfo),
+        7 * 24 * 60 * 60 * 1000,
+      );
+      return {
+        title: apartmentInfo.title || "",
+        subtitle: apartmentInfo.subtitle || "",
+        description: apartmentInfo.description || "",
+        address: apartmentInfo.address || "",
+        price: apartmentInfo.price || "",
+        features: apartmentInfo.features || [],
+      };
+    } catch (error) {
+      throw new BadRequestException(
+        "Не удалось получить информацию о квартире!",
+      );
+    }
+  }
+
+  private async getPageHtml(url: string) {
+    try {
+      const response = await axios.get<string>(
+        `https://api.scraperapi.com/?api_key=${SCRAPER_API_KEY}&url=${encodeURIComponent(url)}&output_format=text`,
+      );
+      return response.data;
+    } catch (error) {
+      //@ts-ignore
+      this.logger.error("Error parsing url HTML:", error.response.data);
+      return null;
     }
   }
 }

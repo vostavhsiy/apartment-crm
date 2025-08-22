@@ -44,6 +44,9 @@ export const ROUTES = {
     delete: (id: string) => ({
       path: `/api/apartments/${id}`,
     }),
+    getInfoFromAi: {
+      path: `/api/apartments/ai`,
+    },
   },
   clients: {
     findForUser: {

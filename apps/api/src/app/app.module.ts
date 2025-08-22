@@ -16,6 +16,7 @@ import { FilesModule } from './files/files.module';
 import { ClientsModule } from './clients/clients.module';
 import { CollectionsModule } from './collections/collections.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { AiModule } from './ai/ai.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { NotificationsModule } from './notifications/notifications.module';
     ClientsModule,
     CollectionsModule,
     NotificationsModule,
+    AiModule,
   ],
   controllers: [AppController],
   providers: [AppService],

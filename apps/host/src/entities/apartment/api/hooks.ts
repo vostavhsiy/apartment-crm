@@ -105,3 +105,9 @@ export function useDeleteApartment() {
     },
   });
 }
+
+export function useGetApartmentInfoFromAi() {
+  return useMutation({
+    mutationFn: (url: string) => ApartmentApi.getApartmentInfoFromAi(url),
+  });
+}

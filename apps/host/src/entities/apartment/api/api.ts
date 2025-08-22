@@ -2,6 +2,7 @@ import { ROUTES } from "@/shared/lib/api/routes";
 import { authInstance, publicInstance } from "@/shared/lib/axios";
 import { getFormDataFromObject } from "@/shared/lib/utils";
 import { PaginatedResult } from "@apartment-crm/helpers";
+import { GetApartmentInfoFromAiResponse } from "@apartment-crm/types";
 import { Prisma } from "@prisma/client";
 
 import { Apartment } from "../model/apartment";
@@ -97,6 +98,18 @@ export class ApartmentApi {
   static async delete(id: string) {
     const res = await authInstance.delete<DeleteApartmentResponse>(
       ROUTES.apartments.delete(id).path,
+    );
+    return res.data;
+  }
+
+  static async getApartmentInfoFromAi(url: string) {
+    const res = await authInstance.get<GetApartmentInfoFromAiResponse>(
+      ROUTES.apartments.getInfoFromAi.path,
+      {
+        params: {
+          url,
+        },
+      },
     );
     return res.data;
   }

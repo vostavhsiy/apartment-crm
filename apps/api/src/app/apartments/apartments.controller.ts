@@ -47,6 +47,12 @@ export class ApartmentsController {
     return this.apartmentsService.findForCollection(collectionId, pagination);
   }
 
+  @Auth({ roles: ["PROSUBSCRIBER"] })
+  @Get("ai")
+  getApartmentInfoFromAi(@Query("url") url: string) {
+    return this.apartmentsService.getApartmentInfoFromAi(url);
+  }
+
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.apartmentsService.findOne(id);

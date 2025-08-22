@@ -20,8 +20,8 @@ authInstance.interceptors.response.use(
   async (error) => {
     try {
       const { status } = error.response;
-      if (status == 401 && !error.response._retry) {
-        error.response._retry = true;
+      if (status == 401 && !error.config._retry) {
+        error.config._retry = true;
         const res = await publicInstance.get(
           ROUTES.auth.refreshAccessToken.path,
         );
