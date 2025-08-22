@@ -5,6 +5,7 @@ import {
   useGetApartmentInfoFromAi,
 } from "@/entities/apartment/api/hooks";
 import { useProfile } from "@/entities/user/api/hooks";
+import { AuthRoutes } from "@/shared/config/routes/routes.auth";
 import { setLCItem } from "@/shared/lib/helpers/local-storage";
 import { useGlobalStore } from "@/shared/lib/store/global.store";
 import { cn, reorder } from "@/shared/lib/utils";
@@ -46,12 +47,7 @@ const formSchema = z.object({
   features: z.string(),
 });
 
-interface Props {
-  userId: string;
-  collectionId: string;
-}
-
-export const AddApartmentForm = ({ userId, collectionId }: Props) => {
+export const AddApartmentForm = () => {
   const { data: profile, isPending: isProfilePending } = useProfile();
   const { mutate: addApartment, isPending: isAddPending } =
     useCreateApartment();
@@ -150,7 +146,7 @@ export const AddApartmentForm = ({ userId, collectionId }: Props) => {
             setImages([]);
             setFeatures([]);
             toast.success("Квартира успешно добавлена!");
-            // router.push(AuthRoutes.APARTMENTS);
+            router.push(AuthRoutes.APARTMENTS);
           } else {
             toast.error("Ошибка при добавлении квартиры! Попробуйте еще раз!");
           }
