@@ -1,4 +1,8 @@
-import { paginate, PaginationQueryDto } from "@apartment-crm/helpers";
+import {
+  paginate,
+  PaginationQueryDto,
+  SortOrder,
+} from "@apartment-crm/helpers";
 import { WebSocketEvents } from "@apartment-crm/types";
 import {
   BadRequestException,
@@ -41,7 +45,19 @@ export class ClientsService {
         this.dbService.client,
         paginationQuery,
         {
-          where: { userId },
+          where: {
+            userId,
+            name: {
+              contains: paginationQuery.search || "",
+              mode: "insensitive",
+            },
+          },
+          orderBy: {
+            name:
+              paginationQuery.sortOrder === SortOrder.ALPHABET
+                ? "asc"
+                : undefined,
+          },
         },
       );
       return data;

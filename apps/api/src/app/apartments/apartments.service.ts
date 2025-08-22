@@ -1,4 +1,8 @@
-import { paginate, PaginationQueryDto } from "@apartment-crm/helpers";
+import {
+  paginate,
+  PaginationQueryDto,
+  SortOrder,
+} from "@apartment-crm/helpers";
 import { GetApartmentInfoFromAiResponse } from "@apartment-crm/types";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import {
@@ -92,6 +96,16 @@ export class ApartmentsService {
                 collectionId,
               },
             },
+            title: {
+              contains: paginationQuery.search || "",
+              mode: "insensitive",
+            },
+          },
+          orderBy: {
+            title:
+              paginationQuery.sortOrder === SortOrder.ALPHABET
+                ? "asc"
+                : undefined,
           },
           include: ApartmentIncludeConfig,
         },

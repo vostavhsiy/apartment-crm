@@ -1,4 +1,8 @@
-import { paginate, PaginationQueryDto } from "@apartment-crm/helpers";
+import {
+  paginate,
+  PaginationQueryDto,
+  SortOrder,
+} from "@apartment-crm/helpers";
 import {
   BadRequestException,
   Injectable,
@@ -36,7 +40,19 @@ export class CollectionsService {
         this.dbService.collection,
         paginationQuery,
         {
-          where: { userId },
+          where: {
+            userId,
+            title: {
+              contains: paginationQuery.search || "",
+              mode: "insensitive",
+            },
+          },
+          orderBy: {
+            title:
+              paginationQuery.sortOrder === SortOrder.ALPHABET
+                ? "asc"
+                : undefined,
+          },
           include: CollectionIncludeConfig,
         },
       );

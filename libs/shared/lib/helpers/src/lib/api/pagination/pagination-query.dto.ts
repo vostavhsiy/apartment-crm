@@ -1,6 +1,12 @@
 import { Transform } from "class-transformer";
 import { IsOptional, IsPositive } from "class-validator";
 
+export enum SortOrder {
+  ALPHABET,
+  CREATED_AT,
+  UPDATED_AT,
+}
+
 export class PaginationQueryDto {
   @IsOptional()
   @Transform(({ value }) => parseInt(value, 10))
@@ -11,6 +17,12 @@ export class PaginationQueryDto {
   @Transform(({ value }) => parseInt(value, 10))
   @IsPositive()
   perPage?: number;
+
+  @IsOptional()
+  search?: string;
+
+  @IsOptional()
+  sortOrder?: SortOrder;
 
   get offset(): number {
     const page = this.page ?? 1;

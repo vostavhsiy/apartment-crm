@@ -1,6 +1,6 @@
 // src/common/utils/paginate-prisma.ts
 import { PaginatedResult } from "./paginated-result.interface";
-import { PaginationQueryDto } from "./pagination-query.dto";
+import { PaginationQueryDto, SortOrder } from "./pagination-query.dto";
 
 type PrismaModelDelegate<T> = {
   findMany: Function;
@@ -21,6 +21,13 @@ export async function paginate<T, F = object>(
       ...findManyArgs,
       skip: offset,
       take: limit,
+      orderBy: {
+        ...(findManyArgs as any)?.orderBy,
+        createdAt:
+          pagination.sortOrder === SortOrder.CREATED_AT ? "asc" : undefined,
+        updatedAt:
+          pagination.sortOrder === SortOrder.UPDATED_AT ? "asc" : undefined,
+      },
     }),
     model.count({ where: (findManyArgs as any)?.where || {} }),
   ]);
