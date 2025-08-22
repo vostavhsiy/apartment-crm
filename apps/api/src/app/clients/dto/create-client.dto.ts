@@ -7,7 +7,7 @@ export class CreateClientDto {
   name!: string;
 
   @ApiProperty()
-  @IsPhoneNumber("RU")
+  @IsPhoneNumber("RU", { message: "Некорректный номер телефона" })
   phone!: string;
 
   @ApiProperty()
