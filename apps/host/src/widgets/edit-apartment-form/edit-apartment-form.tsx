@@ -1,15 +1,26 @@
 "use client";
 
 import {
+  useDeleteApartment,
   useFindApartment,
   useGetApartmentInfoFromAi,
   useUpdateApartment,
 } from "@/entities/apartment/api/hooks";
 import { useProfile } from "@/entities/user/api/hooks";
+import { AuthRoutes } from "@/shared/config/routes/routes.auth";
 import { setLCItem } from "@/shared/lib/helpers/local-storage";
 import { useGlobalStore } from "@/shared/lib/store/global.store";
 import { cn, reorder } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/shared/ui/dialog";
 import {
   Form,
   FormControl,
@@ -60,11 +71,14 @@ export const EditApartmentForm: FC<Props> = ({ apartmentId }) => {
     useFindApartment(apartmentId);
   const { mutate: updateApartment, isPending: isUpdatePending } =
     useUpdateApartment();
+  const { mutate: deleteApartment, isPending: isDeletePending } =
+    useDeleteApartment();
   const { mutate: getApartmentInfoFromAi, isPending: isGetAiInfoPending } =
     useGetApartmentInfoFromAi();
   const { setGlobalPending } = useGlobalStore();
   const [forAiUrl, setForAiUrl] = useState("");
   const [aiOpen, setAiOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -76,7 +90,6 @@ export const EditApartmentForm: FC<Props> = ({ apartmentId }) => {
       price: apartment?.price || "",
     },
   });
-  console.log(apartment);
 
   const router = useRouter();
 
@@ -189,6 +202,19 @@ export const EditApartmentForm: FC<Props> = ({ apartmentId }) => {
         },
       },
     );
+  }
+
+  function handleDelete() {
+    if (isDeletePending || !apartment) return;
+    deleteApartment(apartment.id, {
+      onSuccess() {
+        router.push(AuthRoutes.APARTMENTS);
+        toast.success("Квартира успешно удалена!");
+      },
+      onError() {
+        toast.error("Ошибка при удалении квартиры");
+      },
+    });
   }
 
   function handleGenerate() {
@@ -481,11 +507,42 @@ export const EditApartmentForm: FC<Props> = ({ apartmentId }) => {
         <Button
           className="w-full"
           size={"lg"}
-          disabled={isUpdatePending}
+          disabled={isUpdatePending || isDeletePending}
           type="submit"
         >
           Обновить квартиру
         </Button>
+        <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+          <DialogTrigger asChild>
+            <Button
+              type="button"
+              className="w-full"
+              disabled={isDeletePending}
+              variant={"destructive"}
+            >
+              Удалить квартиру
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Вы точно хотите удалить квартиру?</DialogTitle>
+            </DialogHeader>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button type="button" variant={"outline"}>
+                  Отмена
+                </Button>
+              </DialogClose>
+              <Button
+                disabled={isDeletePending}
+                variant={"destructive"}
+                onClick={handleDelete}
+              >
+                Удалить
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </form>
     </Form>
   );

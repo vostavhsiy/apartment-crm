@@ -251,14 +251,23 @@ export class ApartmentsService {
 
   async remove(apartmentId: string, userId: string, isAdmin: boolean = false) {
     try {
-      await this.filesService.removeFromApartment(apartmentId, userId);
-      const apartment = await this.dbService.apartment.delete({
-        where: { id: apartmentId, userId: isAdmin ? undefined : userId },
-        include: { files: true },
+      const apartment = await this.dbService.$transaction(async (prisma) => {
+        await this.filesService.removeFromApartment(
+          apartmentId,
+          userId,
+          prisma,
+        );
+        await prisma.feature.deleteMany({
+          where: { apartmentId },
+        });
+        const apartment = await prisma.apartment.delete({
+          where: { id: apartmentId, userId: isAdmin ? undefined : userId },
+          include: { files: true },
+        });
+        return apartment;
       });
       return apartment;
     } catch (error) {
-      console.error("Error removing apartment:", error);
       throw new BadRequestException("Не удалось удалить квартиру!");
     }
   }
