@@ -39,7 +39,15 @@ export class ApartmentsController {
     return this.apartmentsService.create(userId, files, createApartmentDto);
   }
 
+  @Auth()
   @Get()
+  findForUser(@Req() req: any, @Pagination() pagination: PaginationQueryDto) {
+    const userId = req?.user?.sub;
+    if (!userId) throw new UnauthorizedException();
+    return this.apartmentsService.findForUser(userId, pagination);
+  }
+
+  @Get("/for-collection")
   findForCollection(
     @Query("collectionId") collectionId: string,
     @Pagination() pagination: PaginationQueryDto,

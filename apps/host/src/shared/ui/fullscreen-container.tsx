@@ -8,5 +8,5 @@ interface Props {
 }
 
 export const FullScreenContainer = ({ children, className }: Props) => {
-  return <div className={cn("grow", className)}>{children}</div>;
+  return <div className={cn("flex-1", className)}>{children}</div>;
 };

@@ -1,9 +1,8 @@
+import { paginate, PaginationQueryDto } from "@apartment-crm/helpers";
 import {
-  paginate,
-  PaginationQueryDto,
+  GetApartmentInfoFromAiResponse,
   SortOrder,
-} from "@apartment-crm/helpers";
-import { GetApartmentInfoFromAiResponse } from "@apartment-crm/types";
+} from "@apartment-crm/types";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import {
   BadRequestException,
@@ -78,6 +77,34 @@ export class ApartmentsService {
       return apartment;
     } catch (error) {
       throw new BadRequestException("Не удалось добавить квартиру!");
+    }
+  }
+
+  async findForUser(userId: string, paginationQuery: PaginationQueryDto) {
+    try {
+      const data = await paginate<Apartment, Prisma.ApartmentFindManyArgs>(
+        this.dbService.apartment,
+        paginationQuery,
+        {
+          where: {
+            userId,
+            title: {
+              contains: paginationQuery.search || "",
+              mode: "insensitive",
+            },
+          },
+          orderBy: {
+            title:
+              paginationQuery.sortOrder === SortOrder.ALPHABET
+                ? "asc"
+                : undefined,
+          },
+          include: ApartmentIncludeConfig,
+        },
+      );
+      return data;
+    } catch (error) {
+      throw new NotFoundException("Квартиры не найдены!");
     }
   }
 

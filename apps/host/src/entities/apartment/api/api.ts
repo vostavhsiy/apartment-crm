@@ -1,7 +1,7 @@
 import { ROUTES } from "@/shared/lib/api/routes";
 import { authInstance, publicInstance } from "@/shared/lib/axios";
 import { getFormDataFromObject } from "@/shared/lib/utils";
-import { PaginatedResult } from "@apartment-crm/helpers";
+import { PaginatedResult, PaginationQueryDto } from "@apartment-crm/helpers";
 import { GetApartmentInfoFromAiResponse } from "@apartment-crm/types";
 import { Prisma } from "@prisma/client";
 
@@ -53,6 +53,16 @@ export class ApartmentApi {
     const res = await authInstance.post<CreateApartmentResponse>(
       ROUTES.apartments.create.path,
       formData,
+    );
+    return res.data;
+  }
+
+  static async findForUser(dto: Partial<PaginationQueryDto>) {
+    const res = await authInstance.get<FindApartmentsForCollectionResponse>(
+      ROUTES.apartments.findForUser.path,
+      {
+        params: dto,
+      },
     );
     return res.data;
   }

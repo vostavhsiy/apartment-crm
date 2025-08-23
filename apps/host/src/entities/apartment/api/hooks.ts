@@ -1,5 +1,6 @@
 "use client";
 
+import { PaginationQueryDto } from "@apartment-crm/helpers";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
@@ -24,6 +25,23 @@ export function useCreateApartment() {
         queryKey: APARTMENT_QUERY_KEYS.apartments,
       });
     },
+  });
+}
+
+export function useFindApartmentsForUser(
+  dto: Partial<PaginationQueryDto>,
+  options = {},
+) {
+  return useQuery({
+    queryKey: [
+      ...APARTMENT_QUERY_KEYS.apartments,
+      dto.page,
+      dto.perPage,
+      dto.search,
+      dto.sortOrder,
+    ],
+    queryFn: () => ApartmentApi.findForUser(dto),
+    ...options,
   });
 }
 

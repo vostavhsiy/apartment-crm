@@ -1,11 +1,6 @@
+import { SortOrder } from '@apartment-crm/types';
 import { Transform } from "class-transformer";
 import { IsOptional, IsPositive } from "class-validator";
-
-export enum SortOrder {
-  ALPHABET,
-  CREATED_AT,
-  UPDATED_AT,
-}
 
 export class PaginationQueryDto {
   @IsOptional()

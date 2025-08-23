@@ -1,6 +1,7 @@
 // src/common/utils/paginate-prisma.ts
+import { SortOrder } from '@apartment-crm/types'
 import { PaginatedResult } from "./paginated-result.interface";
-import { PaginationQueryDto, SortOrder } from "./pagination-query.dto";
+import { PaginationQueryDto } from "./pagination-query.dto";
 
 type PrismaModelDelegate<T> = {
   findMany: Function;
