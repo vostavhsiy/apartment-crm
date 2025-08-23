@@ -21,7 +21,7 @@ export interface CreateApartmentDto {
 
   features?: Omit<Prisma.FeatureUncheckedCreateInput, "apartmentId">[];
 
-  files?: File[];
+  files?: (File | string)[];
 }
 
 export interface CreateApartmentResponse extends ApartmentWithRelations {}

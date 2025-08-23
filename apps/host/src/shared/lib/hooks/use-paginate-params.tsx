@@ -30,6 +30,7 @@ export function usePaginateParams() {
     ) => {
       const params = new URLSearchParams(searchParams.toString());
       params.set(key, value);
+      if (key === "sortOrder") params.set("page", "1");
       router.push(`${pathname}?${params.toString()}`);
     },
   };

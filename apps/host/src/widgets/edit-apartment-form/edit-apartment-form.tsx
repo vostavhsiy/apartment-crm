@@ -1,11 +1,11 @@
 "use client";
 
 import {
-  useCreateApartment,
+  useFindApartment,
   useGetApartmentInfoFromAi,
+  useUpdateApartment,
 } from "@/entities/apartment/api/hooks";
 import { useProfile } from "@/entities/user/api/hooks";
-import { AuthRoutes } from "@/shared/config/routes/routes.auth";
 import { setLCItem } from "@/shared/lib/helpers/local-storage";
 import { useGlobalStore } from "@/shared/lib/store/global.store";
 import { cn, reorder } from "@/shared/lib/utils";
@@ -23,6 +23,7 @@ import { Input } from "@/shared/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { Separator } from "@/shared/ui/separator";
 import { Skeleton } from "@/shared/ui/skeleton";
+import { Spinner } from "@/shared/ui/spinner";
 import { SimpleEditor } from "@/shared/ui/tiptap-templates";
 import {
   DragDropContext,
@@ -37,9 +38,9 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { Fragment, useState } from "react";
+import { FC, Fragment, useEffect, useState } from "react";
 
-const LC_EDITOR_NAME = "LC_EDITOR_CONTENT";
+const LC_EDITOR_NAME = "LC_EDITOR_UPDATE_CONTENT";
 
 const formSchema = z.object({
   title: z.string().min(2, "Название должно содержать не менее 2 символов"),
@@ -49,10 +50,16 @@ const formSchema = z.object({
   price: z.string(),
 });
 
-export const AddApartmentForm = () => {
+interface Props {
+  apartmentId: string;
+}
+
+export const EditApartmentForm: FC<Props> = ({ apartmentId }) => {
   const { data: profile, isPending: isProfilePending } = useProfile();
-  const { mutate: addApartment, isPending: isAddPending } =
-    useCreateApartment();
+  const { data: apartment, isPending: isApartmentPending } =
+    useFindApartment(apartmentId);
+  const { mutate: updateApartment, isPending: isUpdatePending } =
+    useUpdateApartment();
   const { mutate: getApartmentInfoFromAi, isPending: isGetAiInfoPending } =
     useGetApartmentInfoFromAi();
   const { setGlobalPending } = useGlobalStore();
@@ -62,24 +69,49 @@ export const AddApartmentForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      subtitle: "",
-      description: "",
-      address: "",
-      price: "",
+      title: apartment?.title || "",
+      subtitle: apartment?.subtitle || "",
+      description: apartment?.description || "",
+      address: apartment?.address || "",
+      price: apartment?.price || "",
     },
   });
+  console.log(apartment);
 
   const router = useRouter();
 
   const [newFeatureName, setNewFeatureName] = useState("");
   const [newFeatureValue, setNewFeatureValue] = useState("");
 
-  const [images, setImages] = useState<Array<{ file: File; id: string }>>([]);
+  const [images, setImages] = useState<
+    Array<{ file: File | string; id: string }>
+  >([]);
 
   const [features, setFeatures] = useState<
     Array<{ name: string; value: string }>
   >([]);
+
+  useEffect(() => {
+    if (apartment) {
+      form.reset({
+        title: apartment?.title || "",
+        subtitle: apartment?.subtitle || "",
+        description: apartment?.description || "",
+        address: apartment?.address || "",
+        price: apartment?.price || "",
+      });
+      setImages(
+        apartment?.files?.map((file) => ({ file: file.url, id: file.id })) ||
+          [],
+      );
+      setFeatures(
+        apartment?.features.map((feature) => ({
+          name: feature.name,
+          value: feature.value,
+        })) || [],
+      );
+    }
+  }, [apartment]);
 
   const addNewFeature = () => {
     if (!newFeatureName || !newFeatureValue) {
@@ -122,30 +154,34 @@ export const AddApartmentForm = () => {
   };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    addApartment(
+    if (!apartment) return;
+    updateApartment(
       {
-        title: values.title,
-        address: values.address,
-        description: values.description,
-        features: features.map((feature) => ({
-          name: feature.name,
-          value: feature.value,
-        })),
-        files: images.map((image) => image.file),
-        price: values.price,
-        subtitle: values.subtitle,
+        id: apartment?.id,
+        dto: {
+          title: values.title,
+          address: values.address,
+          description: values.description,
+          features: features.map((feature) => ({
+            name: feature.name,
+            value: feature.value,
+          })),
+          files: images.map((image) => image.file),
+          price: values.price,
+          subtitle: values.subtitle,
+        },
       },
       {
         onSuccess(response) {
           if (response) {
-            setLCItem(LC_EDITOR_NAME, "");
+            setLCItem(LC_EDITOR_NAME + apartment?.id, "");
             form.reset();
             setImages([]);
             setFeatures([]);
-            toast.success("Квартира успешно добавлена!");
-            router.push(AuthRoutes.APARTMENTS);
+            toast.success("Квартира успешно обновлена!");
+            router.refresh();
           } else {
-            toast.error("Ошибка при добавлении квартиры! Попробуйте еще раз!");
+            toast.error("Ошибка при обновлении квартиры! Попробуйте еще раз!");
           }
         },
         onError() {
@@ -161,7 +197,7 @@ export const AddApartmentForm = () => {
     getApartmentInfoFromAi(forAiUrl, {
       onSuccess(response) {
         const { features, ...state } = response;
-        setLCItem(LC_EDITOR_NAME, "");
+        setLCItem(LC_EDITOR_NAME + apartment?.id, "");
         form.reset(state);
         setFeatures((prev) => [...prev, ...features]);
         setForAiUrl("");
@@ -180,6 +216,10 @@ export const AddApartmentForm = () => {
 
   const isExtraFeatures =
     profile && (profile.role === "PROSUBSCRIBER" || profile.role === "ADMIN");
+
+  if (isApartmentPending) {
+    return <Spinner />;
+  }
 
   return (
     <Form {...form}>
@@ -231,7 +271,7 @@ export const AddApartmentForm = () => {
           </Popover>
         )}
         <Heading className="text-2xl font-bold text-center">
-          Добавить квартиру
+          Редактировать квартиру
         </Heading>
         <FormField
           control={form.control}
@@ -291,7 +331,11 @@ export const AddApartmentForm = () => {
                               <div className="flex items-center gap-2 text-black/60">
                                 <GripVertical />
                                 <img
-                                  src={URL.createObjectURL(image.file)}
+                                  src={
+                                    typeof image.file === "string"
+                                      ? image.file
+                                      : URL.createObjectURL(image.file)
+                                  }
                                   alt={`Uploaded image ${index + 1}`}
                                   className="w-32 h-32 object-cover rounded"
                                 />
@@ -367,7 +411,10 @@ export const AddApartmentForm = () => {
             <FormItem>
               <FormLabel>Описание</FormLabel>
               <FormControl>
-                <SimpleEditor {...field} lcEditorName={LC_EDITOR_NAME} />
+                <SimpleEditor
+                  {...field}
+                  lcEditorName={LC_EDITOR_NAME + apartment?.id}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -434,10 +481,10 @@ export const AddApartmentForm = () => {
         <Button
           className="w-full"
           size={"lg"}
-          disabled={isAddPending}
+          disabled={isUpdatePending}
           type="submit"
         >
-          Добавить квартиру
+          Обновить квартиру
         </Button>
       </form>
     </Form>

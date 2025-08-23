@@ -21,15 +21,26 @@ export class FilesService {
     const dbService = tx || this.dbService;
     try {
       if (!userId) throw new Error();
-      const fileInfo = await this.s3Service.uploadFile(
-        createFileDto.file,
-        userId,
-        S3BucketFolders.POST_IMAGES,
-      );
-      if (!fileInfo) throw new Error();
+      if (typeof createFileDto.file !== "string") {
+        const fileInfo = await this.s3Service.uploadFile(
+          createFileDto.file,
+          userId,
+          S3BucketFolders.POST_IMAGES,
+        );
+        if (!fileInfo) throw new Error();
+        const file = await dbService.file.create({
+          data: {
+            url: fileInfo.url,
+            apartmentId: createFileDto.apartmentId,
+            order: createFileDto.order,
+          },
+        });
+        return file;
+      }
+
       const file = await dbService.file.create({
         data: {
-          url: fileInfo.url,
+          url: createFileDto.file,
           apartmentId: createFileDto.apartmentId,
           order: createFileDto.order,
         },

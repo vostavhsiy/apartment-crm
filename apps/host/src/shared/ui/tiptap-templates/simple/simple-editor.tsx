@@ -62,8 +62,6 @@ import { HighlighterIcon } from "./tiptap-icons/highlighter-icon";
 import { LinkIcon } from "./tiptap-icons/link-icon";
 import { ListDropdownMenu } from "./tiptap-ui/list-dropdown-menu";
 
-export const LC_EDITOR_NAME = "LC_EDITOR_CONTENT";
-
 const MainToolbarContent = ({
   onHighlighterClick,
   onLinkClick,
@@ -157,6 +155,7 @@ const MobileToolbarContent = ({
 
 interface Props {
   name: string;
+  lcEditorName: string;
   value?: string;
   onChange?: (value: string) => void;
   onBlur?: () => void;
@@ -210,7 +209,7 @@ export function SimpleEditor(props: Props) {
       }),
     ],
     onCreate(data) {
-      const content = getLCItem(LC_EDITOR_NAME);
+      const content = getLCItem(props.lcEditorName);
       try {
         const value = props.value ? JSON.parse(props.value) : null;
         data.editor.commands.setContent(content || value);
@@ -221,7 +220,7 @@ export function SimpleEditor(props: Props) {
     onUpdate(data) {
       const content = data.editor.getJSON();
       setLCItem(
-        LC_EDITOR_NAME,
+        props.lcEditorName,
         JSON.stringify(content) === TIPTAP_EMPTY_DOC ? "" : content,
       );
       props.onChange?.(JSON.stringify(content));
@@ -229,7 +228,7 @@ export function SimpleEditor(props: Props) {
   });
 
   React.useEffect(() => {
-    const content = getLCItem(LC_EDITOR_NAME);
+    const content = getLCItem(props.lcEditorName);
     try {
       const value = props.value ? JSON.parse(props.value) : null;
       editor?.commands.setContent(content || value);

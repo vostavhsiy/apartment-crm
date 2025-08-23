@@ -159,7 +159,7 @@ export class ApartmentsService {
   async update(
     apartmentId: string,
     userId: string,
-    files: Express.Multer.File[],
+    files: Array<Express.Multer.File | string>,
     updateApartmentDto: UpdateApartmentDto,
     isAdmin: boolean = false,
   ) {
@@ -191,10 +191,10 @@ export class ApartmentsService {
             );
           }
         }
+        await prisma.feature.deleteMany({
+          where: { apartmentId: apartment.id },
+        });
         if (features?.length) {
-          await prisma.feature.deleteMany({
-            where: { apartmentId: apartment.id },
-          });
           await prisma.feature.createMany({
             data: features.map((feature) => ({
               name: feature.name,

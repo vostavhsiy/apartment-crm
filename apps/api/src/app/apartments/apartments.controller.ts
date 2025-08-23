@@ -78,10 +78,11 @@ export class ApartmentsController {
     const userId = req?.user?.sub;
     if (!userId) throw new UnauthorizedException();
     const isAdmin = req?.user?.role === Role.ADMIN;
+
     return this.apartmentsService.update(
       id,
       userId,
-      files,
+      files || updateApartmentDto.files,
       updateApartmentDto,
       isAdmin,
     );
