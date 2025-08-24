@@ -67,12 +67,16 @@ export class ApartmentApi {
     return res.data;
   }
 
-  static async findForCollection(collectionId: string) {
+  static async findForCollection(
+    collectionId: string,
+    dto: Partial<PaginationQueryDto>,
+  ) {
     const res = await publicInstance.get<FindApartmentsForCollectionResponse>(
       ROUTES.apartments.findForCollection.path,
       {
         params: {
           collectionId,
+          ...dto,
         },
       },
     );

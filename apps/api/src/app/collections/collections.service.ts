@@ -1,8 +1,5 @@
-import {
-  paginate,
-  PaginationQueryDto,
-  SortOrder,
-} from "@apartment-crm/helpers";
+import { paginate, PaginationQueryDto } from "@apartment-crm/helpers";
+import { SortOrder } from "@apartment-crm/types";
 import {
   BadRequestException,
   Injectable,
@@ -58,6 +55,7 @@ export class CollectionsService {
       );
       return data;
     } catch (error) {
+      console.log(error);
       throw new BadRequestException("Не удалось получить подборки!");
     }
   }

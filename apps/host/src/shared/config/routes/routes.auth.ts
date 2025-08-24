@@ -4,6 +4,12 @@ export class AuthRoutes {
   static FEEDBACK = this.DASHBOARD + "/feedback";
 
   static COLLECTIONS = this.DASHBOARD + "/collections";
+  static DASHBOARD_COLLECTION(id: string) {
+    return this.COLLECTIONS + `/${id}`;
+  }
+  static DASHBOARD_COLLECTION_EDIT(id: string) {
+    return this.COLLECTIONS + `/${id}/edit`;
+  }
   static APARTMENTS = this.DASHBOARD + "/apartments";
   static DASHBOARD_APARTMENT(id: string) {
     return this.APARTMENTS + `/${id}`;

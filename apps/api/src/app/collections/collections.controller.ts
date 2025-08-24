@@ -38,7 +38,7 @@ export class CollectionsController {
   }
 
   @Get(":id")
-  findOne(@Param(":id") id: string) {
+  findOne(@Param("id") id: string) {
     return this.collectionsService.findOne(id);
   }
 

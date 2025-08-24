@@ -1,6 +1,6 @@
 import { ROUTES } from "@/shared/lib/api/routes";
 import { authInstance, publicInstance } from "@/shared/lib/axios";
-import { PaginatedResult } from "@apartment-crm/helpers";
+import { PaginatedResult, PaginationQueryDto } from "@apartment-crm/helpers";
 
 import { Collection } from "../model/collection";
 import { CollectionWithRelations } from "../model/collection-with-relations";
@@ -12,9 +12,7 @@ export interface CreateCollectionDto {
 
 export interface CreateCollectionResponse extends CollectionWithRelations {}
 
-export interface UpdateCollectionDto extends Partial<CreateCollectionDto> {
-  published?: boolean;
-}
+export interface UpdateCollectionDto extends Partial<CreateCollectionDto> {}
 
 export interface UpdateCollectionResponse extends CollectionWithRelations {}
 
@@ -34,9 +32,12 @@ export class CollectionApi {
     return res.data;
   }
 
-  static async findForUser() {
+  static async findForUser(dto: Partial<PaginationQueryDto>) {
     const res = await publicInstance.get<FindCollectionsForUserResponse>(
       ROUTES.collections.findForUser.path,
+      {
+        params: dto,
+      },
     );
     return res.data;
   }

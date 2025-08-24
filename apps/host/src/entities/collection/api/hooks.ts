@@ -1,10 +1,17 @@
 "use client";
 
+import { useInfiniteScroll } from "@/shared/lib/hooks/use-infinity-scroll";
+import { PaginationQueryDto } from "@apartment-crm/helpers";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { CollectionApi, CreateCollectionDto, UpdateCollectionDto } from "./api";
+import {
+  CollectionApi,
+  CreateCollectionDto,
+  FindCollectionsForUserResponse,
+  UpdateCollectionDto,
+} from "./api";
 
-const COLLECTION_QUERY_KEYS = {
+export const COLLECTION_QUERY_KEYS = {
   collections: ["collections", "list"],
   collection: (id: string) => ["collections", "item", id],
 };
@@ -22,10 +29,35 @@ export function useCreateCollection() {
   });
 }
 
-export function useFindCollectionsForUser(options = {}) {
+export function useFindCollectionsForUser(
+  dto: Partial<PaginationQueryDto>,
+  options = {},
+) {
+  return useInfiniteScroll<FindCollectionsForUserResponse>({
+    queryKey: [...COLLECTION_QUERY_KEYS.collections, dto.search || ""],
+    queryFn: ({ pageParam }) => {
+      return CollectionApi.findForUser({ ...dto, page: pageParam });
+    },
+    getNextPageParam: (lastPage, allPages) => {
+      const hasMore = lastPage.hasMore;
+      return hasMore ? allPages.length + 1 : undefined;
+    },
+  });
+}
+
+export function useFindCollectionsForUserPerPage(
+  dto: Partial<PaginationQueryDto>,
+  options = {},
+) {
   return useQuery({
-    queryKey: COLLECTION_QUERY_KEYS.collections,
-    queryFn: () => CollectionApi.findForUser(),
+    queryKey: [
+      ...COLLECTION_QUERY_KEYS.collections,
+      dto.page,
+      dto.perPage,
+      dto.search,
+      dto.sortOrder,
+    ],
+    queryFn: () => CollectionApi.findForUser(dto),
     ...options,
   });
 }

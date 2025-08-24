@@ -43,11 +43,14 @@ export const ApartmentFilesDialog: FC<Props> = ({
           />
         )}
       </DialogTrigger>
-      <DialogContent className="!max-w-full w-screen h-screen rounded-none bg-black border-black text-white">
+      <DialogContent className="max-xl:block !max-w-full w-screen h-screen rounded-none bg-black border-black text-white">
         {!title && <DialogTitle className="hidden"></DialogTitle>}
         {title && <DialogTitle>{title}</DialogTitle>}
         <Carousel
-          className={cn("max-sm:flex max-sm:items-center", !title && "mt-10")}
+          className={cn(
+            "max-sm:flex h-full max-sm:items-center",
+            !title && "mt-10",
+          )}
         >
           <CarouselContent className="max-h-[85vh]">
             {files.map((file) => {

@@ -1,8 +1,8 @@
 model ApartmentCollection {
   id           String     @id @default(cuid())
-  apartment    Apartment  @relation(fields: [apartmentId], references: [id])
+  apartment    Apartment  @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
   apartmentId  String
-  collection   Collection @relation(fields: [collectionId], references: [id])
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   collectionId String
   order        Int?
 

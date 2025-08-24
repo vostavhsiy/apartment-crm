@@ -1,3 +1,5 @@
 import { Prisma } from "@prisma/client";
 
-export const CollectionIncludeConfig: Prisma.CollectionInclude = {};
+export const CollectionIncludeConfig: Prisma.CollectionInclude = {
+	apartmentsLinks: true
+};

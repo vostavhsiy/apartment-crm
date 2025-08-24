@@ -1,5 +1,6 @@
 "use client";
 
+import { COLLECTION_QUERY_KEYS } from "@/entities/collection/api/hooks";
 import { PaginationQueryDto } from "@apartment-crm/helpers";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -47,11 +48,19 @@ export function useFindApartmentsForUser(
 
 export function useFindApartmentsForCollection(
   collectionId: string,
+  dto: Partial<PaginationQueryDto>,
   options = {},
 ) {
   return useQuery({
-    queryKey: [...APARTMENT_QUERY_KEYS.apartments, { collectionId }],
-    queryFn: () => ApartmentApi.findForCollection(collectionId),
+    queryKey: [
+      ...APARTMENT_QUERY_KEYS.apartments,
+      collectionId,
+      dto.page,
+      dto.perPage,
+      dto.search,
+      dto.sortOrder,
+    ],
+    queryFn: () => ApartmentApi.findForCollection(collectionId, dto),
     enabled: !!collectionId,
     ...options,
   });
@@ -97,6 +106,9 @@ export function useToggleApartmentToCollection() {
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
         queryKey: APARTMENT_QUERY_KEYS.apartments,
+      });
+      queryClient.invalidateQueries({
+        queryKey: COLLECTION_QUERY_KEYS.collections,
       });
       if (variables?.id) {
         queryClient.invalidateQueries({

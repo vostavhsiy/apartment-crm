@@ -1,6 +1,12 @@
 import { Prisma } from "@prisma/client";
-66
+
+66;
 export const ApartmentIncludeConfig: Prisma.ApartmentInclude = {
   files: true,
-  features: true
+  features: true,
+  collectionsLinks: {
+    orderBy: {
+      order: "asc",
+    },
+  },
 };

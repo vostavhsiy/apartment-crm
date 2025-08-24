@@ -2,10 +2,6 @@ import { type ClassValue, clsx } from "clsx";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
-
-
-
-
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -115,6 +111,7 @@ export function getMMSSfromSeconds(seconds: number) {
 
   return `${formattedMinutes}:${formattedSeconds}`;
 }
+
 
 export const TIPTAP_EMPTY_DOC =
   '{"type":"doc","content":[{"type":"paragraph","attrs":{"textAlign":null}}]}';

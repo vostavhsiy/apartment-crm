@@ -1,4 +1,5 @@
 import { ApartmentFilesDialog } from "@/features/apartment-files-dialog/apartment-files-dialog";
+import { ApartmentToCollectionDialog } from "@/features/apartment-to-collection-dialog/apartment-to-collection-dialog";
 import { AuthRoutes } from "@/shared/config/routes/routes.auth";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
@@ -40,7 +41,7 @@ export const ApartmentRowCard: FC<Props> = ({ apartment, isInAdminPage }) => {
         <div className="w-full px-4">
           <CardTitle>
             <Link
-              className="line-clamp-2 text-lg text-blue-500"
+              className="line-clamp-2 leading-normal text-lg text-blue-500"
               href={AuthRoutes.DASHBOARD_APARTMENT(apartment.id)}
             >
               {apartment.title}
@@ -81,6 +82,7 @@ export const ApartmentRowCard: FC<Props> = ({ apartment, isInAdminPage }) => {
             </div>
           )}
           <div className="w-full lg:w-max flex flex-col lg:flex-row items-center gap-2">
+            <ApartmentToCollectionDialog apartment={apartment} />
             <Button
               asChild
               variant={"secondary"}

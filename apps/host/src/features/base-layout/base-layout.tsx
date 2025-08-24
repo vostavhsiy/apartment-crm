@@ -31,7 +31,7 @@ export const BaseLayout: FC<Props> = ({
       />
       {sidebarGroups && <BaseSidebar sidebarGroups={sidebarGroups} />}
       <FullScreenContainer className="flex flex-col pt-header-height">
-        <FullScreenContainer className="py-10 pt-6 px-5 flex items-center justify-center">
+        <FullScreenContainer className="py-10 pt-6 px-5 flex items-center justify-center w-full max-w-7xl mx-auto">
           {children}
         </FullScreenContainer>
       </FullScreenContainer>
