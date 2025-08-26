@@ -1,6 +1,7 @@
 "use client";
 
 import { useProfile } from "@/entities/user/api/hooks";
+import { ActivationButton } from "@/features/activation-button/activation-button";
 import { BaseLayout } from "@/features/base-layout/base-layout";
 import { Logo } from "@/features/logo/logo";
 import { ProfileButton } from "@/features/profile-button/profile-button";
@@ -60,6 +61,7 @@ export const DashboardPagesLayout: FC<Props> = ({ children }) => {
             )}
             {!isLoading && profile && (
               <div className="flex items-center gap-5">
+                <ActivationButton className="max-sm:hidden" />
                 <Button asChild size={"icon"} variant={"outline"}>
                   <Link href={AuthRoutes.CREATE_COLLECTION}>
                     <SquarePlus className="size-5" />

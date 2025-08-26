@@ -22,6 +22,8 @@ import { usePathname } from "next/navigation";
 
 import { FC } from "react";
 
+import { ActivationButton } from "../activation-button/activation-button";
+
 interface Props {
   sidebarGroups: SidebarGroupItem[];
 }
@@ -73,6 +75,7 @@ export const BaseSidebar: FC<Props> = ({ sidebarGroups }) => {
             </SidebarGroup>
           );
         })}
+        <ActivationButton className="min-sm:hidden mx-auto mt-10" />
       </SidebarContent>
       <SidebarRail />
     </Sidebar>

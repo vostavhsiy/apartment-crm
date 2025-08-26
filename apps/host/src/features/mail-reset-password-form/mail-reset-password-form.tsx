@@ -3,8 +3,8 @@
 import { useSendResetPasswordEmail } from "@/entities/user/api/hooks";
 import { PublicRoutes } from "@/shared/config/routes/routes.public";
 import {
-  getPasswordMailExpireTimeDiff,
-  setPasswordMailExpire,
+  getMailExpireTimeDiff,
+  setMailExpire,
 } from "@/shared/lib/helpers/password";
 import { cn, getMMSSfromSeconds } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
@@ -48,7 +48,7 @@ export const MailResetPasswordForm = () => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     if (isPending) return;
 
-    const time = getPasswordMailExpireTimeDiff();
+    const time = getMailExpireTimeDiff();
     if (time) {
       if (diffTime) return;
       setDiffTime(time);
@@ -65,7 +65,7 @@ export const MailResetPasswordForm = () => {
       onSuccess: () => {
         router.push(PublicRoutes.MAIL_RESET_PASSWORD_SUCCESS);
         toast.success("Письмо для сброса пароля отправлено!");
-        setPasswordMailExpire();
+        setMailExpire();
       },
       onError: (error) => {
         toast.error("Ошибка при отправке письма. Попробуйте позже!");

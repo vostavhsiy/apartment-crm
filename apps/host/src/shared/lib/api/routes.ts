@@ -16,7 +16,7 @@ export const ROUTES = {
       path: "/api/auth/profile",
     },
     sendActivationMail: {
-      path: "/api/auth/send-activation-mail",
+      path: "/api/auth/activation-mail",
     },
     sendResetPasswordEmail: {
       path: "/api/auth/reset-password-mail",
