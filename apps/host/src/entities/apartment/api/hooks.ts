@@ -11,7 +11,7 @@ import {
   UpdateApartmentDto,
 } from "./api";
 
-const APARTMENT_QUERY_KEYS = {
+export const APARTMENT_QUERY_KEYS = {
   apartments: ["apartments", "list"],
   apartment: (id: string) => ["apartments", "item", id],
 };

@@ -92,6 +92,14 @@ export class ClientsController {
     );
   }
 
+  @Post(":id/view/:apartmentId")
+  seeApartment(
+    @Param("id") id: string,
+    @Param("apartmentId") apartmentId: string,
+  ) {
+    return this.clientsService.seeApartment(id, apartmentId);
+  }
+
   @Auth()
   @Delete(":id")
   remove(@Param("id") id: string, @Req() req: any) {

@@ -1,6 +1,7 @@
 import { ROUTES } from "@/shared/lib/api/routes";
 import { authInstance, publicInstance } from "@/shared/lib/axios";
-import { PaginatedResult } from "@apartment-crm/helpers";
+import { PaginatedResult, PaginationQueryDto } from "@apartment-crm/helpers";
+import { ClientApartmentView } from "@prisma/client";
 
 import { Client } from "../model/client";
 import { ClientWithRelations } from "../model/client-with-relations";
@@ -13,7 +14,8 @@ export interface CreateClientDto {
   avatarUrl?: string;
 }
 
-export interface FindClientsForUser extends PaginatedResult<Client> {}
+export interface FindClientsForUser
+  extends PaginatedResult<ClientWithRelations> {}
 
 export interface CreateClientResponse extends ClientWithRelations {}
 
@@ -43,6 +45,12 @@ export interface ToggleApartmentToClientResponse extends Client {}
 
 export interface DeleteClientResponse extends Client {}
 
+export interface SeeApartmentDto {
+  clientId: string;
+  apartmentId: string;
+}
+export interface SeeApartmentResponse extends ClientApartmentView {}
+
 export class ClientApi {
   static async createClient(data: CreateClientDto) {
     const res = await authInstance.post<CreateClientResponse>(
@@ -52,9 +60,12 @@ export class ClientApi {
     return res.data;
   }
 
-  static async findForUser() {
+  static async findForUser(dto: Partial<PaginationQueryDto>) {
     const res = await publicInstance.get<FindClientsForUser>(
       ROUTES.clients.findForUser.path,
+      {
+        params: dto,
+      },
     );
     return res.data;
   }
@@ -91,6 +102,14 @@ export class ClientApi {
   ) {
     const res = await authInstance.patch<ToggleApartmentToClientResponse>(
       ROUTES.clients.toggleApartmentToClient(id).path,
+      dto,
+    );
+    return res.data;
+  }
+
+  static async seeApartment(dto: SeeApartmentDto) {
+    const res = await authInstance.post<SeeApartmentResponse>(
+      ROUTES.clients.seeApartment(dto.clientId, dto.apartmentId).path,
       dto,
     );
     return res.data;

@@ -1,10 +1,10 @@
 "use client";
 
-import { useFindCollectionsForUserPerPage } from "@/entities/collection/api/hooks";
+import { useFindClientsForUser } from "@/entities/client/api/hooks";
 import {
-  CollectionSheet,
-  CollectionSheetSkeleton,
-} from "@/entities/collection/ui/collection-sheet";
+  ClientSheet,
+  ClientSheetSkeleton,
+} from "@/entities/client/ui/client-sheet";
 import { Pagination } from "@/features/pagination/pagination";
 import { QueryParamsFilters } from "@/features/query-params-filters/query-params-filters";
 import { AuthRoutes } from "@/shared/config/routes/routes.auth";
@@ -13,30 +13,26 @@ import { Button } from "@/shared/ui/button";
 import { Heading } from "@/shared/ui/heading";
 import Link from "next/link";
 
-export const DashboardCollections = () => {
+export const DashboardClients = () => {
   const { params } = usePaginateParams();
 
-  const { data: collectionsData, isPending } =
-    useFindCollectionsForUserPerPage(params);
+  const { data: clientsData, isPending } = useFindClientsForUser(params);
 
   return (
     <div className="w-full">
       <div className="mb-8 flex items-center gap-3 max-sm:flex-col justify-between">
-        <Heading size={"h2"}>Добавленные подборки</Heading>
+        <Heading size={"h2"}>Добавленные клиенты</Heading>
         <Button variant={"outline"} asChild>
-          <Link href={AuthRoutes.CREATE_COLLECTION}>Добавить подборку</Link>
+          <Link href={AuthRoutes.CREATE_CLIENT}>Добавить клиента</Link>
         </Button>
       </div>
-
       <QueryParamsFilters />
-      {!isPending && (
-        <CollectionSheet collections={collectionsData?.data || []} />
-      )}
-      {isPending && <CollectionSheetSkeleton />}
-      {collectionsData && (
+      {!isPending && <ClientSheet clients={clientsData?.data || []} />}
+      {isPending && <ClientSheetSkeleton />}
+      {clientsData && (
         <Pagination
-          currentPage={collectionsData.currentPage}
-          totalPages={collectionsData.totalPages}
+          currentPage={clientsData.currentPage}
+          totalPages={clientsData.totalPages}
         />
       )}
     </div>

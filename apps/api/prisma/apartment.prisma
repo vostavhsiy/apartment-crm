@@ -14,6 +14,7 @@ model Apartment {
   features Feature[]
 
   collectionsLinks ApartmentCollection[]
+  clientViews      ClientApartmentView[]
 
   clientsLikes ApartmentClient[]
 

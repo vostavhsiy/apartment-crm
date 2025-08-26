@@ -7,8 +7,11 @@ import {
 } from "@/entities/apartment/ui/apartment-row-sheet";
 import { Pagination } from "@/features/pagination/pagination";
 import { QueryParamsFilters } from "@/features/query-params-filters/query-params-filters";
+import { AuthRoutes } from "@/shared/config/routes/routes.auth";
 import { usePaginateParams } from "@/shared/lib/hooks/use-paginate-params";
+import { Button } from "@/shared/ui/button";
 import { Heading } from "@/shared/ui/heading";
+import Link from "next/link";
 
 export const DashboardApartments = () => {
   const { params } = usePaginateParams();
@@ -17,7 +20,13 @@ export const DashboardApartments = () => {
 
   return (
     <div className="w-full">
-      <Heading size={"h2"} className='mb-5'>Добавленные квартиры</Heading>
+      <div className="mb-8 flex items-center gap-3 max-sm:flex-col justify-between">
+        <Heading size={"h2"}>Добавленные квартиры</Heading>
+
+        <Button variant={"outline"} asChild>
+          <Link href={AuthRoutes.CREATE_APARTMENT}>Добавить объект</Link>
+        </Button>
+      </div>
       <QueryParamsFilters />
       {!isPending && (
         <ApartmentRowSheet

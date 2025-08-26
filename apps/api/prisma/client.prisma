@@ -8,6 +8,7 @@ model Client {
   user   User   @relation(fields: [userId], references: [id])
 
   collectionsLinks CollectionClient[]
+  apartmentViews ClientApartmentView[]
 
   likes ApartmentClient[]
 

@@ -1,10 +1,13 @@
 "use client";
 
+import { APARTMENT_QUERY_KEYS } from "@/entities/apartment/api/hooks";
+import { PaginationQueryDto } from "@apartment-crm/helpers";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
   ClientApi,
   CreateClientDto,
+  SeeApartmentDto,
   ToggleApartmentToClientDto,
   ToggleClientToCollectionDto,
   UpdateClientDto,
@@ -25,10 +28,19 @@ export function useCreateClient() {
   });
 }
 
-export function useFindClientsForUser(options = {}) {
+export function useFindClientsForUser(
+  dto: Partial<PaginationQueryDto>,
+  options = {},
+) {
   return useQuery({
-    queryKey: CLIENT_QUERY_KEYS.clients,
-    queryFn: () => ClientApi.findForUser(),
+    queryKey: [
+      ...CLIENT_QUERY_KEYS.clients,
+      dto.page,
+      dto.perPage,
+      dto.search,
+      dto.sortOrder,
+    ],
+    queryFn: () => ClientApi.findForUser(dto),
     ...options,
   });
 }
@@ -91,9 +103,32 @@ export function useToggleApartmentToClient() {
     }) => ClientApi.toggleApartmentToClient(id, dto),
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: CLIENT_QUERY_KEYS.clients });
+      queryClient.invalidateQueries({
+        queryKey: APARTMENT_QUERY_KEYS.apartments,
+      });
       if (variables?.id) {
         queryClient.invalidateQueries({
           queryKey: CLIENT_QUERY_KEYS.client(variables.id),
+        });
+      }
+      if (variables?.dto?.apartmentId) {
+        queryClient.invalidateQueries({
+          queryKey: APARTMENT_QUERY_KEYS.apartment(variables.dto.apartmentId),
+        });
+      }
+    },
+  });
+}
+
+export function useSeeApartment() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (dto: SeeApartmentDto) => ClientApi.seeApartment(dto),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: CLIENT_QUERY_KEYS.clients });
+      if (variables?.clientId) {
+        queryClient.invalidateQueries({
+          queryKey: CLIENT_QUERY_KEYS.client(variables.clientId),
         });
       }
     },

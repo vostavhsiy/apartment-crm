@@ -13,7 +13,7 @@ interface Props {
 export const ApartmentLikeButton: FC<Props> = ({ client, apartmentId }) => {
   const { mutate: toggleLike, isPending } = useToggleApartmentToClient();
 
-  const connect = client.apartments.some((a) => a.id === apartmentId);
+  const connect = client.likes.some((a) => a.apartmentId === apartmentId);
 
   const handleLike = () => {
     if (isPending) return;

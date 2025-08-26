@@ -537,6 +537,7 @@ export const EditApartmentForm: FC<Props> = ({ apartmentId }) => {
                 disabled={isDeletePending}
                 variant={"destructive"}
                 onClick={handleDelete}
+                type="button"
               >
                 Удалить
               </Button>

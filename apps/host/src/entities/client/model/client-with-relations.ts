@@ -1,7 +1,13 @@
-import { Apartment } from "@/entities/apartment/model/apartment";
+import { ApartmentClient, ClientApartmentView, Prisma } from "@prisma/client";
 
 import { Client } from "./client";
 
 export interface ClientWithRelations extends Client {
-  apartments: Apartment[];
+  likes: ApartmentClient[];
+  apartmentViews: ClientApartmentView[];
+  collectionsLinks: Array<
+    Prisma.CollectionClientGetPayload<{
+      include: { collection: { include: { apartmentsLinks: true } } };
+    }>
+  >;
 }

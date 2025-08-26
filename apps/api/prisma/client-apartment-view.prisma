@@ -1,0 +1,13 @@
+model ClientApartmentView {
+  id          String    @id @default(cuid())
+  client      Client    @relation(fields: [clientId], references: [id])
+  clientId    String
+  apartment   Apartment @relation(fields: [apartmentId], references: [id])
+  apartmentId String
+  seen        Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([clientId, apartmentId])
+  @@map("client_apartment_views")
+}

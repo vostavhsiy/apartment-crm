@@ -51,7 +51,7 @@ export function wordEnding(
 export async function copyToClipboard(textToCopy: string) {
   if (navigator.clipboard && window.isSecureContext) {
     await navigator.clipboard.writeText(textToCopy);
-    toast.success("Ссылка скопирована!");
+    toast.success("Скопировано в буфер обмена!");
   } else {
     const textArea = document.createElement("textarea");
     textArea.value = textToCopy;
@@ -64,7 +64,7 @@ export async function copyToClipboard(textToCopy: string) {
 
     try {
       document.execCommand("copy");
-      toast.success("Ссылка скопирована!");
+      toast.success("Скопировано в буфер обмена!");
     } catch (error) {
       console.error(error);
     } finally {
@@ -111,7 +111,6 @@ export function getMMSSfromSeconds(seconds: number) {
 
   return `${formattedMinutes}:${formattedSeconds}`;
 }
-
 
 export const TIPTAP_EMPTY_DOC =
   '{"type":"doc","content":[{"type":"paragraph","attrs":{"textAlign":null}}]}';

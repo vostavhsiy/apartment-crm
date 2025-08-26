@@ -196,6 +196,7 @@ export const EditCollectionForm: FC<Props> = ({ collectionId }) => {
                 disabled={isDeletePending}
                 variant={"destructive"}
                 onClick={handleDelete}
+                type="button"
               >
                 Удалить
               </Button>

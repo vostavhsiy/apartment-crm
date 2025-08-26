@@ -70,6 +70,9 @@ export const ROUTES = {
     toggleApartmentToClient: (id: string) => ({
       path: `/api/clients/${id}/toggle-apartment`,
     }),
+    seeApartment: (clientId: string, apartmentId: string) => ({
+      path: `/api/clients/${clientId}/view/${apartmentId}`,
+    }),
     delete: (id: string) => ({
       path: `/api/clients/${id}`,
     }),

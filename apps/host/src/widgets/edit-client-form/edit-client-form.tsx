@@ -1,7 +1,6 @@
 "use client";
 
-import { useCreateClient } from "@/entities/client/api/hooks";
-import { AuthRoutes } from "@/shared/config/routes/routes.auth";
+import { useFindClient, useUpdateClient } from "@/entities/client/api/hooks";
 import { useUploadFile } from "@/shared/lib/api/s3/hooks";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
@@ -15,25 +14,33 @@ import {
 } from "@/shared/ui/form";
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
+import { Spinner } from "@/shared/ui/spinner";
 import { S3BucketFolders } from "@apartment-crm/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { X } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 const formSchema = z.object({
   name: z.string().min(2, "Имя должно содержать не менее 2 символов"),
   phone: z.string(),
 });
 
-export const AddClientForm = () => {
+interface Props {
+  clientId: string;
+}
+
+export const EditClientForm: FC<Props> = ({ clientId }) => {
   const { mutate: uploadFile, isPending: isUploadPending } = useUploadFile();
-  const { mutate: addClient, isPending: isAddPending } = useCreateClient();
+  const { mutate: updateClient, isPending: isUpdatePending } =
+    useUpdateClient();
+
+  const { data: client, isPending: isClientPending } = useFindClient(clientId);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,7 +52,7 @@ export const AddClientForm = () => {
 
   const router = useRouter();
 
-  const [image, setImage] = useState<File | null>(null);
+  const [image, setImage] = useState<File | string | null>(null);
 
   const addImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -53,29 +60,32 @@ export const AddClientForm = () => {
     setImage(file);
   };
 
-  function handleAddClient(name: string, phone: string, avatarUrl?: string) {
-    addClient(
+  function handleUpdateClient(name: string, phone: string, avatarUrl?: string) {
+    updateClient(
       {
-        name,
-        phone,
-        avatarUrl,
+        id: clientId,
+        dto: {
+          name,
+          phone,
+          avatarUrl,
+        },
       },
       {
         onSuccess(response) {
           if (response) {
             form.reset();
             setImage(null);
-            toast.success("Клиент успешно добавлен!");
-            router.push(AuthRoutes.CLIENTS);
+            toast.success("Клиент успешно обновлен!");
+            router.refresh();
           } else {
-            toast.error("Ошибка при добавлении клиента! Попробуйте еще раз!");
+            toast.error("Ошибка при обновлении клиента! Попробуйте еще раз!");
           }
         },
         onError(error) {
           //@ts-ignore
           const message = error.response?.data?.message;
           toast.error(
-            message || "Ошибка при добавлении клиента! Попробуйте еще раз!",
+            message || "Ошибка при обновлении клиента! Попробуйте еще раз!",
           );
         },
       },
@@ -83,7 +93,7 @@ export const AddClientForm = () => {
   }
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    if (image) {
+    if (image && typeof image !== "string") {
       uploadFile(
         { file: image, folder: S3BucketFolders.CLIENT_AVATARS },
         {
@@ -94,7 +104,7 @@ export const AddClientForm = () => {
           },
           onSuccess: (data) => {
             if (data) {
-              handleAddClient(values.name, values.phone, data?.url);
+              handleUpdateClient(values.name, values.phone, data?.url);
             } else {
               toast.error(
                 "Не удалось загрузить фотографию клиенту. Попробуйте еще раз!",
@@ -104,8 +114,22 @@ export const AddClientForm = () => {
         },
       );
     } else {
-      handleAddClient(values.name, values.phone);
+      handleUpdateClient(values.name, values.phone, image || "");
     }
+  }
+
+  useEffect(() => {
+    if (client) {
+      form.reset({ name: client.name, phone: client.phone });
+      setImage(client.avatarUrl);
+    }
+    if (!isClientPending && !client) {
+      notFound();
+    }
+  }, [client]);
+
+  if (isClientPending) {
+    return <Spinner />;
   }
 
   return (
@@ -114,7 +138,9 @@ export const AddClientForm = () => {
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn("max-w-2xl w-full mx-auto space-y-8")}
       >
-        <h1 className="text-2xl font-bold text-center">Добавить клиента</h1>
+        <h1 className="text-2xl font-bold text-center">
+          Редактировать клиента
+        </h1>
         <FormField
           control={form.control}
           name="name"
@@ -149,7 +175,9 @@ export const AddClientForm = () => {
               <Image
                 width={200}
                 height={200}
-                src={URL.createObjectURL(image)}
+                src={
+                  typeof image === "string" ? image : URL.createObjectURL(image)
+                }
                 alt={`Uploaded image`}
                 className="size-full object-cover object-center rounded"
               />
@@ -165,7 +193,7 @@ export const AddClientForm = () => {
           </div>
           <Button asChild variant={"secondary"}>
             <label>
-              Добавить фотографию
+              Изменить фотографию
               <input
                 id="client-avatar"
                 type="file"
@@ -180,10 +208,10 @@ export const AddClientForm = () => {
         <Button
           className="w-full"
           size={"lg"}
-          disabled={isAddPending || isUploadPending}
+          disabled={isUpdatePending || isUploadPending}
           type="submit"
         >
-          Добавить клиента
+          Обновить клиента
         </Button>
       </form>
     </Form>

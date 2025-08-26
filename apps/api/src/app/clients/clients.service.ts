@@ -1,9 +1,5 @@
-import {
-  paginate,
-  PaginationQueryDto,
-  SortOrder,
-} from "@apartment-crm/helpers";
-import { WebSocketEvents } from "@apartment-crm/types";
+import { paginate, PaginationQueryDto } from "@apartment-crm/helpers";
+import { SortOrder, WebSocketEvents } from "@apartment-crm/types";
 import {
   BadRequestException,
   Injectable,
@@ -58,6 +54,7 @@ export class ClientsService {
                 ? "asc"
                 : undefined,
           },
+          include: ClientIncludeConfig,
         },
       );
       return data;
@@ -179,9 +176,24 @@ export class ClientsService {
     }
   }
 
-  remove(clientId: string, userId: string) {
+  async seeApartment(clientId: string, apartmentId: string) {
     try {
-      const client = this.dbService.client.delete({
+      const view = await this.dbService.clientApartmentView.create({
+        data: {
+          clientId,
+          apartmentId,
+          seen: true,
+        },
+      });
+      return view;
+    } catch (error) {
+      throw new BadRequestException("Не удалось добавить просмотр объекту!");
+    }
+  }
+
+  async remove(clientId: string, userId: string) {
+    try {
+      const client = await this.dbService.client.delete({
         where: { id: clientId, userId },
         include: ClientIncludeConfig,
       });
