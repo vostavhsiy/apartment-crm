@@ -51,7 +51,9 @@ export interface ResetPasswordResponse {
   ok: boolean;
 }
 
-export interface UpdateUserDto extends Omit<SignUpDto, "password"> {}
+export interface UpdateUserDto extends Partial<Omit<SignUpDto, "password">> {
+  avatarUrl?: string;
+}
 
 export interface UpdateUserResponse extends UserWithRelations {}
 
@@ -123,7 +125,7 @@ export class UserApi {
   }
 
   static async update(id: string, data: UpdateUserDto) {
-    const res = await authInstance.put<UpdateUserResponse>(
+    const res = await authInstance.patch<UpdateUserResponse>(
       ROUTES.users.update(id).path,
       data,
     );

@@ -56,8 +56,13 @@ export const ProfileButton: FC<Props> = ({ profile }) => {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="max-w-3xs">
-        <DropdownMenuLabel className="text-center line-clamp-1">
-          {profile.name || profile.email}
+        <DropdownMenuLabel className="flex flex-col text-center">
+          <span className="truncate">{profile.email}</span>
+          {profile.name && (
+            <span className="mt-1 truncate font-normal text-primary/70">
+              {profile.name}
+            </span>
+          )}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild className="flex items-center">
