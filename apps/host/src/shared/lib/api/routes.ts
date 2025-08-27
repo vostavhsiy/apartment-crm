@@ -1,3 +1,5 @@
+import { settings } from "../env";
+
 export const ROUTES = {
   auth: {
     signUp: {
@@ -101,6 +103,15 @@ export const ROUTES = {
     create: {
       path: "/api/notifications",
     },
+    readForUser: {
+      path: "/api/notifications",
+    },
+    readOneForUser: (id: string) => ({
+      path: `/api/notifications/${id}`,
+    }),
+    deleteForUser: {
+      path: "/api/notifications",
+    },
     delete: (id: string) => ({
       path: `/api/notifications/${id}`,
     }),
@@ -124,4 +135,5 @@ export const ROUTES = {
       path: `/api/users/${id}`,
     }),
   },
+  ws: settings.NEXT_PUBLIC_API_URL + "/ws",
 };

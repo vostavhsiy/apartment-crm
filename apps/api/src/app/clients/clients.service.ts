@@ -151,7 +151,7 @@ export class ClientsService {
           });
         try {
           await this.notificationsService.create(userId, {
-            title: apartmentClientRelation.apartment.title,
+            title: `Клиенту понравилась квартира "${apartmentClientRelation.apartment.title}"`,
             body: `Клиенту "${client.name}" понравилась квартира "${apartmentClientRelation.apartment.title}"`,
             link: `${CLIENT_URL}/ap/${apartmentId}`,
           });

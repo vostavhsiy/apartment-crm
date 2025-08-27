@@ -1,6 +1,9 @@
 "use client";
 
-import { NOTIFICATION_QUERY_KEYS } from "@/entities/notification/api/hooks";
+import {
+  NOTIFICATION_QUERY_KEYS,
+  USER_QUERY_KEYS,
+} from "@/shared/lib/api/query-keys";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
@@ -11,10 +14,6 @@ import {
   UpdateUserDto,
   UserApi,
 } from "./api";
-
-const USER_QUERY_KEYS = {
-  profile: ["user", "profile"],
-};
 
 export function useSignUp() {
   const queryClient = useQueryClient();

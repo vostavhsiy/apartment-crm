@@ -8,6 +8,7 @@ export interface SidebarItem {
   icon?: ForwardRefExoticComponent<
     Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
   >;
+  notifications?: number;
 }
 export interface SidebarGroupItem {
   title: string;

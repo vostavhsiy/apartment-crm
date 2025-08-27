@@ -4,6 +4,7 @@ import { AuthRoutes } from "@/shared/config/routes/routes.auth";
 import { PublicRoutes } from "@/shared/config/routes/routes.public";
 import { useIsMobile } from "@/shared/lib/hooks/use-mobile";
 import { SidebarGroupItem } from "@/shared/lib/types";
+import { Badge } from "@/shared/ui/badge";
 import {
   Sidebar,
   SidebarContent,
@@ -65,6 +66,16 @@ export const BaseSidebar: FC<Props> = ({ sidebarGroups }) => {
                           <Link href={item.href}>
                             {item.icon && <item.icon />}
                             <span>{item.title}</span>
+                            {!!item.notifications && (
+                              <Badge
+                                className="h-5 min-w-5 rounden-full px-1 font-mono tabular-nums"
+                                variant="destructive"
+                              >
+                                {item.notifications < 99
+                                  ? item.notifications
+                                  : "99+"}
+                              </Badge>
+                            )}
                           </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>

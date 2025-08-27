@@ -13,6 +13,7 @@ import { Button } from "@/shared/ui/button";
 import { Skeleton } from "@/shared/ui/skeleton";
 import {
   Bell,
+  BellDot,
   ChartArea,
   House,
   MessageCircle,
@@ -116,7 +117,8 @@ export const DashboardPagesLayout: FC<Props> = ({ children }) => {
             {
               title: "Уведомления",
               href: AuthRoutes.NOTIFICATIONS,
-              icon: Bell,
+              icon: !profile?.notifications.length ? Bell : BellDot,
+              notifications: profile?.notifications.length,
             },
             {
               title: "Обратная связь",

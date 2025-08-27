@@ -1,5 +1,6 @@
 "use client";
 
+import { COLLECTION_QUERY_KEYS } from "@/shared/lib/api/query-keys";
 import { useInfiniteScroll } from "@/shared/lib/hooks/use-infinity-scroll";
 import { PaginationQueryDto } from "@apartment-crm/helpers";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -10,11 +11,6 @@ import {
   FindCollectionsForUserResponse,
   UpdateCollectionDto,
 } from "./api";
-
-export const COLLECTION_QUERY_KEYS = {
-  collections: ["collections", "list"],
-  collection: (id: string) => ["collections", "item", id],
-};
 
 export function useCreateCollection() {
   const queryClient = useQueryClient();

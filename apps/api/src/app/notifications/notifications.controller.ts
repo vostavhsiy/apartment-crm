@@ -5,6 +5,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Req,
   UnauthorizedException,
@@ -37,10 +38,35 @@ export class NotificationsController {
     return this.notificationsService.findForUser(userId, pagination);
   }
 
+  @Auth()
+  @Patch()
+  readForUser(@Req() req: any) {
+    const userId = req?.user?.sub;
+    if (!userId) throw new UnauthorizedException();
+    return this.notificationsService.readForUser(userId);
+  }
+
+  @Auth()
+  @Patch(":id")
+  readOneForUser(@Param("id") id: string, @Req() req: any) {
+    const userId = req?.user?.sub;
+    if (!userId) throw new UnauthorizedException();
+    return this.notificationsService.readOneForUser(id, userId);
+  }
+
+  @Auth()
+  @Delete("")
+  removeForUser(@Req() req: any) {
+    const userId = req?.user?.sub;
+    if (!userId) throw new UnauthorizedException();
+    return this.notificationsService.removeForUser(userId);
+  }
+
+  @Auth()
   @Delete(":id")
   remove(@Param("id") id: string, @Req() req: any) {
     const userId = req?.user?.sub;
     if (!userId) throw new UnauthorizedException();
-    return this.notificationsService.remove(userId, id);
+    return this.notificationsService.remove(id, userId);
   }
 }

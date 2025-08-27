@@ -112,5 +112,41 @@ export function getMMSSfromSeconds(seconds: number) {
   return `${formattedMinutes}:${formattedSeconds}`;
 }
 
+export function getRelativeTime(inputDate: Date) {
+  const now = new Date();
+  const date = new Date(inputDate);
+  const diffTime = Math.abs(now.getTime() - date.getTime());
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays > 3) {
+    return date.toLocaleDateString("ru-RU");
+  }
+
+  const diffMinutes = Math.floor(diffTime / (1000 * 60));
+  const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+
+  if (diffMinutes < 1) {
+    return "только что";
+  } else if (diffMinutes < 60) {
+    const minutes = diffMinutes;
+    let minuteWord = "минут";
+    if (minutes === 1) minuteWord = "минуту";
+    else if (minutes >= 2 && minutes <= 4) minuteWord = "минуты";
+    return `${minutes} ${minuteWord} назад`;
+  } else if (diffHours < 24) {
+    const hours = diffHours;
+    let hourWord = "часов";
+    if (hours === 1) hourWord = "час";
+    else if (hours >= 2 && hours <= 4) hourWord = "часа";
+    return `${hours} ${hourWord} назад`;
+  } else {
+    const days = diffDays;
+    let dayWord = "дней";
+    if (days === 1) dayWord = "день";
+    else if (days >= 2 && days <= 4) dayWord = "дня";
+    return `${days} ${dayWord} назад`;
+  }
+}
+
 export const TIPTAP_EMPTY_DOC =
   '{"type":"doc","content":[{"type":"paragraph","attrs":{"textAlign":null}}]}';

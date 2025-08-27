@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { FC, ReactNode, useState } from "react";
 
 import { GlobalPendingProvider } from "./global-pending.provider";
+import { NotificationsProvider } from "./notifications.provider";
 import { ThemeProvider } from "./theme.provider";
 
 interface Props {
@@ -19,6 +20,7 @@ export const Providers: FC<Props> = ({ children }) => {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider attribute="class" defaultTheme="light">
         <GlobalPendingProvider>{children}</GlobalPendingProvider>
+        <NotificationsProvider />
         <Toaster />
       </ThemeProvider>
     </QueryClientProvider>

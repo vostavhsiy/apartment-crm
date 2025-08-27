@@ -35,7 +35,6 @@ export const ApartmentToCollectionDialog: FC<Props> = ({ apartment }) => {
   } = useFindCollectionsForUser({
     search: debounsedSearch,
   });
-  console.log(collectionData?.pages, collectionData?.pages.flat().length);
 
   return (
     <Dialog>

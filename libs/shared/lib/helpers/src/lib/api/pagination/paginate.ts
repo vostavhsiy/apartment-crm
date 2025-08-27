@@ -1,5 +1,6 @@
 // src/common/utils/paginate-prisma.ts
-import { SortOrder } from '@apartment-crm/types'
+import { SortOrder } from "@apartment-crm/types";
+
 import { PaginatedResult } from "./paginated-result.interface";
 import { PaginationQueryDto } from "./pagination-query.dto";
 
@@ -23,11 +24,11 @@ export async function paginate<T, F = object>(
       skip: offset,
       take: limit,
       orderBy: {
-        ...(findManyArgs as any)?.orderBy,
         createdAt:
           pagination.sortOrder === SortOrder.CREATED_AT ? "asc" : undefined,
         updatedAt:
           pagination.sortOrder === SortOrder.UPDATED_AT ? "asc" : undefined,
+        ...(findManyArgs as any)?.orderBy,
       },
     }),
     model.count({ where: (findManyArgs as any)?.where || {} }),
@@ -40,6 +41,7 @@ export async function paginate<T, F = object>(
     data,
     currentPage,
     totalPages,
+    count: total,
     perPage: limit,
     hasMore,
   };

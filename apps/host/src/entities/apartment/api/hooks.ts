@@ -1,6 +1,9 @@
 "use client";
 
-import { COLLECTION_QUERY_KEYS } from "@/entities/collection/api/hooks";
+import {
+  APARTMENT_QUERY_KEYS,
+  COLLECTION_QUERY_KEYS,
+} from "@/shared/lib/api/query-keys";
 import { PaginationQueryDto } from "@apartment-crm/helpers";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -10,11 +13,6 @@ import {
   ToggleApartmentToCollectionDto,
   UpdateApartmentDto,
 } from "./api";
-
-export const APARTMENT_QUERY_KEYS = {
-  apartments: ["apartments", "list"],
-  apartment: (id: string) => ["apartments", "item", id],
-};
 
 export function useCreateApartment() {
   const queryClient = useQueryClient();

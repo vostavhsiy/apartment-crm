@@ -32,7 +32,8 @@ export class WebsocketsGateway {
   }
 
   async handleConnection(client: Socket) {
-    const userId = client.handshake.auth.user?.id;
+    const userId = client.handshake.auth.user?.sub;
+
     if (!userId) {
       client.disconnect(true);
       return;
@@ -65,7 +66,7 @@ export class WebsocketsGateway {
     );
 
     if (socketId) {
-      const socket = this.server.sockets.sockets.get(socketId);
+      const socket = await this.getSocketById(socketId);
       if (socket) {
         socket.emit(event, data);
       }
@@ -80,5 +81,14 @@ export class WebsocketsGateway {
 
   async broadcast(event: WebSocketEvents, data: any) {
     this.server.emit(event, data);
+  }
+
+  async getSocketById(socketId: string) {
+    try {
+      const sockets = await this.server.fetchSockets();
+      return sockets.find((socket) => socket.id === socketId);
+    } catch (error) {
+      return null;
+    }
   }
 }
