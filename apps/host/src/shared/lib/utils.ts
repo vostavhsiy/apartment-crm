@@ -129,21 +129,15 @@ export function getRelativeTime(inputDate: Date) {
     return "только что";
   } else if (diffMinutes < 60) {
     const minutes = diffMinutes;
-    let minuteWord = "минут";
-    if (minutes === 1) minuteWord = "минуту";
-    else if (minutes >= 2 && minutes <= 4) minuteWord = "минуты";
+    let minuteWord = "мин";
     return `${minutes} ${minuteWord} назад`;
   } else if (diffHours < 24) {
     const hours = diffHours;
-    let hourWord = "часов";
-    if (hours === 1) hourWord = "час";
-    else if (hours >= 2 && hours <= 4) hourWord = "часа";
+    let hourWord = "ч";
     return `${hours} ${hourWord} назад`;
   } else {
     const days = diffDays;
-    let dayWord = "дней";
-    if (days === 1) dayWord = "день";
-    else if (days >= 2 && days <= 4) dayWord = "дня";
+    let dayWord = "д";
     return `${days} ${dayWord} назад`;
   }
 }
