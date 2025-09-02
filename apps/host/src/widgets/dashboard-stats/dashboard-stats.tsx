@@ -45,9 +45,9 @@ export const DashboardStats = () => {
   if (pending) return <Spinner />;
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full p-6 max-sm:px-0">
       <div className="max-w-7xl mx-auto space-y-8 w-full">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-5 max-sm:flex-col max-sm:text-center">
           <div>
             <h1 className="text-3xl font-bold text-foreground">
               Панель управления
@@ -305,19 +305,19 @@ export const DashboardStats = () => {
                 recentApartments.map((apartment) => (
                   <div
                     key={apartment.id}
-                    className="flex items-center justify-between p-4 rounded-lg bg-muted/50 gap-2"
+                    className="flex max-sm:flex-col items-center justify-between p-4 rounded-lg bg-muted/50 gap-2"
                   >
-                    <div className="space-y-1 max-w-4/5">
+                    <div className="space-y-1 max-w-full sm:max-w-4/5">
                       <Link
                         href={AuthRoutes.DASHBOARD_APARTMENT(apartment.id)}
                         className="block font-medium text-card-foreground truncate"
                       >
                         {apartment.title}
                       </Link>
-                      <span className="text-sm text-muted-foreground truncate">
+                      <span className="block text-sm text-muted-foreground truncate">
                         {apartment.subtitle}
                       </span>
-                      <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                      <div className="flex max-sm:flex-col items-center gap-2 sm:gap-4 text-xs text-muted-foreground">
                         <span className="truncate max-w-42">
                           {apartment.address}
                         </span>
@@ -355,11 +355,11 @@ export const DashboardStats = () => {
                   recentCollections.map((collection) => (
                     <div
                       key={collection.id}
-                      className="flex items-center justify-between p-3 rounded-lg bg-muted/50 gap-3"
+                      className="flex max-sm:flex-col items-center justify-between p-3 rounded-lg bg-muted/50 gap-3"
                     >
                       <Link
                         href={AuthRoutes.DASHBOARD_COLLECTION(collection.id)}
-                        className="flex items-center gap-3 max-w-4/5"
+                        className="flex items-center gap-3 max-w-full sm:max-w-4/5"
                       >
                         <FolderOpen className="w-4 h-4 text-primary shrink-0" />
                         <span className="font-medium text-card-foreground truncate">
