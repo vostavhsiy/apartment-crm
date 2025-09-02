@@ -63,7 +63,9 @@ export const ApartmentOverview: FC<Props> = ({
       )}
       {apartment.files?.length > 0 && <ApartmentImages apartment={apartment} />}
       {apartment.price && <ApartmentPrice apartment={apartment} />}
-      {apartment.features && <AparmentFeatures apartment={apartment} />}
+      {apartment.features?.length > 0 && (
+        <AparmentFeatures apartment={apartment} />
+      )}
       {apartment.address && <ApartmentMap apartment={apartment} />}
       {apartment.description && <ApartmentDescription apartment={apartment} />}
       {client && (

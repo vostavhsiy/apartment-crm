@@ -37,7 +37,9 @@ export const AparmentFeatures: FC<Props> = ({ apartment }) => {
           ))}
         </ul>
       ) : (
-        <div className="text-muted-foreground">No features available</div>
+        <div className="text-muted-foreground mt-2">
+          Нет доступных характеристик.
+        </div>
       )}
     </div>
   );
