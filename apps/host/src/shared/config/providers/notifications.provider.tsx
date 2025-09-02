@@ -30,6 +30,9 @@ export const NotificationsProvider = () => {
           queryKey: USER_QUERY_KEYS.profile,
         });
         queryClient.invalidateQueries({
+          queryKey: USER_QUERY_KEYS.stats,
+        });
+        queryClient.invalidateQueries({
           queryKey: APARTMENT_QUERY_KEYS.apartments,
         });
         queryClient.invalidateQueries({

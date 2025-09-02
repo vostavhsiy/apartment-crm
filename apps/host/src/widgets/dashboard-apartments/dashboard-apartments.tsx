@@ -1,6 +1,6 @@
 "use client";
 
-import { useFindApartmentsForUser } from "@/entities/apartment/api/hooks";
+import { useFindApartmentsForUserPerPage } from "@/entities/apartment/api/hooks";
 import {
   ApartmentRowSheet,
   ApartmentRowSheetSkeleton,
@@ -16,7 +16,8 @@ import Link from "next/link";
 export const DashboardApartments = () => {
   const { params } = usePaginateParams();
 
-  const { data: apartmentsData, isPending } = useFindApartmentsForUser(params);
+  const { data: apartmentsData, isPending } =
+    useFindApartmentsForUserPerPage(params);
 
   return (
     <div className="w-full">

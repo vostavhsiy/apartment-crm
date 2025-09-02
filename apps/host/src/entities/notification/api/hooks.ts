@@ -26,6 +26,9 @@ export function useCreateNotification() {
       queryClient.invalidateQueries({
         queryKey: USER_QUERY_KEYS.profile,
       });
+      queryClient.invalidateQueries({
+        queryKey: USER_QUERY_KEYS.stats,
+      });
     },
   });
 }
@@ -57,6 +60,9 @@ export function useReadNotifications() {
       queryClient.invalidateQueries({
         queryKey: USER_QUERY_KEYS.profile,
       });
+      queryClient.invalidateQueries({
+        queryKey: USER_QUERY_KEYS.stats,
+      });
     },
   });
 }
@@ -71,6 +77,9 @@ export function useReadNotification() {
       });
       queryClient.invalidateQueries({
         queryKey: USER_QUERY_KEYS.profile,
+      });
+      queryClient.invalidateQueries({
+        queryKey: USER_QUERY_KEYS.stats,
       });
     },
   });
@@ -87,6 +96,9 @@ export function useDeleteNotifications() {
       queryClient.invalidateQueries({
         queryKey: USER_QUERY_KEYS.profile,
       });
+      queryClient.invalidateQueries({
+        queryKey: USER_QUERY_KEYS.stats,
+      });
     },
   });
 }
@@ -101,6 +113,9 @@ export function useDeleteNotification() {
       });
       queryClient.invalidateQueries({
         queryKey: USER_QUERY_KEYS.profile,
+      });
+      queryClient.invalidateQueries({
+        queryKey: USER_QUERY_KEYS.stats,
       });
     },
   });

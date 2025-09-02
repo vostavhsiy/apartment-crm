@@ -21,6 +21,7 @@ export function useSignUp() {
     mutationFn: (data: SignUpDto) => UserApi.signUp(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.profile });
+      queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.stats });
       queryClient.invalidateQueries({
         queryKey: NOTIFICATION_QUERY_KEYS.notifications,
       });
@@ -35,6 +36,9 @@ export function useSignIn() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.profile });
       queryClient.invalidateQueries({
+        queryKey: USER_QUERY_KEYS.stats,
+      });
+      queryClient.invalidateQueries({
         queryKey: NOTIFICATION_QUERY_KEYS.notifications,
       });
     },
@@ -47,6 +51,9 @@ export function useSignOut() {
     mutationFn: () => UserApi.signOut(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.profile });
+      queryClient.invalidateQueries({
+        queryKey: USER_QUERY_KEYS.stats,
+      });
       queryClient.invalidateQueries({
         queryKey: NOTIFICATION_QUERY_KEYS.notifications,
       });
@@ -64,6 +71,14 @@ export function useProfile(options = {}) {
   return useQuery({
     queryKey: USER_QUERY_KEYS.profile,
     queryFn: () => UserApi.getProfile(),
+    ...options,
+  });
+}
+
+export function useGetUserStats(options = {}) {
+  return useQuery({
+    queryKey: USER_QUERY_KEYS.stats,
+    queryFn: () => UserApi.getStats(),
     ...options,
   });
 }
@@ -94,6 +109,9 @@ export function useUpdateUser() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.profile });
       queryClient.invalidateQueries({
+        queryKey: USER_QUERY_KEYS.stats,
+      });
+      queryClient.invalidateQueries({
         queryKey: NOTIFICATION_QUERY_KEYS.notifications,
       });
     },
@@ -108,6 +126,9 @@ export function useToggleBan() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.profile });
       queryClient.invalidateQueries({
+        queryKey: USER_QUERY_KEYS.stats,
+      });
+      queryClient.invalidateQueries({
         queryKey: NOTIFICATION_QUERY_KEYS.notifications,
       });
     },
@@ -120,6 +141,9 @@ export function useDeleteUser() {
     mutationFn: (id: string) => UserApi.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.profile });
+      queryClient.invalidateQueries({
+        queryKey: USER_QUERY_KEYS.stats,
+      });
       queryClient.invalidateQueries({
         queryKey: NOTIFICATION_QUERY_KEYS.notifications,
       });

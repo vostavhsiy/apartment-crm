@@ -27,7 +27,7 @@ export function useCreateApartment() {
   });
 }
 
-export function useFindApartmentsForUser(
+export function useFindApartmentsForUserPerPage(
   dto: Partial<PaginationQueryDto>,
   options = {},
 ) {

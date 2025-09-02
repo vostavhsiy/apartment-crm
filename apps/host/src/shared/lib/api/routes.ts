@@ -17,6 +17,9 @@ export const ROUTES = {
     getProfile: {
       path: "/api/auth/profile",
     },
+    getStats: {
+      path: `/api/apartments/stats`,
+    },
     sendActivationMail: {
       path: "/api/auth/activation-mail",
     },

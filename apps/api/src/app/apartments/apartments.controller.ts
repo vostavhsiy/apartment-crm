@@ -47,7 +47,15 @@ export class ApartmentsController {
     return this.apartmentsService.findForUser(userId, pagination);
   }
 
-  @Get("/for-collection")
+  @Auth()
+  @Get("stats")
+  findStatsForUser(@Req() req: any) {
+    const userId = req?.user?.sub;
+    if (!userId) throw new UnauthorizedException();
+    return this.apartmentsService.findStatsForUser(userId);
+  }
+
+  @Get("for-collection")
   findForCollection(
     @Query("collectionId") collectionId: string,
     @Pagination() pagination: PaginationQueryDto,

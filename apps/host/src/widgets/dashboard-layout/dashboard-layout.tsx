@@ -117,8 +117,8 @@ export const DashboardPagesLayout: FC<Props> = ({ children }) => {
             {
               title: "Уведомления",
               href: AuthRoutes.NOTIFICATIONS,
-              icon: !profile?.notifications.length ? Bell : BellDot,
-              notifications: profile?.notifications.length,
+              icon: !profile?.notifications?.length ? Bell : BellDot,
+              notifications: profile?.notifications?.length || 0,
             },
             {
               title: "Обратная связь",

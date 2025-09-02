@@ -25,9 +25,9 @@ export async function paginate<T, F = object>(
       take: limit,
       orderBy: {
         createdAt:
-          pagination.sortOrder === SortOrder.CREATED_AT ? "asc" : undefined,
+          pagination.sortOrder === SortOrder.CREATED_AT ? "desc" : undefined,
         updatedAt:
-          pagination.sortOrder === SortOrder.UPDATED_AT ? "asc" : undefined,
+          pagination.sortOrder === SortOrder.UPDATED_AT ? "desc" : undefined,
         ...(findManyArgs as any)?.orderBy,
       },
     }),

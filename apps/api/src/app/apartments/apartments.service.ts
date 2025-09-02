@@ -108,6 +108,33 @@ export class ApartmentsService {
     }
   }
 
+  async findStatsForUser(userId: string) {
+    try {
+      const [
+        publishedCount,
+        totalViews,
+        totalLikes,
+        mostViewedApartment,
+        mostLikedApartment,
+      ] = await Promise.all([
+        this.findPublishedCountForUser(userId),
+        this.findTotalViewsForUser(userId),
+        this.findTotalLikesForUser(userId),
+        this.findMostViewedApartment(userId),
+        this.findMostLikedApartment(userId),
+      ]);
+      return {
+        publishedCount,
+        totalViews,
+        totalLikes,
+        mostViewedApartment,
+        mostLikedApartment,
+      };
+    } catch (error) {
+      throw new NotFoundException("Статистика не найдена!");
+    }
+  }
+
   async findForCollection(
     collectionId: string,
     paginationQuery: PaginationQueryDto,
@@ -269,6 +296,88 @@ export class ApartmentsService {
       return apartment;
     } catch (error) {
       throw new BadRequestException("Не удалось удалить квартиру!");
+    }
+  }
+
+  async findPublishedCountForUser(userId: string) {
+    try {
+      const count = await this.dbService.apartment.count({
+        where: {
+          userId,
+          published: true,
+        },
+      });
+      return count;
+    } catch (error) {
+      throw new NotFoundException("Квартиры не найдены!");
+    }
+  }
+
+  async findTotalViewsForUser(userId: string) {
+    try {
+      const count = await this.dbService.clientApartmentView.count({
+        where: {
+          apartment: {
+            userId,
+          },
+        },
+      });
+      return count;
+    } catch (error) {
+      throw new NotFoundException("Квартиры не найдены!");
+    }
+  }
+
+  async findTotalLikesForUser(userId: string) {
+    try {
+      const count = await this.dbService.apartmentClient.count({
+        where: {
+          apartment: {
+            userId,
+          },
+        },
+      });
+      return count;
+    } catch (error) {
+      throw new NotFoundException("Квартиры не найдены!");
+    }
+  }
+
+  async findMostViewedApartment(userId: string) {
+    try {
+      const apartment = await this.dbService.apartment.findFirst({
+        where: {
+          userId,
+        },
+        orderBy: {
+          clientViews: {
+            _count: "desc",
+          },
+        },
+        include: ApartmentIncludeConfig,
+      });
+      return apartment;
+    } catch (error) {
+      throw new NotFoundException("Квартиры не найдены!");
+    }
+  }
+
+  async findMostLikedApartment(userId: string) {
+    try {
+      const apartment = await this.dbService.apartment.findFirst({
+        where: {
+          userId,
+        },
+        orderBy: {
+          clientsLikes: {
+            _count: "desc",
+          },
+        },
+        include: ApartmentIncludeConfig,
+      });
+      return apartment;
+    } catch (error) {
+      throw new NotFoundException("Квартиры не найдены!");
     }
   }
 

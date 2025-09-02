@@ -1,3 +1,4 @@
+import { ApartmentWithRelations } from "@/entities/apartment/model/apartment-with-relations";
 import { ROUTES } from "@/shared/lib/api/routes";
 import { authInstance, publicInstance } from "@/shared/lib/axios";
 
@@ -32,6 +33,13 @@ export interface RefreshResponse {
 }
 
 export interface ProfileResponse extends UserWithRelations {}
+export interface GetStatsResponse {
+  publishedCount: number;
+  totalViews: number;
+  totalLikes: number;
+  mostViewedApartment: ApartmentWithRelations;
+  mostLikedApartment: ApartmentWithRelations;
+}
 
 export interface SendActivationEmailResponse {
   message?: string;
@@ -98,6 +106,13 @@ export class UserApi {
   static async getProfile() {
     const res = await authInstance.get<ProfileResponse>(
       ROUTES.auth.getProfile.path,
+    );
+    return res.data;
+  }
+
+  static async getStats() {
+    const res = await authInstance.get<GetStatsResponse>(
+      ROUTES.auth.getStats.path,
     );
     return res.data;
   }
