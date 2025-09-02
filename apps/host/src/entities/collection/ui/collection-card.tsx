@@ -24,9 +24,9 @@ export const CollectionCard = ({ collection }: Props) => {
           </CardTitle>
           {collection.apartmentsLinks.length}{" "}
           {wordEnding(collection.apartmentsLinks.length, [
-            "квартира",
-            "квартиры",
-            "квартир",
+            "объект",
+            "объекта",
+            "объектов",
           ])}
         </div>
         <div className="shrink-0 w-max flex flex-col lg:flex-row items-center gap-2">

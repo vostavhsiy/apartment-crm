@@ -76,7 +76,7 @@ export class ApartmentsService {
       });
       return apartment;
     } catch (error) {
-      throw new BadRequestException("Не удалось добавить квартиру!");
+      throw new BadRequestException("Не удалось добавить объект!");
     }
   }
 
@@ -104,7 +104,7 @@ export class ApartmentsService {
       );
       return data;
     } catch (error) {
-      throw new NotFoundException("Квартиры не найдены!");
+      throw new NotFoundException("Объекты не найдены!");
     }
   }
 
@@ -166,7 +166,7 @@ export class ApartmentsService {
       );
       return data;
     } catch (error) {
-      throw new NotFoundException("Квартиры не найдены!");
+      throw new NotFoundException("Объекты не найдены!");
     }
   }
 
@@ -176,10 +176,10 @@ export class ApartmentsService {
         where: { id },
         include: ApartmentIncludeConfig,
       });
-      if (!apartment) throw new NotFoundException("Квартира не найдена!");
+      if (!apartment) throw new NotFoundException("Объект не найден!");
       return apartment;
     } catch (error) {
-      throw new NotFoundException("Квартира не найдена!");
+      throw new NotFoundException("Объект не найден!");
     }
   }
 
@@ -234,7 +234,7 @@ export class ApartmentsService {
       });
       return apartment;
     } catch (error) {
-      throw new BadRequestException("Не удалось обновить квартиру!");
+      throw new BadRequestException("Не удалось обновить объект!");
     }
   }
 
@@ -270,8 +270,8 @@ export class ApartmentsService {
       return apartment;
     } catch (error) {
       const message = connect
-        ? "Не удалось добавить квартиру в подборку!"
-        : "Не удалось удалить квартиру из подборки!";
+        ? "Не удалось добавить объект в подборку!"
+        : "Не удалось удалить объект из подборки!";
       throw new BadRequestException(message);
     }
   }
@@ -295,7 +295,7 @@ export class ApartmentsService {
       });
       return apartment;
     } catch (error) {
-      throw new BadRequestException("Не удалось удалить квартиру!");
+      throw new BadRequestException("Не удалось удалить объект!");
     }
   }
 
@@ -309,7 +309,7 @@ export class ApartmentsService {
       });
       return count;
     } catch (error) {
-      throw new NotFoundException("Квартиры не найдены!");
+      throw new NotFoundException("Объекты не найдены!");
     }
   }
 
@@ -324,7 +324,7 @@ export class ApartmentsService {
       });
       return count;
     } catch (error) {
-      throw new NotFoundException("Квартиры не найдены!");
+      throw new NotFoundException("Объекты не найдены!");
     }
   }
 
@@ -339,7 +339,7 @@ export class ApartmentsService {
       });
       return count;
     } catch (error) {
-      throw new NotFoundException("Квартиры не найдены!");
+      throw new NotFoundException("Объекты не найдены!");
     }
   }
 
@@ -358,7 +358,7 @@ export class ApartmentsService {
       });
       return apartment;
     } catch (error) {
-      throw new NotFoundException("Квартиры не найдены!");
+      throw new NotFoundException("Объекты не найдены!");
     }
   }
 
@@ -377,7 +377,7 @@ export class ApartmentsService {
       });
       return apartment;
     } catch (error) {
-      throw new NotFoundException("Квартиры не найдены!");
+      throw new NotFoundException("Объекты не найдены!");
     }
   }
 
@@ -403,7 +403,7 @@ export class ApartmentsService {
             text: "Извлеки информацию о жилье из текста:\n" + urlPageBlob,
           },
         ],
-        `Ты - парсер, тебе нужно извлечь информацию о жилье - title (Название, которое указано в тексте), subtitle (Дополнительная информация в тексте к названию), description (Описание из текста, приведенное к виду ht,html разметки для rich editor - обязательно несколько абзацев текста,если возможно, с маркированным списком), address (Адрес из текста), price (Цена квартиры из текста, сразу с валютой, в формате - <цена> <валюта>), features (Характеристики квартиры, вернуть в формате массива объектов {name: <Название характеристики>, value:<Значение характеристики>}).
+        `Ты - парсер, тебе нужно извлечь информацию о жилье - title (Название, которое указано в тексте), subtitle (Дополнительная информация в тексте к названию), description (Описание из текста, приведенное к виду ht,html разметки для rich editor - обязательно несколько абзацев текста,если возможно, с маркированным списком), address (Адрес из текста), price (Цена недвижимости из текста, сразу с валютой, в формате - <цена> <валюта>), features (Характеристики недвижимости, вернуть в формате массива объектов {name: <Название характеристики>, value:<Значение характеристики>}).
         Ты должен вернуть только JSON объект с указанными полями, чтобы с этим объектом можно было вызвать JSON.parse. Без каких-либо лишних символов и форматирования, ответ должен начинаться с { и заканчиваться на }.
         `,
       );
@@ -425,7 +425,7 @@ export class ApartmentsService {
       };
     } catch (error) {
       throw new BadRequestException(
-        "Не удалось получить информацию о квартире!",
+        "Не удалось получить информацию о объекте!",
       );
     }
   }

@@ -14,8 +14,8 @@ import { Skeleton } from "@/shared/ui/skeleton";
 import {
   Bell,
   BellDot,
+  Building2,
   ChartArea,
-  House,
   MessageCircle,
   Rows4,
   SquarePlus,
@@ -95,9 +95,9 @@ export const DashboardPagesLayout: FC<Props> = ({ children }) => {
               icon: Rows4,
             },
             {
-              title: "Квартиры",
+              title: "Объекты",
               href: AuthRoutes.APARTMENTS,
-              icon: House,
+              icon: Building2,
             },
             {
               title: "Клиенты",

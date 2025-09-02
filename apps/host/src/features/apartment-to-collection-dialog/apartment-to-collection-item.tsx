@@ -20,8 +20,6 @@ export const ApartmentToCollectionItem: FC<Props> = ({
   const { mutate: toggleApartmentToCollection, isPending: isTogglePending } =
     useToggleApartmentToCollection();
 
-  console.log(apartment.collectionsLinks, collection);
-
   const isConnected = apartment.collectionsLinks.some(
     (link) => link.collectionId === collection.id,
   );

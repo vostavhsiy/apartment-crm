@@ -87,7 +87,7 @@ export const ProfileButton: FC<Props> = ({ profile }) => {
         <DropdownMenuItem asChild>
           <Link href={AuthRoutes.APARTMENTS}>
             <House />
-            <span>Квартиры</span>
+            <span>Объекты</span>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>

@@ -198,14 +198,14 @@ export const EditApartmentForm: FC<Props> = ({ apartmentId }) => {
             form.reset();
             setImages([]);
             setFeatures([]);
-            toast.success("Квартира успешно обновлена!");
+            toast.success("Объект успешно обновлен!");
             router.refresh();
           } else {
-            toast.error("Ошибка при обновлении квартиры! Попробуйте еще раз!");
+            toast.error("Ошибка при обновлении объекта! Попробуйте еще раз!");
           }
         },
         onError() {
-          toast.error("Ошибка при добавлении квартиры! Попробуйте еще раз!");
+          toast.error("Ошибка при обновлении объекта! Попробуйте еще раз!");
         },
       },
     );
@@ -259,10 +259,10 @@ export const EditApartmentForm: FC<Props> = ({ apartmentId }) => {
     deleteApartment(apartment.id, {
       onSuccess() {
         router.push(AuthRoutes.APARTMENTS);
-        toast.success("Квартира успешно удалена!");
+        toast.success("Объект успешно удален!");
       },
       onError() {
-        toast.error("Ошибка при удалении квартиры");
+        toast.error("Ошибка при удалении объекта");
       },
     });
   }
@@ -347,7 +347,7 @@ export const EditApartmentForm: FC<Props> = ({ apartmentId }) => {
           </Popover>
         )}
         <Heading className="text-2xl font-bold text-center">
-          Редактировать квартиру
+          Редактировать объект
         </Heading>
         <FormField
           control={form.control}
@@ -560,7 +560,7 @@ export const EditApartmentForm: FC<Props> = ({ apartmentId }) => {
           disabled={isUpdatePending || isUploadPending || isDeletePending}
           type="submit"
         >
-          Обновить квартиру
+          Обновить объект
         </Button>
         <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
           <DialogTrigger asChild>
@@ -570,12 +570,12 @@ export const EditApartmentForm: FC<Props> = ({ apartmentId }) => {
               disabled={isDeletePending}
               variant={"destructive"}
             >
-              Удалить квартиру
+              Удалить объект
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Вы точно хотите удалить квартиру?</DialogTitle>
+              <DialogTitle>Вы точно хотите удалить объект?</DialogTitle>
             </DialogHeader>
             <DialogFooter>
               <DialogClose asChild>

@@ -142,14 +142,14 @@ export const AddApartmentForm = () => {
             form.reset();
             setImages([]);
             setFeatures([]);
-            toast.success("Квартира успешно добавлена!");
+            toast.success("Объект успешно добавлен!");
             router.push(AuthRoutes.APARTMENTS);
           } else {
-            toast.error("Ошибка при добавлении квартиры! Попробуйте еще раз!");
+            toast.error("Ошибка при добавлении объекта! Попробуйте еще раз!");
           }
         },
         onError() {
-          toast.error("Ошибка при добавлении квартиры! Попробуйте еще раз!");
+          toast.error("Ошибка при добавлении объекта! Попробуйте еще раз!");
         },
       },
     );
@@ -231,7 +231,7 @@ export const AddApartmentForm = () => {
           </Popover>
         )}
         <Heading className="text-2xl font-bold text-center">
-          Добавить квартиру
+          Добавить объект
         </Heading>
         <FormField
           control={form.control}
@@ -437,7 +437,7 @@ export const AddApartmentForm = () => {
           disabled={isAddPending}
           type="submit"
         >
-          Добавить квартиру
+          Добавить объект
         </Button>
       </form>
     </Form>

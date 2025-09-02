@@ -151,12 +151,12 @@ export class ClientsService {
           });
         try {
           await this.notificationsService.create(userId, {
-            title: `Клиенту понравилась квартира "${apartmentClientRelation.apartment.title}"`,
-            body: `Клиенту "${client.name}" понравилась квартира "${apartmentClientRelation.apartment.title}"`,
+            title: `Клиенту понравился объект "${apartmentClientRelation.apartment.title}"`,
+            body: `Клиенту "${client.name}" понравился объект "${apartmentClientRelation.apartment.title}"`,
             link: `${CLIENT_URL}/ap/${apartmentId}`,
           });
           this.webSocketsGateway.sendToUser(userId, WebSocketEvents.MESSAGE, {
-            message: `Клиенту "${client.name}" понравилась квартира "${apartmentClientRelation.apartment.title}"`,
+            message: `Клиенту "${client.name}" понравился объект "${apartmentClientRelation.apartment.title}"`,
           });
         } catch (error) {}
       } else {
@@ -170,8 +170,8 @@ export class ClientsService {
       return client;
     } catch (error) {
       const message = connect
-        ? "Не удалось отметить квартиру!"
-        : "Не удалось удалить квартиру из отмеченных!";
+        ? "Не удалось отметить объект!"
+        : "Не удалось удалить объект из отмеченных!";
       throw new BadRequestException(message);
     }
   }

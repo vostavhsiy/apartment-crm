@@ -27,8 +27,8 @@ export const ApartmentRowSheet: FC<Props> = ({ apartments, isInAdminPage }) => {
           );
         })
       ) : (
-        <Heading asChild size={"h2"} className='p-6'>
-          <p>Не найдено квартир!</p>
+        <Heading asChild size={"h2"} className="p-6">
+          <p>Не найдено объектов!</p>
         </Heading>
       )}
     </div>

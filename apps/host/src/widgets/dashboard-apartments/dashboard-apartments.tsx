@@ -22,7 +22,7 @@ export const DashboardApartments = () => {
   return (
     <div className="w-full">
       <div className="mb-8 flex items-center gap-3 max-sm:flex-col justify-between">
-        <Heading size={"h2"}>Добавленные квартиры</Heading>
+        <Heading size={"h2"}>Добавленные объекты</Heading>
 
         <Button variant={"outline"} asChild>
           <Link href={AuthRoutes.CREATE_APARTMENT}>Добавить объект</Link>
