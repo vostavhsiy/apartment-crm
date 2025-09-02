@@ -103,6 +103,9 @@ export function useToggleApartmentToCollection() {
     }) => ApartmentApi.toggleApartmentToCollection(id, dto),
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
+        queryKey: APARTMENT_QUERY_KEYS.apartment(variables.id),
+      });
+      queryClient.invalidateQueries({
         queryKey: APARTMENT_QUERY_KEYS.apartments,
       });
       queryClient.invalidateQueries({

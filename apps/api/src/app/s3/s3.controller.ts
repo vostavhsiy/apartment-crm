@@ -8,9 +8,10 @@ import {
   Req,
   UnauthorizedException,
   UploadedFile,
+  UploadedFiles,
   UseInterceptors,
 } from "@nestjs/common";
-import { FileInterceptor } from "@nestjs/platform-express";
+import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 
 import { Auth } from "../auth/decorators/auth.decorator";
 import { imageFileFilter } from "./filters/s3-image.filter";
@@ -35,6 +36,23 @@ export class S3Controller {
     const userId = req?.user?.sub;
     if (!userId) throw new UnauthorizedException();
     return this.s3Service.uploadFile(file, userId, folder);
+  }
+
+  @Auth()
+  @Post("upload-multiple")
+  @UseInterceptors(
+    FilesInterceptor("files", 15, {
+      fileFilter: imageFileFilter,
+    }),
+  )
+  async uploadFiles(
+    @Req() req: any,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @Body("folder") folder?: S3BucketFolders,
+  ) {
+    const userId = req?.user?.sub;
+    if (!userId) throw new UnauthorizedException();
+    return this.s3Service.uploadFiles(files, userId, folder);
   }
 
   @Auth()

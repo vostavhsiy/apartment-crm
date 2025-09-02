@@ -69,7 +69,7 @@ export class ApartmentApi {
 
   static async findForCollection(
     collectionId: string,
-    dto: Partial<PaginationQueryDto>,
+    dto?: Partial<PaginationQueryDto>,
   ) {
     const res = await publicInstance.get<FindApartmentsForCollectionResponse>(
       ROUTES.apartments.findForCollection.path,

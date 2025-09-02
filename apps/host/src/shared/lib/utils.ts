@@ -142,5 +142,15 @@ export function getRelativeTime(inputDate: Date) {
   }
 }
 
+export function getShortNumber(num: number) {
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(1) + "M";
+  }
+  if (num >= 1000) {
+    return (num / 1000).toFixed(1) + "K";
+  }
+  return num.toString();
+}
+
 export const TIPTAP_EMPTY_DOC =
   '{"type":"doc","content":[{"type":"paragraph","attrs":{"textAlign":null}}]}';

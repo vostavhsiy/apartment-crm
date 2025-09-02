@@ -55,11 +55,12 @@ export class FilesService {
     apartmentId: string,
     userId: string,
     tx?: TransactionContext,
+    ids?: string[],
   ) {
     const dbService = tx || this.dbService;
     try {
       const files = await dbService.file.findMany({
-        where: { apartmentId },
+        where: { apartmentId, url: { notIn: ids || [] } },
       });
       for (let file of files) {
         await this.s3Service.deleteFile(file.url, userId);

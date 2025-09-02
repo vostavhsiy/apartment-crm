@@ -55,7 +55,6 @@ export class CollectionsService {
       );
       return data;
     } catch (error) {
-      console.log(error);
       throw new BadRequestException("Не удалось получить подборки!");
     }
   }

@@ -68,11 +68,9 @@ export class ApartmentsController {
 
   @Auth()
   @Patch(":id")
-  @UseInterceptors(FilesInterceptor("files"))
   update(
     @Req() req: any,
     @Param("id") id: string,
-    @UploadedFiles() files: Array<Express.Multer.File>,
     @Body() updateApartmentDto: UpdateApartmentDto,
   ) {
     const userId = req?.user?.sub;
@@ -82,7 +80,6 @@ export class ApartmentsController {
     return this.apartmentsService.update(
       id,
       userId,
-      files || updateApartmentDto.files,
       updateApartmentDto,
       isAdmin,
     );

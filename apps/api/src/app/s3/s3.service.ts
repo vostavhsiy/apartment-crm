@@ -64,6 +64,21 @@ export class S3Service {
     }
   }
 
+  async uploadFiles(
+    files: Express.Multer.File[],
+    userId: string,
+    folder: S3BucketFolders = S3BucketFolders.PUBLIC,
+  ) {
+    try {
+      const resultArray = await Promise.all(
+        files.map((file) => this.uploadFile(file, userId, folder)),
+      );
+      return resultArray;
+    } catch (error) {
+      throw new BadRequestException("Ошибка при загрузке файлов!");
+    }
+  }
+
   async deleteFile(url: string, userId: string) {
     try {
       const baseUrl = `${this.s3.endpoint.href}${this.bucket}/`;

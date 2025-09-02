@@ -1,5 +1,6 @@
 "use client";
 
+import { UpdateApartmentDto } from "@/entities/apartment/api/api";
 import {
   useDeleteApartment,
   useFindApartment,
@@ -8,6 +9,7 @@ import {
 } from "@/entities/apartment/api/hooks";
 import { useProfile } from "@/entities/user/api/hooks";
 import { AuthRoutes } from "@/shared/config/routes/routes.auth";
+import { useUploadFiles } from "@/shared/lib/api/s3/hooks";
 import { setLCItem } from "@/shared/lib/helpers/local-storage";
 import { useGlobalStore } from "@/shared/lib/store/global.store";
 import { cn, reorder } from "@/shared/lib/utils";
@@ -36,6 +38,7 @@ import { Separator } from "@/shared/ui/separator";
 import { Skeleton } from "@/shared/ui/skeleton";
 import { Spinner } from "@/shared/ui/spinner";
 import { SimpleEditor } from "@/shared/ui/tiptap-templates";
+import { S3BucketFolders } from "@apartment-crm/types";
 import {
   DragDropContext,
   Draggable,
@@ -71,6 +74,7 @@ export const EditApartmentForm: FC<Props> = ({ apartmentId }) => {
     useFindApartment(apartmentId);
   const { mutate: updateApartment, isPending: isUpdatePending } =
     useUpdateApartment();
+  const { mutate: uploadFiles, isPending: isUploadPending } = useUploadFiles();
   const { mutate: deleteApartment, isPending: isDeletePending } =
     useDeleteApartment();
   const { mutate: getApartmentInfoFromAi, isPending: isGetAiInfoPending } =
@@ -166,8 +170,11 @@ export const EditApartmentForm: FC<Props> = ({ apartmentId }) => {
     setImages(items);
   };
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const handleUpdateApartment = (
+    values: Omit<UpdateApartmentDto, "features">,
+  ) => {
     if (!apartment) return;
+
     updateApartment(
       {
         id: apartment?.id,
@@ -179,7 +186,7 @@ export const EditApartmentForm: FC<Props> = ({ apartmentId }) => {
             name: feature.name,
             value: feature.value,
           })),
-          files: images.map((image) => image.file),
+          files: values.files,
           price: values.price,
           subtitle: values.subtitle,
         },
@@ -202,6 +209,49 @@ export const EditApartmentForm: FC<Props> = ({ apartmentId }) => {
         },
       },
     );
+  };
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    if (isUpdatePending || isUploadPending) return;
+    const files = images.map((image, index) => ({
+      file: image.file,
+      order: index,
+    }));
+    const toUploadFiles = files.filter((file) => typeof file.file !== "string");
+    if (toUploadFiles.length > 0) {
+      uploadFiles(
+        {
+          files: toUploadFiles.map((f) => f.file as File),
+          folder: S3BucketFolders.POST_IMAGES,
+        },
+        {
+          onSuccess(data) {
+            for (let index = 0; index < data.length; index++) {
+              const item = data[index];
+              if (item?.url) {
+                toUploadFiles[index].file = item?.url;
+              }
+            }
+            for (const item of toUploadFiles) {
+              files.splice(item.order, 1, item);
+            }
+
+            handleUpdateApartment({
+              ...values,
+              files: files.map((file) => file.file),
+            });
+          },
+          onError() {
+            toast.error("Ошибка при загрузке изображений! Попробуйте еще раз!");
+          },
+        },
+      );
+    } else {
+      handleUpdateApartment({
+        ...values,
+        files: files.map((file) => file.file),
+      });
+    }
   }
 
   function handleDelete() {
@@ -507,7 +557,7 @@ export const EditApartmentForm: FC<Props> = ({ apartmentId }) => {
         <Button
           className="w-full"
           size={"lg"}
-          disabled={isUpdatePending || isDeletePending}
+          disabled={isUpdatePending || isUploadPending || isDeletePending}
           type="submit"
         >
           Обновить квартиру
@@ -534,7 +584,7 @@ export const EditApartmentForm: FC<Props> = ({ apartmentId }) => {
                 </Button>
               </DialogClose>
               <Button
-                disabled={isDeletePending}
+                disabled={isDeletePending || isUpdatePending || isUploadPending}
                 variant={"destructive"}
                 onClick={handleDelete}
                 type="button"

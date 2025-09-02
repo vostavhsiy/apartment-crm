@@ -1,10 +1,16 @@
 import { useMutation } from "@tanstack/react-query";
 
-import { S3Api, UploadFileDto } from "./api";
+import { S3Api, UploadFileDto, UploadFilesDto } from "./api";
 
 export function useUploadFile() {
   return useMutation({
     mutationFn: (data: UploadFileDto) => S3Api.uploadFile(data),
+  });
+}
+
+export function useUploadFiles() {
+  return useMutation({
+    mutationFn: (data: UploadFilesDto) => S3Api.uploadFiles(data),
   });
 }
 

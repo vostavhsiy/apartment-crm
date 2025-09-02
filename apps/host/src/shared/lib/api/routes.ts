@@ -120,6 +120,9 @@ export const ROUTES = {
     upload: {
       path: "/api/s3/upload",
     },
+    uploadMultiple: {
+      path: "/api/s3/upload-multiple",
+    },
     delete: {
       path: `/api/s3/delete`,
     },

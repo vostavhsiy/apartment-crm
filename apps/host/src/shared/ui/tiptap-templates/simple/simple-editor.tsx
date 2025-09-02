@@ -154,8 +154,8 @@ const MobileToolbarContent = ({
 );
 
 interface Props {
-  name: string;
-  lcEditorName: string;
+  name?: string;
+  lcEditorName?: string;
   value?: string;
   onChange?: (value: string) => void;
   onBlur?: () => void;
@@ -209,7 +209,7 @@ export function SimpleEditor(props: Props) {
       }),
     ],
     onCreate(data) {
-      const content = getLCItem(props.lcEditorName);
+      const content = props.lcEditorName && getLCItem(props.lcEditorName);
       try {
         const value = props.value ? JSON.parse(props.value) : null;
         data.editor.commands.setContent(content || value);
@@ -219,23 +219,14 @@ export function SimpleEditor(props: Props) {
     },
     onUpdate(data) {
       const content = data.editor.getJSON();
-      setLCItem(
-        props.lcEditorName,
-        JSON.stringify(content) === TIPTAP_EMPTY_DOC ? "" : content,
-      );
+      props.lcEditorName &&
+        setLCItem(
+          props.lcEditorName,
+          JSON.stringify(content) === TIPTAP_EMPTY_DOC ? "" : content,
+        );
       props.onChange?.(JSON.stringify(content));
     },
   });
-
-  React.useEffect(() => {
-    const content = getLCItem(props.lcEditorName);
-    try {
-      const value = props.value ? JSON.parse(props.value) : null;
-      editor?.commands.setContent(content || value);
-    } catch {
-      editor?.commands.setContent(content || props.value);
-    }
-  }, [props.value]);
 
   const rect = useCursorVisibility({
     editor,

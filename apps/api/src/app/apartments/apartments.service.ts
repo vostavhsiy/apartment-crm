@@ -159,24 +159,24 @@ export class ApartmentsService {
   async update(
     apartmentId: string,
     userId: string,
-    files: Array<Express.Multer.File | string>,
     updateApartmentDto: UpdateApartmentDto,
     isAdmin: boolean = false,
   ) {
     try {
       const apartment = await this.dbService.$transaction(async (prisma) => {
-        const { files: dtoFiles, features, ...dto } = updateApartmentDto;
+        const { files, features, ...dto } = updateApartmentDto;
         const apartment = await prisma.apartment.update({
           where: { id: apartmentId, userId: isAdmin ? undefined : userId },
           data: dto,
         });
         if (!apartment) throw new Error();
+        await this.filesService.removeFromApartment(
+          apartment.id,
+          userId,
+          prisma,
+          files,
+        );
         if (files?.length) {
-          await this.filesService.removeFromApartment(
-            apartment.id,
-            userId,
-            prisma,
-          );
           for (let index = 0; index < files.length; index++) {
             const file = files[index];
             if (!file) throw new Error();
@@ -184,7 +184,7 @@ export class ApartmentsService {
               userId,
               {
                 apartmentId: apartment.id,
-                file: files[index],
+                file,
                 order: index,
               },
               prisma,

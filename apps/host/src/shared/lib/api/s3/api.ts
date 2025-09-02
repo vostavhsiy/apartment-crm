@@ -14,6 +14,13 @@ export type UploadFileResponse = {
   key: string;
 } | null;
 
+export interface UploadFilesDto {
+  files: File[];
+  folder?: S3BucketFolders;
+}
+
+export type UploadFilesResponse = UploadFileResponse[];
+
 export interface DeleteFileResponse {
   ok?: boolean;
 }
@@ -23,6 +30,15 @@ export class S3Api {
     const formData = getFormDataFromObject(data);
     const res = await authInstance.post<UploadFileResponse>(
       ROUTES.s3.upload.path,
+      formData,
+    );
+    return res.data;
+  }
+
+  static async uploadFiles(data: UploadFilesDto) {
+    const formData = getFormDataFromObject(data);
+    const res = await authInstance.post<UploadFilesResponse>(
+      ROUTES.s3.uploadMultiple.path,
       formData,
     );
     return res.data;
