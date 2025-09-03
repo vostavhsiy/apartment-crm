@@ -185,10 +185,10 @@ export const DashboardStats = () => {
             <Card className="bg-card border-border">
               <CardHeader>
                 <CardTitle className="text-card-foreground flex items-center gap-2">
-                  <Eye className="w-5 h-5 text-primary" />
+                  <Eye className="w-5 h-5 text-primary max-[425px]:hidden" />
                   Самый просматриваемый объект
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="max-[425px]:text-sm">
                   Объект с наибольшим количеством просмотров
                 </CardDescription>
               </CardHeader>
@@ -240,10 +240,10 @@ export const DashboardStats = () => {
             <Card className="bg-card border-border">
               <CardHeader>
                 <CardTitle className="text-card-foreground flex items-center gap-2">
-                  <Heart className="w-5 h-5 text-primary" />
+                  <Heart className="w-5 h-5 text-primary max-[425px]:hidden" />
                   Самый понравившийся объект
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="max-[425px]:text-sm">
                   Объект с наибольшим количеством лайков
                 </CardDescription>
               </CardHeader>
@@ -318,7 +318,7 @@ export const DashboardStats = () => {
                         {apartment.subtitle}
                       </span>
                       <div className="flex max-sm:flex-col items-center gap-2 sm:gap-4 text-xs text-muted-foreground">
-                        <span className="truncate max-w-42">
+                        <span className="truncate max-w-66 max-sm:max-w-full">
                           {apartment.address}
                         </span>
                         <span className="truncate max-w-24">
