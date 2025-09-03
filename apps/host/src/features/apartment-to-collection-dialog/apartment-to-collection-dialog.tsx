@@ -37,7 +37,11 @@ export const ApartmentToCollectionDialog: FC<Props> = ({ apartment }) => {
   });
 
   return (
-    <Dialog>
+    <Dialog
+      onOpenChange={(open) => {
+        if (!open) setSearch("");
+      }}
+    >
       <DialogTrigger asChild>
         <Button type="button">Добавить в подборку</Button>
       </DialogTrigger>
@@ -63,7 +67,7 @@ export const ApartmentToCollectionDialog: FC<Props> = ({ apartment }) => {
                   />
                 );
               })}
-          {!collectionData?.pages?.[0]?.data.length && (
+          {!isPending && !collectionData?.pages?.[0]?.data.length && (
             <Heading
               className="flex-1 flex items-center justify-center"
               asChild

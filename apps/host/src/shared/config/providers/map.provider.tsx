@@ -1,3 +1,5 @@
+"use client";
+
 import { settings } from "@/shared/lib/env";
 import { YMaps } from "@iminside/react-yandex-maps";
 

@@ -1,3 +1,4 @@
+import { CollectionToClientDialog } from "@/features/collection-to-client-dialog/collection-to-client-dialog";
 import { AuthRoutes } from "@/shared/config/routes/routes.auth";
 import { wordEnding } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
@@ -35,6 +36,7 @@ export const CollectionCard = ({ collection }: Props) => {
               <Edit /> Редактировать
             </Link>
           </Button>
+          <CollectionToClientDialog collection={collection} />
           <Button
             asChild
             variant={"secondary"}

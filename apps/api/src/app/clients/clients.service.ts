@@ -43,10 +43,20 @@ export class ClientsService {
         {
           where: {
             userId,
-            name: {
-              contains: paginationQuery.search || "",
-              mode: "insensitive",
-            },
+            OR: [
+              {
+                name: {
+                  contains: paginationQuery.search || "",
+                  mode: "insensitive",
+                },
+              },
+              {
+                phone: {
+                  contains: paginationQuery.search || "",
+                  mode: "insensitive",
+                },
+              },
+            ],
           },
           orderBy: {
             name:
@@ -104,12 +114,17 @@ export class ClientsService {
       });
       if (!client) throw new Error();
       if (connect) {
-        await this.dbService.collectionClient.create({
+        const collectionClient = await this.dbService.collectionClient.create({
           data: {
             clientId,
             collectionId,
           },
+          include: {
+            collection: true,
+            client: true,
+          },
         });
+        return collectionClient;
       } else {
         await this.dbService.collectionClient.deleteMany({
           where: {
@@ -117,8 +132,8 @@ export class ClientsService {
             collectionId,
           },
         });
+        return true;
       }
-      return client;
     } catch (error) {
       const message = connect
         ? "Не удалось добавить подборку клиенту!"

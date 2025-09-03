@@ -1,6 +1,6 @@
 "use client";
 
-import { useFindClientsForUser } from "@/entities/client/api/hooks";
+import { useFindClientsForUserPerPage } from "@/entities/client/api/hooks";
 import {
   ClientSheet,
   ClientSheetSkeleton,
@@ -16,7 +16,7 @@ import Link from "next/link";
 export const DashboardClients = () => {
   const { params } = usePaginateParams();
 
-  const { data: clientsData, isPending } = useFindClientsForUser(params);
+  const { data: clientsData, isPending } = useFindClientsForUserPerPage(params);
 
   return (
     <div className="w-full">

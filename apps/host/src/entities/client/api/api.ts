@@ -1,7 +1,7 @@
 import { ROUTES } from "@/shared/lib/api/routes";
 import { authInstance, publicInstance } from "@/shared/lib/axios";
 import { PaginatedResult, PaginationQueryDto } from "@apartment-crm/helpers";
-import { ClientApartmentView } from "@prisma/client";
+import { ClientApartmentView, Prisma } from "@prisma/client";
 
 import { Client } from "../model/client";
 import { ClientWithRelations } from "../model/client-with-relations";
@@ -34,7 +34,10 @@ export interface ToggleClientToCollectionDto {
   order?: number;
 }
 
-export interface ToggleClientToCollectionResponse extends Client {}
+export type ToggleClientToCollectionResponse =
+  Prisma.CollectionClientGetPayload<{
+    include: { client: true; collection: true };
+  }>;
 
 export interface ToggleApartmentToClientDto {
   apartmentId: string;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useFindApartmentsForUserPerPage } from "@/entities/apartment/api/hooks";
-import { useFindClientsForUser } from "@/entities/client/api/hooks";
+import { useFindClientsForUserPerPage } from "@/entities/client/api/hooks";
 import { useFindCollectionsForUserPerPage } from "@/entities/collection/api/hooks";
 import { useGetUserStats } from "@/entities/user/api/hooks";
 import { AuthRoutes } from "@/shared/config/routes/routes.auth";
@@ -27,7 +27,7 @@ export const DashboardStats = () => {
   const { data: collectionsData, isPending: isCollectionsPending } =
     useFindCollectionsForUserPerPage({ sortOrder: SortOrder.UPDATED_AT });
   const { data: clientsData, isPending: isClientsPending } =
-    useFindClientsForUser({ sortOrder: SortOrder.UPDATED_AT });
+    useFindClientsForUserPerPage({ sortOrder: SortOrder.UPDATED_AT });
 
   const pending =
     isStatsPending ||

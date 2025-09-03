@@ -1,3 +1,5 @@
+"use client";
+
 import { useProfile } from "@/entities/user/api/hooks";
 import {
   APARTMENT_QUERY_KEYS,

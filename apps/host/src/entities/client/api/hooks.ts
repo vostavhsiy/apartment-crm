@@ -4,12 +4,14 @@ import {
   APARTMENT_QUERY_KEYS,
   CLIENT_QUERY_KEYS,
 } from "@/shared/lib/api/query-keys";
+import { useInfiniteScroll } from "@/shared/lib/hooks/use-infinity-scroll";
 import { PaginationQueryDto } from "@apartment-crm/helpers";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
   ClientApi,
   CreateClientDto,
+  FindClientsForUser,
   SeeApartmentDto,
   ToggleApartmentToClientDto,
   ToggleClientToCollectionDto,
@@ -27,6 +29,22 @@ export function useCreateClient() {
 }
 
 export function useFindClientsForUser(
+  dto: Partial<PaginationQueryDto>,
+  options = {},
+) {
+  return useInfiniteScroll<FindClientsForUser>({
+    queryKey: [...CLIENT_QUERY_KEYS.clients, dto.search || ""],
+    queryFn: ({ pageParam }) => {
+      return ClientApi.findForUser({ ...dto, page: pageParam });
+    },
+    getNextPageParam: (lastPage, allPages) => {
+      const hasMore = lastPage.hasMore;
+      return hasMore ? allPages.length + 1 : undefined;
+    },
+  });
+}
+
+export function useFindClientsForUserPerPage(
   dto: Partial<PaginationQueryDto>,
   options = {},
 ) {

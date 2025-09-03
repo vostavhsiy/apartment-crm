@@ -1,3 +1,5 @@
+"use client";
+
 import { useGlobalStore } from "@/shared/lib/store/global.store";
 import { Dialog, DialogContent, DialogTitle } from "@/shared/ui/dialog";
 
