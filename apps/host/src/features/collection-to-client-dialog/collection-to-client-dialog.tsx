@@ -31,6 +31,7 @@ import { useDebounce } from "use-debounce";
 
 import { FC, useState } from "react";
 
+import { ClientMessageLinkButton } from "../client-message-link-button/client-message-link-button";
 import { CollectionToClientItem } from "./collection-to-client-item";
 
 interface Props {
@@ -162,9 +163,11 @@ export const CollectionToClientDialog: FC<Props> = ({ collection }) => {
     <Dialog
       onOpenChange={(open) => {
         if (!open) {
-          setSearch("");
-          setSelectedClient(null);
-          setCreatedCollectionToClient(null);
+          setTimeout(() => {
+            setSearch("");
+            setSelectedClient(null);
+            setCreatedCollectionToClient(null);
+          }, 300);
         }
       }}
     >
@@ -229,6 +232,34 @@ export const CollectionToClientDialog: FC<Props> = ({ collection }) => {
                 Посмотреть, что увидит клиент
               </Link>
             </Button>
+            <div className="flex flex-col gap-2 items-center mt-5">
+              <p className="text-sm text-muted-foreground">
+                Другие способы отправки
+              </p>
+              <div className="flex items-center gap-2 justify-center">
+                <ClientMessageLinkButton
+                  phone={createdCollectionToClient.client.phone}
+                  collectionLink={PublicRoutes.CLIENT_COLLECTION(
+                    createdCollectionToClient.id,
+                  )}
+                  linkType="whatsapp"
+                />
+                <ClientMessageLinkButton
+                  phone={createdCollectionToClient.client.phone}
+                  collectionLink={PublicRoutes.CLIENT_COLLECTION(
+                    createdCollectionToClient.id,
+                  )}
+                  linkType="telegram"
+                />
+                <ClientMessageLinkButton
+                  phone={createdCollectionToClient.client.phone}
+                  collectionLink={PublicRoutes.CLIENT_COLLECTION(
+                    createdCollectionToClient.id,
+                  )}
+                  linkType="email"
+                />
+              </div>
+            </div>
           </>
         )}
         {!isTogglePending && !createdCollectionToClient && (
