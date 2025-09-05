@@ -11,18 +11,35 @@ import {
 interface Props {
   apartments: ApartmentWithRelations[];
   isInAdminPage?: boolean;
+  isInClientPage?: boolean;
+  clientId?: string;
 }
 
-export const ApartmentRowSheet: FC<Props> = ({ apartments, isInAdminPage }) => {
+export const ApartmentRowSheet: FC<Props> = ({
+  apartments,
+  isInAdminPage,
+  isInClientPage,
+  clientId,
+}) => {
   return (
     <div className="w-full space-y-5">
       {apartments.length > 0 ? (
         apartments.map((apartment) => {
+          console.log(clientId, apartment);
+          const isLiked = apartment.clientsLikes.some(
+            (like) => like.clientId === clientId,
+          );
+          const isSeen = apartment.clientViews.some(
+            (view) => view.clientId === clientId,
+          );
           return (
             <ApartmentRowCard
               key={apartment.id}
               apartment={apartment}
               isInAdminPage={isInAdminPage}
+              isInClientPage={isInClientPage}
+              isLiked={isLiked}
+              isSeen={isSeen}
             />
           );
         })

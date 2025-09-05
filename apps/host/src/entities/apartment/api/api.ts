@@ -35,6 +35,9 @@ export interface UpdateApartmentResponse extends ApartmentWithRelations {}
 export interface FindApartmentsForCollectionResponse
   extends PaginatedResult<ApartmentWithRelations> {}
 
+export interface FindApartmentsForClientResponse
+  extends PaginatedResult<ApartmentWithRelations> {}
+
 export interface FindApartmentResponse extends ApartmentWithRelations {}
 
 export interface ToggleApartmentToCollectionDto {
@@ -76,6 +79,21 @@ export class ApartmentApi {
       {
         params: {
           collectionId,
+          ...dto,
+        },
+      },
+    );
+    return res.data;
+  }
+
+  static async findForClient(
+    clientId: string,
+    dto?: Partial<PaginationQueryDto>,
+  ) {
+    const res = await publicInstance.get<FindApartmentsForClientResponse>(
+      ROUTES.apartments.findForClient(clientId).path,
+      {
+        params: {
           ...dto,
         },
       },

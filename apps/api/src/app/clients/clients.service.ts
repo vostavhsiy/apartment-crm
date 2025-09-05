@@ -93,6 +93,60 @@ export class ClientsService {
     }
   }
 
+  async findClientStats(id: string, userId: string) {
+    try {
+      const client = await this.dbService.client.findUnique({
+        where: { id, userId },
+        include: {
+          ...ClientIncludeConfig,
+          collectionsLinks: {
+            include: {
+              collection: {
+                include: {
+                  apartmentsLinks: true,
+                },
+              },
+            },
+          },
+        },
+      });
+      if (!client) throw new Error();
+
+      const unseenApartementsCount = await this.dbService.apartment.count({
+        where: {
+          collectionsLinks: {
+            some: {
+              collection: {
+                clientsLinks: {
+                  some: {
+                    clientId: id,
+                  },
+                },
+              },
+            },
+          },
+          clientViews: {
+            none: {
+              clientId: id,
+            },
+          },
+        },
+      });
+
+      return {
+        totalObjectsCount: client.collectionsLinks.reduce(
+          (acc, link) => acc + (link?.collection?.apartmentsLinks?.length || 0),
+          0,
+        ),
+        unseenApartementsCount,
+        totalViewsCount: client.apartmentViews?.length || 0,
+        totalLikesCount: client.likes?.length || 0,
+      };
+    } catch (error) {
+      throw new NotFoundException("Не удалось получить статистику клиента!");
+    }
+  }
+
   async update(
     clientId: string,
     userId: string,

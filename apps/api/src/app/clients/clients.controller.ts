@@ -47,6 +47,14 @@ export class ClientsController {
   }
 
   @Auth()
+  @Get(":id/stats")
+  findClientStats(@Req() req: any, @Param("id") id: string) {
+    const userId = req?.user?.sub;
+    if (!userId) throw new UnauthorizedException();
+    return this.clientsService.findClientStats(id, userId);
+  }
+
+  @Auth()
   @Patch(":id")
   update(
     @Param("id") id: string,

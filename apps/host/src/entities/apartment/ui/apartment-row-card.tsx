@@ -6,7 +6,8 @@ import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { Card, CardContent, CardTitle } from "@/shared/ui/card";
 import { Skeleton } from "@/shared/ui/skeleton";
-import { Ban, Edit } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+import { Ban, Edit, Heart, House } from "lucide-react";
 import Link from "next/link";
 
 import { FC } from "react";
@@ -16,9 +17,18 @@ import { ApartmentWithRelations } from "../model/apartment-with-relations";
 interface Props {
   apartment: ApartmentWithRelations;
   isInAdminPage?: boolean;
+  isInClientPage?: boolean;
+  isLiked?: boolean;
+  isSeen?: boolean;
 }
 
-export const ApartmentRowCard: FC<Props> = ({ apartment, isInAdminPage }) => {
+export const ApartmentRowCard: FC<Props> = ({
+  apartment,
+  isInAdminPage,
+  isInClientPage,
+  isLiked,
+  isSeen,
+}) => {
   return (
     <Card className="w-full mx-auto">
       <CardContent className="flex max-sm:flex-col max-sm:gap-3 items-center">
@@ -82,7 +92,47 @@ export const ApartmentRowCard: FC<Props> = ({ apartment, isInAdminPage }) => {
             </div>
           )}
           <div className="w-full lg:w-max flex flex-col lg:flex-row items-center gap-2">
-            <ApartmentToCollectionDialog apartment={apartment} />
+            {!isInClientPage && (
+              <ApartmentToCollectionDialog apartment={apartment} />
+            )}
+            {isInClientPage && (
+              <>
+                {isLiked && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        className="bg-red-500/20 hover:bg-red-500/30 text-red-500"
+                        size={"icon"}
+                      >
+                        <Heart fill="red" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Объект пронравился клиенту</p>
+                    </TooltipContent>
+                  </Tooltip>
+                )}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      disabled={isSeen}
+                      className={cn(!isSeen && "opacity-50")}
+                      variant="outline"
+                      size={"icon"}
+                    >
+                      <House />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>
+                      {isSeen
+                        ? "Клиент смотрел объект"
+                        : "Клиент не смотрел объект"}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </>
+            )}
             <Button
               asChild
               variant={"secondary"}

@@ -61,6 +61,14 @@ export function useFindClientsForUserPerPage(
   });
 }
 
+export function useFindClientStats(clientId: string, options = {}) {
+  return useQuery({
+    queryKey: CLIENT_QUERY_KEYS.clientStats(clientId),
+    queryFn: () => ClientApi.findClientStats(clientId),
+    ...options,
+  });
+}
+
 export function useFindClient(id: string, options = {}) {
   return useQuery({
     queryKey: CLIENT_QUERY_KEYS.client(id),
@@ -80,6 +88,9 @@ export function useUpdateClient() {
       if (variables?.id) {
         queryClient.invalidateQueries({
           queryKey: CLIENT_QUERY_KEYS.client(variables.id),
+        });
+        queryClient.invalidateQueries({
+          queryKey: CLIENT_QUERY_KEYS.clientStats(variables.id),
         });
       }
     },
@@ -101,6 +112,9 @@ export function useToggleClientToCollection() {
       if (variables?.id) {
         queryClient.invalidateQueries({
           queryKey: CLIENT_QUERY_KEYS.client(variables.id),
+        });
+        queryClient.invalidateQueries({
+          queryKey: CLIENT_QUERY_KEYS.clientStats(variables.id),
         });
       }
     },
@@ -126,6 +140,9 @@ export function useToggleApartmentToClient() {
         queryClient.invalidateQueries({
           queryKey: CLIENT_QUERY_KEYS.client(variables.id),
         });
+        queryClient.invalidateQueries({
+          queryKey: CLIENT_QUERY_KEYS.clientStats(variables.id),
+        });
       }
       if (variables?.dto?.apartmentId) {
         queryClient.invalidateQueries({
@@ -146,6 +163,9 @@ export function useSeeApartment() {
         queryClient.invalidateQueries({
           queryKey: CLIENT_QUERY_KEYS.client(variables.clientId),
         });
+        queryClient.invalidateQueries({
+          queryKey: CLIENT_QUERY_KEYS.clientStats(variables.clientId),
+        });
       }
     },
   });
@@ -160,6 +180,9 @@ export function useDeleteClient() {
       if (id) {
         queryClient.invalidateQueries({
           queryKey: CLIENT_QUERY_KEYS.client(id),
+        });
+        queryClient.invalidateQueries({
+          queryKey: CLIENT_QUERY_KEYS.clientStats(id),
         });
       }
     },

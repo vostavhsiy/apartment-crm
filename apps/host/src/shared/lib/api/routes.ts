@@ -40,6 +40,9 @@ export const ROUTES = {
     findOne: (id: string) => ({
       path: `/api/apartments/${id}`,
     }),
+    findForClient: (clientId: string) => ({
+      path: `/api/apartments/${clientId}/for-client`,
+    }),
     create: {
       path: "/api/apartments",
     },
@@ -62,6 +65,9 @@ export const ROUTES = {
     },
     findOne: (id: string) => ({
       path: `/api/clients/${id}`,
+    }),
+    findClientStats: (id: string) => ({
+      path: `/api/clients/${id}/stats`,
     }),
     create: {
       path: "/api/clients",

@@ -1,5 +1,5 @@
 import { ROUTES } from "@/shared/lib/api/routes";
-import { authInstance, publicInstance } from "@/shared/lib/axios";
+import { authInstance } from "@/shared/lib/axios";
 import { PaginatedResult, PaginationQueryDto } from "@apartment-crm/helpers";
 import { ClientApartmentView, Prisma } from "@prisma/client";
 
@@ -27,6 +27,13 @@ export interface FindClientsForCollectionResponse
   extends PaginatedResult<ClientWithRelations> {}
 
 export interface FindClientResponse extends ClientWithRelations {}
+
+export interface FindClientStatsResponse {
+  totalObjectsCount: number;
+  unseenApartementsCount: number;
+  totalViewsCount: number;
+  totalLikesCount: number;
+}
 
 export interface ToggleClientToCollectionDto {
   collectionId: string;
@@ -64,7 +71,7 @@ export class ClientApi {
   }
 
   static async findForUser(dto: Partial<PaginationQueryDto>) {
-    const res = await publicInstance.get<FindClientsForUser>(
+    const res = await authInstance.get<FindClientsForUser>(
       ROUTES.clients.findForUser.path,
       {
         params: dto,
@@ -74,8 +81,15 @@ export class ClientApi {
   }
 
   static async findOne(id: string) {
-    const res = await publicInstance.get<FindClientResponse>(
+    const res = await authInstance.get<FindClientResponse>(
       ROUTES.clients.findOne(id).path,
+    );
+    return res.data;
+  }
+
+  static async findClientStats(id: string) {
+    const res = await authInstance.get<FindClientStatsResponse>(
+      ROUTES.clients.findClientStats(id).path,
     );
     return res.data;
   }

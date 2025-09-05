@@ -73,7 +73,7 @@ export const ClientCard: FC<Props> = ({ client }) => {
             <CardTitle>
               <Link
                 className="line-clamp-2 leading-normal truncate text-lg text-blue-500 max-w-40"
-                href={AuthRoutes.DASHBOARD_APARTMENT(client.id)}
+                href={AuthRoutes.DASHBOARD_CLIENT(client.id)}
               >
                 {client.name}
               </Link>

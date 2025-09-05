@@ -16,13 +16,17 @@ import { useDebounce } from "use-debounce";
 import { useEffect, useState } from "react";
 
 export const QueryParamsFilters = () => {
-  const { params, addParam } = usePaginateParams();
+  const { params, addParam, removeParam } = usePaginateParams();
 
   const [search, setSearch] = useState(params.search || "");
   const [debounceSearch] = useDebounce(search, 300);
 
   useEffect(() => {
-    addParam("search", debounceSearch);
+    if (debounceSearch) {
+      addParam("search", debounceSearch.trim());
+    } else {
+      params.search && removeParam("search");
+    }
   }, [debounceSearch]);
 
   return (

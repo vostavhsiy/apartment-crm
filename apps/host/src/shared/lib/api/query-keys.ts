@@ -6,6 +6,7 @@ export const APARTMENT_QUERY_KEYS = {
 export const CLIENT_QUERY_KEYS = {
   clients: ["clients", "list"],
   client: (id: string) => ["clients", "item", id],
+  clientStats: (id: string) => ["clients", "stats", id],
 };
 
 export const COLLECTION_QUERY_KEYS = {

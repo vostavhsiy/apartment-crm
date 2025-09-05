@@ -64,6 +64,26 @@ export function useFindApartmentsForCollection(
   });
 }
 
+export function useFindApartmentsForClient(
+  clientId: string,
+  dto: Partial<PaginationQueryDto>,
+  options = {},
+) {
+  return useQuery({
+    queryKey: [
+      ...APARTMENT_QUERY_KEYS.apartments,
+      clientId,
+      dto.page,
+      dto.perPage,
+      dto.search,
+      dto.sortOrder,
+    ],
+    queryFn: () => ApartmentApi.findForClient(clientId, dto),
+    enabled: !!clientId,
+    ...options,
+  });
+}
+
 export function useFindApartment(id: string, options = {}) {
   return useQuery({
     queryKey: APARTMENT_QUERY_KEYS.apartment(id),
@@ -114,6 +134,13 @@ export function useToggleApartmentToCollection() {
       if (variables?.id) {
         queryClient.invalidateQueries({
           queryKey: APARTMENT_QUERY_KEYS.apartment(variables.id),
+        });
+      }
+      if (variables?.dto?.collectionId) {
+        queryClient.invalidateQueries({
+          queryKey: COLLECTION_QUERY_KEYS.collection(
+            variables.dto.collectionId,
+          ),
         });
       }
     },

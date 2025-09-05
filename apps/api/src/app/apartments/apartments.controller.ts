@@ -75,6 +75,18 @@ export class ApartmentsController {
   }
 
   @Auth()
+  @Get(":id/for-client")
+  findForClient(
+    @Req() req: any,
+    @Param("id") clientId: string,
+    @Pagination() pagination: PaginationQueryDto,
+  ) {
+    const userId = req?.user?.sub;
+    if (!userId) throw new UnauthorizedException();
+    return this.apartmentsService.findForClient(userId, clientId, pagination);
+  }
+
+  @Auth()
   @Patch(":id")
   update(
     @Req() req: any,

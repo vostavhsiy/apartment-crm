@@ -33,5 +33,11 @@ export function usePaginateParams() {
       if (key === "sortOrder") params.set("page", "1");
       router.push(`${pathname}?${params.toString()}`);
     },
+    removeParam: (key: "page" | "perPage" | "search" | "sortOrder") => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete(key);
+      if (key === "sortOrder") params.set("page", "1");
+      router.push(`${pathname}?${params.toString()}`);
+    },
   };
 }

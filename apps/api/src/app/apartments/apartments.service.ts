@@ -108,6 +108,60 @@ export class ApartmentsService {
     }
   }
 
+  async findForClient(
+    userId: string,
+    clientId: string,
+    paginationQuery: PaginationQueryDto,
+  ) {
+    try {
+      const data = await paginate<Apartment, Prisma.ApartmentFindManyArgs>(
+        this.dbService.apartment,
+        paginationQuery,
+        {
+          where: {
+            userId,
+            OR: [
+              {
+                collectionsLinks: {
+                  some: {
+                    collection: {
+                      clientsLinks: {
+                        some: {
+                          clientId,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              {
+                clientsLikes: {
+                  some: {
+                    clientId,
+                  },
+                },
+              },
+            ],
+            title: {
+              contains: paginationQuery.search || "",
+              mode: "insensitive",
+            },
+          },
+          orderBy: {
+            title:
+              paginationQuery.sortOrder === SortOrder.ALPHABET
+                ? "asc"
+                : undefined,
+          },
+          include: ApartmentIncludeConfig,
+        },
+      );
+      return data;
+    } catch (error) {
+      throw new NotFoundException("Объекты не найдены!");
+    }
+  }
+
   async findStatsForUser(userId: string) {
     try {
       const [
