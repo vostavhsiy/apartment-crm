@@ -1,4 +1,5 @@
 import { paginate, PaginationQueryDto } from "@apartment-crm/helpers";
+import { getClientNamePhoneFromString } from "@apartment-crm/helpers";
 import { SortOrder, WebSocketEvents } from "@apartment-crm/types";
 import {
   BadRequestException,
@@ -37,26 +38,32 @@ export class ClientsService {
 
   async findForUser(userId: string, paginationQuery: PaginationQueryDto) {
     try {
+      const [clientName, clientPhone] = getClientNamePhoneFromString(
+        paginationQuery.search,
+      );
+
       const data = await paginate<Client, Prisma.ClientFindManyArgs>(
         this.dbService.client,
         paginationQuery,
         {
           where: {
             userId,
-            OR: [
+            AND: [
               {
                 name: {
-                  contains: paginationQuery.search || "",
+                  contains: clientName || "",
                   mode: "insensitive",
                 },
               },
-              {
-                phone: {
-                  contains: paginationQuery.search || "",
-                  mode: "insensitive",
-                },
-              },
-            ],
+              clientPhone
+                ? {
+                    phone: {
+                      contains: clientPhone,
+                      mode: "insensitive",
+                    },
+                  }
+                : undefined,
+            ].filter(Boolean) as Prisma.ClientWhereInput[],
           },
           orderBy: {
             name:
@@ -69,6 +76,7 @@ export class ClientsService {
       );
       return data;
     } catch (error) {
+      console.log(error);
       throw new BadRequestException("Не удалось получить клиентов!");
     }
   }

@@ -99,6 +99,7 @@ export const CollectionToClientDialog: FC<Props> = ({ collection }) => {
           toast.error(
             "Ошибка при отправке подборки клиенту! Попробуйте еще раз.",
           );
+          setGlobalPending(false);
         },
       },
     );
@@ -113,7 +114,7 @@ export const CollectionToClientDialog: FC<Props> = ({ collection }) => {
         phone && phoneRegex.test(phone.replace(/[^\d\+]/g, "")) ? phone : "";
       const clientName = clientPhone
         ? name
-        : [name, clientPhone].filter(Boolean).join(" ");
+        : [name, phone].filter(Boolean).join(" ");
       createClient(
         {
           name: clientName,
@@ -130,6 +131,7 @@ export const CollectionToClientDialog: FC<Props> = ({ collection }) => {
               message ||
                 'Ошибка при добавлении клиента! Попробуйте добавить клиента в разделе "Клиенты".',
             );
+            setGlobalPending(false);
           },
         },
       );
@@ -277,7 +279,12 @@ export const CollectionToClientDialog: FC<Props> = ({ collection }) => {
                 placeholder="Иванов Иван 89998887776"
               />
             </Label>
-            <div className="flex flex-col gap-3 h-80 overflow-auto border p-3 rounded-md">
+            <div
+              className={cn(
+                "flex flex-col gap-3 h-80 overflow-auto border p-3 rounded-md",
+                (selectedClient || name || phone) && "pb-16",
+              )}
+            >
               {isPending && <Spinner />}
               {!isPending &&
                 !!clientData?.pages?.[0]?.data.length &&
