@@ -63,6 +63,9 @@ export const ROUTES = {
     findForUser: {
       path: "/api/clients",
     },
+    findCollectionLink: (id: string) => ({
+      path: `/api/clients/collection-link/${id}`,
+    }),
     findOne: (id: string) => ({
       path: `/api/clients/${id}`,
     }),

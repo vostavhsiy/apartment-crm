@@ -38,6 +38,11 @@ export class ClientsController {
     return this.clientsService.findForUser(userId, pagination);
   }
 
+  @Get("collection-link/:id")
+  findCollectionLink(@Param("id") id: string) {
+    return this.clientsService.findCollectionLink(id);
+  }
+
   @Auth()
   @Get(":id")
   findOne(@Req() req: any, @Param("id") id: string) {

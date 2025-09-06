@@ -9,7 +9,15 @@ export class PublicRoutes {
 
   static HOME = "/";
 
-  static CLIENT_COLLECTION(id: string) {
-    return settings.NEXT_PUBLIC_DOMAIN_URL + `/c/${id}`;
+  static CLIENT_COLLECTION(id: string, relative?: boolean) {
+    return (!relative ? settings.NEXT_PUBLIC_DOMAIN_URL : "") + `/c/${id}`;
+  }
+
+  static CLIENT_COLLECTION_MORTGAGE(id: string) {
+    return this.CLIENT_COLLECTION(id, true) + `/mortgage`;
+  }
+
+  static CLIENT_APARTMENT(collectionClientId: string, id: string) {
+    return this.CLIENT_COLLECTION(collectionClientId) + `/ap/${id}`;
   }
 }

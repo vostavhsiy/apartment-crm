@@ -28,6 +28,11 @@ export interface FindClientsForCollectionResponse
 
 export interface FindClientResponse extends ClientWithRelations {}
 
+export interface FindCollectionLinkResponse
+  extends Prisma.CollectionClientGetPayload<{
+    include: { collection: { include: { user: true } }; client: true };
+  }> {}
+
 export interface FindClientStatsResponse {
   totalObjectsCount: number;
   unseenApartementsCount: number;
@@ -43,7 +48,7 @@ export interface ToggleClientToCollectionDto {
 
 export type ToggleClientToCollectionResponse =
   Prisma.CollectionClientGetPayload<{
-    include: { client: true; collection: true };
+    include: { client: true; collection: { include: { user: true } } };
   }>;
 
 export interface ToggleApartmentToClientDto {
@@ -76,6 +81,13 @@ export class ClientApi {
       {
         params: dto,
       },
+    );
+    return res.data;
+  }
+
+  static async findCollectionLink(id: string) {
+    const res = await authInstance.get<FindCollectionLinkResponse>(
+      ROUTES.clients.findCollectionLink(id).path,
     );
     return res.data;
   }

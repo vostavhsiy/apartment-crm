@@ -76,7 +76,6 @@ export class ClientsService {
       );
       return data;
     } catch (error) {
-      console.log(error);
       throw new BadRequestException("Не удалось получить клиентов!");
     }
   }
@@ -147,6 +146,29 @@ export class ClientsService {
     }
   }
 
+  async findCollectionLink(id: string) {
+    try {
+      const collectionClient = await this.dbService.collectionClient.findUnique(
+        {
+          where: {
+            id,
+          },
+          include: {
+            collection: {
+              include: {
+                user: true,
+              },
+            },
+            client: true,
+          },
+        },
+      );
+      return collectionClient;
+    } catch (error) {
+      throw new NotFoundException("Не удалось получить подборку!");
+    }
+  }
+
   async update(
     clientId: string,
     userId: string,
@@ -182,7 +204,11 @@ export class ClientsService {
             collectionId,
           },
           include: {
-            collection: true,
+            collection: {
+              include: {
+                user: true,
+              },
+            },
             client: true,
           },
         });

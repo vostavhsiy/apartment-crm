@@ -240,21 +240,21 @@ export const CollectionToClientDialog: FC<Props> = ({ collection }) => {
               </p>
               <div className="flex items-center gap-2 justify-center">
                 <ClientMessageLinkButton
-                  phone={createdCollectionToClient.client.phone}
+                  user={createdCollectionToClient.collection.user}
                   collectionLink={PublicRoutes.CLIENT_COLLECTION(
                     createdCollectionToClient.id,
                   )}
                   linkType="whatsapp"
                 />
                 <ClientMessageLinkButton
-                  phone={createdCollectionToClient.client.phone}
+                  user={createdCollectionToClient.collection.user}
                   collectionLink={PublicRoutes.CLIENT_COLLECTION(
                     createdCollectionToClient.id,
                   )}
                   linkType="telegram"
                 />
                 <ClientMessageLinkButton
-                  phone={createdCollectionToClient.client.phone}
+                  user={createdCollectionToClient.collection.user}
                   collectionLink={PublicRoutes.CLIENT_COLLECTION(
                     createdCollectionToClient.id,
                   )}

@@ -69,6 +69,15 @@ export function useFindClientStats(clientId: string, options = {}) {
   });
 }
 
+export function useFindCollectionClientLink(id: string, options = {}) {
+  return useQuery({
+    queryKey: CLIENT_QUERY_KEYS.collectionClient(id),
+    queryFn: () => ClientApi.findCollectionLink(id),
+    enabled: !!id,
+    ...options,
+  });
+}
+
 export function useFindClient(id: string, options = {}) {
   return useQuery({
     queryKey: CLIENT_QUERY_KEYS.client(id),

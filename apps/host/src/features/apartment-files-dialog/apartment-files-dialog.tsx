@@ -26,12 +26,14 @@ interface Props {
   files: File[];
   title?: string;
   previewSlider?: boolean;
+  showButtons?: boolean;
 }
 
 export const ApartmentFilesDialog: FC<Props> = ({
   files,
   title,
   previewSlider,
+  showButtons,
 }) => {
   const [previewApi, setPreviewApi] = useState<CarouselApi>();
   const [dialogApi, setDialogApi] = useState<CarouselApi>();
@@ -75,7 +77,7 @@ export const ApartmentFilesDialog: FC<Props> = ({
         />
       ) : (
         <Carousel setApi={setPreviewApi} className="w-full h-full">
-          <CarouselContent>
+          <CarouselContent className="h-full">
             {files.map((file, index) => (
               <CarouselItem
                 onClick={handleOpen}
@@ -96,8 +98,20 @@ export const ApartmentFilesDialog: FC<Props> = ({
           </CarouselContent>
           {files?.length > 0 && (
             <>
-              <CarouselPrevious className="max-md:absolute max-lg:left-4 max-lg:top-1/2 max-lg:transform max-lg:-translate-y-1/2 z-10" />
-              <CarouselNext className="max-lg:absolute max-lg:right-4 max-lg:top-1/2 max-lg:transform max-lg:-translate-y-1/2 z-10" />
+              <CarouselPrevious
+                className={cn(
+                  !showButtons
+                    ? "max-lg:absolute max-lg:left-4 max-lg:top-1/2 max-lg:transform max-lg:-translate-y-1/2 z-10"
+                    : "absolute left-4 top-1/2 transform -translate-y-1/2 z-10",
+                )}
+              />
+              <CarouselNext
+                className={cn(
+                  !showButtons
+                    ? "max-lg:absolute max-lg:right-4 max-lg:top-1/2 max-lg:transform max-lg:-translate-y-1/2 z-10"
+                    : "absolute right-4 top-1/2 transform -translate-y-1/2 z-10",
+                )}
+              />
             </>
           )}
         </Carousel>

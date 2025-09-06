@@ -25,7 +25,6 @@ export const ApartmentRowSheet: FC<Props> = ({
     <div className="w-full space-y-5">
       {apartments.length > 0 ? (
         apartments.map((apartment) => {
-          console.log(clientId, apartment);
           const isLiked = apartment.clientsLikes.some(
             (like) => like.clientId === clientId,
           );

@@ -1,4 +1,5 @@
 import { User } from "@/entities/user/model/user";
+import { cn } from "@/shared/lib/utils";
 import { Button, ButtonProps } from "@/shared/ui/button";
 import { TelegramIcon } from "@/shared/ui/icons/telegram";
 import { WhatsAppIcon } from "@/shared/ui/icons/whatsapp";
@@ -11,41 +12,50 @@ interface Props extends ButtonProps {
   user: User;
   collectionLink: string;
   linkType: "whatsapp" | "telegram" | "email";
-  message?: string;
 }
 
 const getLinkMessage = (collectionLink: string) => {
-  return `Для Вас подготовлена презентация объектов недвижимости. Для просмотра перейдите по ссылке ${collectionLink}`;
+  return `Здравствуйте, меня заинтересовало предложение объектов ${collectionLink}`;
 };
 
-export const ClientMessageLinkButton: FC<Props> = ({
-  linkType,
+export const UserSocialMediaButton: FC<Props> = ({
   user,
   collectionLink,
-  message,
+  linkType,
   ...props
 }) => {
   const getLink = () => {
     const email = user.email;
     const phone = user.phone || "";
     const formattedPhone = phone[0] === "8" ? "+7" + phone.slice(1) : phone;
-    const linkMessage = message || getLinkMessage(collectionLink);
+    const linkMessage = getLinkMessage(collectionLink);
     switch (linkType) {
       case "whatsapp":
-        return `https://wa.me/${formattedPhone}?text=${encodeURIComponent(linkMessage)}`;
+        return `https://wa.me/${formattedPhone}`;
       case "telegram":
-        return `https://t.me/${formattedPhone}?text=${encodeURIComponent(linkMessage)}`;
+        return `https://t.me/${formattedPhone}`;
       case "email":
-        return `mailto:${email}?subject=${encodeURIComponent("Презентация объектов недвижимости")}&body=${encodeURIComponent(linkMessage)}`;
+        return `mailto:${email}?subject=${encodeURIComponent("У вас новое сообщение по предложению")}&body=${encodeURIComponent(linkMessage)}`;
     }
   };
 
   return (
-    <Button size="icon" variant="outline" asChild {...props}>
+    <Button
+      size="icon"
+      variant="outline"
+      asChild
+      {...props}
+      className={cn(
+        "group rounded-full grayscale-100 hover:grayscale-0",
+        props.className,
+      )}
+    >
       <Link href={getLink()} target="_blank">
         {linkType === "whatsapp" && <WhatsAppIcon className="size-6" />}
         {linkType === "telegram" && <TelegramIcon className="size-6" />}
-        {linkType === "email" && <Mail />}
+        {linkType === "email" && (
+          <Mail className="opacity-50 group-hover:opacity-100" />
+        )}
       </Link>
     </Button>
   );

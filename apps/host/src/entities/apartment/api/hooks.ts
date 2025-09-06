@@ -4,12 +4,14 @@ import {
   APARTMENT_QUERY_KEYS,
   COLLECTION_QUERY_KEYS,
 } from "@/shared/lib/api/query-keys";
+import { useInfiniteScroll } from "@/shared/lib/hooks/use-infinity-scroll";
 import { PaginationQueryDto } from "@apartment-crm/helpers";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
   ApartmentApi,
   CreateApartmentDto,
+  FindApartmentsForCollectionResponse,
   ToggleApartmentToCollectionDto,
   UpdateApartmentDto,
 } from "./api";
@@ -45,6 +47,26 @@ export function useFindApartmentsForUserPerPage(
 }
 
 export function useFindApartmentsForCollection(
+  collectionId: string,
+  dto: Partial<PaginationQueryDto>,
+  options = {},
+) {
+  return useInfiniteScroll<FindApartmentsForCollectionResponse>({
+    queryKey: [...APARTMENT_QUERY_KEYS.apartments, dto.search || ""],
+    queryFn: ({ pageParam }) => {
+      return ApartmentApi.findForCollection(collectionId, {
+        ...dto,
+        page: pageParam,
+      });
+    },
+    getNextPageParam: (lastPage, allPages) => {
+      const hasMore = lastPage.hasMore;
+      return hasMore ? allPages.length + 1 : undefined;
+    },
+  });
+}
+
+export function useFindApartmentsForCollectionPerPage(
   collectionId: string,
   dto: Partial<PaginationQueryDto>,
   options = {},

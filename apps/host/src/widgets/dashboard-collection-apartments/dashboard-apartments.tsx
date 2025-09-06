@@ -1,6 +1,6 @@
 "use client";
 
-import { useFindApartmentsForCollection } from "@/entities/apartment/api/hooks";
+import { useFindApartmentsForCollectionPerPage } from "@/entities/apartment/api/hooks";
 import {
   ApartmentRowSheet,
   ApartmentRowSheetSkeleton,
@@ -28,10 +28,8 @@ export const DashboardCollectionApartments: FC<Props> = ({ collectionId }) => {
   const { data: collection, isPending: isCollectionPending } =
     useFindCollection(collectionId);
 
-  const { data: apartmentsData, isPending } = useFindApartmentsForCollection(
-    collectionId,
-    params,
-  );
+  const { data: apartmentsData, isPending } =
+    useFindApartmentsForCollectionPerPage(collectionId, params);
 
   if (isCollectionPending) return <Spinner />;
 
