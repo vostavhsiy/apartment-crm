@@ -177,7 +177,7 @@ export const CollectionToClientDialog: FC<Props> = ({ collection }) => {
         <Button type="button">Отправить клиенту</Button>
       </DialogTrigger>
       <DialogContent className="flex flex-col overflow-hidden">
-        {!isTogglePending && createdCollectionToClient && (
+        {createdCollectionToClient && (
           <>
             <DialogTitle>Отправьте ссылку клиенту!</DialogTitle>
             <p className="text-center">
@@ -264,7 +264,7 @@ export const CollectionToClientDialog: FC<Props> = ({ collection }) => {
             </div>
           </>
         )}
-        {!isTogglePending && !createdCollectionToClient && (
+        {!createdCollectionToClient && (
           <>
             <DialogTitle>Отправить подборку клиенту</DialogTitle>
             <Label className="flex-col items-start font-normal">
@@ -342,7 +342,7 @@ export const CollectionToClientDialog: FC<Props> = ({ collection }) => {
                   className="w-full"
                   type="button"
                   onClick={() => handleToggleClick(true)}
-                  disabled={isCreatePending}
+                  disabled={isCreatePending || isTogglePending}
                 >
                   <Plus className="mr-2 shrink-0" />
                   <span className="truncate">
