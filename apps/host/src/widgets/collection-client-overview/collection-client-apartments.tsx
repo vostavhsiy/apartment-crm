@@ -14,11 +14,13 @@ import { Spinner } from "@/shared/ui/spinner";
 
 import { FC } from "react";
 
+import { CollectionClientListMapToggle } from "./collection-client-list-map-toggle";
+
 interface Props {
   collectionClientLink: FindCollectionLinkResponse;
 }
 
-export const ClientCollectionApartments: FC<Props> = ({
+export const CollectionClientApartments: FC<Props> = ({
   collectionClientLink,
 }) => {
   const { params } = usePaginateParams();
@@ -43,7 +45,16 @@ export const ClientCollectionApartments: FC<Props> = ({
 
   return (
     <div className="w-full">
-      <Heading className="mb-5 text-muted-foreground">Подбор объектов</Heading>
+      <div className="flex items-center justify-between gap-5 mb-5">
+        <Heading className="text-muted-foreground max-md:text-lg">
+          Подбор объектов
+        </Heading>
+        <div className="flex items-center gap-3">
+          <CollectionClientListMapToggle
+            collectionClientLinkId={collectionClientLink.id}
+          />
+        </div>
+      </div>
       <QueryParamsFilters />
       {!pending && client && (
         <ApartmentSheet

@@ -46,16 +46,23 @@ export const UserSocialMediaButton: FC<Props> = ({
       asChild
       {...props}
       className={cn(
-        "group rounded-full grayscale-100 hover:grayscale-0",
+        "group max-md:w-full max-md:justify-start max-md:h-14 max-md:px-3 max-md:bg-muted max-md:border-none rounded-full md:grayscale-100 md:hover:grayscale-0",
         props.className,
       )}
     >
-      <Link href={getLink()} target="_blank">
-        {linkType === "whatsapp" && <WhatsAppIcon className="size-6" />}
-        {linkType === "telegram" && <TelegramIcon className="size-6" />}
-        {linkType === "email" && (
-          <Mail className="opacity-50 group-hover:opacity-100" />
-        )}
+      <Link href={getLink()} target="_blank" className={cn("")}>
+        <span className="max-md:flex max-md:items-center max-md:rounded-full max-md:size-9 max-md:border max-md:bg-background max-md:shadow-xs max-md:hover:bg-accent max-md:hover:text-accent-foreground max-md:dark:border-input max-md:dark:hover:bg-background/70 max-md:justify-center">
+          {linkType === "whatsapp" && <WhatsAppIcon className="size-6" />}
+          {linkType === "telegram" && <TelegramIcon className="size-6" />}
+          {linkType === "email" && (
+            <Mail className="md:opacity-50 md:group-hover:opacity-100" />
+          )}
+        </span>
+        <span className="md:hidden">
+          Написать {linkType === "whatsapp" && "в WhatsApp"}
+          {linkType === "telegram" && "в Telegram"}
+          {linkType === "email" && "на почту"}
+        </span>
       </Link>
     </Button>
   );

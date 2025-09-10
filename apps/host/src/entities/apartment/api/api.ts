@@ -32,6 +32,8 @@ export interface UpdateApartmentDto extends Partial<CreateApartmentDto> {
 
 export interface UpdateApartmentResponse extends ApartmentWithRelations {}
 
+export type FindAllApartmentsForCollectionResponse = ApartmentWithRelations[];
+
 export interface FindApartmentsForCollectionResponse
   extends PaginatedResult<ApartmentWithRelations> {}
 
@@ -83,6 +85,19 @@ export class ApartmentApi {
         },
       },
     );
+    return res.data;
+  }
+
+  static async findAllForCollection(collectionId: string) {
+    const res =
+      await publicInstance.get<FindAllApartmentsForCollectionResponse>(
+        ROUTES.apartments.findAllForCollection.path,
+        {
+          params: {
+            collectionId,
+          },
+        },
+      );
     return res.data;
   }
 

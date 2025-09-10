@@ -75,11 +75,7 @@ export const ApartmentCard: FC<Props> = ({
         </div>
 
         <div className="w-full flex flex-col items-center gap-5 px-4">
-          <ApartmentLikeButton
-            variant={"outline"}
-            apartmentId={apartment.id}
-            client={client}
-          />
+          <ApartmentLikeButton apartmentId={apartment.id} client={client} />
         </div>
       </CardContent>
     </Card>

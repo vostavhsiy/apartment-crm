@@ -130,7 +130,7 @@ export const ApartmentFilesDialog: FC<Props> = ({
       >
         <DialogContent
           showCloseButton={false}
-          className="max-xl:block !max-w-full w-screen h-screen rounded-none bg-black border-black text-white"
+          className="max-xl:block !max-w-full w-screen h-screen rounded-none bg-black border-black text-white z-110"
         >
           <DialogClose className="absolute top-4 right-4" asChild>
             <Button variant={"ghost"} type="button" size={"icon"}>
@@ -138,7 +138,9 @@ export const ApartmentFilesDialog: FC<Props> = ({
             </Button>
           </DialogClose>
           {!title && <DialogTitle className="hidden"></DialogTitle>}
-          {title && <DialogTitle>{title}</DialogTitle>}
+          {title && (
+            <DialogTitle className="truncate max-w-[80%]">{title}</DialogTitle>
+          )}
           <Carousel
             setApi={setDialogApi}
             className={cn(

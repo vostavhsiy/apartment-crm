@@ -37,6 +37,9 @@ export const ROUTES = {
     findForCollection: {
       path: "/api/apartments/for-collection",
     },
+    findAllForCollection: {
+      path: "/api/apartments/for-collection/all",
+    },
     findOne: (id: string) => ({
       path: `/api/apartments/${id}`,
     }),

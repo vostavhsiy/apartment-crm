@@ -18,7 +18,7 @@ export const ApartmentLikeButton: FC<Props> = ({
 }) => {
   const { mutate: toggleLike, isPending } = useToggleApartmentToClient();
 
-  const connect = client.likes.some((a) => a.apartmentId === apartmentId);
+  const connect = client.likes?.some((a) => a.apartmentId === apartmentId);
 
   const handleLike = () => {
     if (isPending) return;
@@ -35,9 +35,11 @@ export const ApartmentLikeButton: FC<Props> = ({
     <Button
       disabled={isPending}
       size={"lg"}
+      variant={"outline"}
       {...props}
       className={cn(
-        "group w-full text-red-500 hover:text-red-500 hover:shadow-lg hover:bg-transparent",
+        "group text-red-500 hover:text-red-500 hover:shadow-lg hover:bg-transparent",
+        props.size !== "icon" && "w-full",
         connect && "bg-red-100 hover:bg-red-200/80",
         props.className,
       )}
@@ -49,7 +51,7 @@ export const ApartmentLikeButton: FC<Props> = ({
           (connect || isPending) && "fill-red-500 scale-110",
         )}
       />
-      Мне нравится
+      {props.size !== "icon" && "Мне нравится"}
     </Button>
   );
 };

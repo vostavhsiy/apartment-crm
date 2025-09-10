@@ -224,6 +224,32 @@ export class ApartmentsService {
     }
   }
 
+  async findAllForCollection(collectionId: string) {
+    try {
+      const apartments = await this.dbService.apartment.findMany({
+        where: {
+          collectionsLinks: {
+            some: {
+              collectionId,
+            },
+          },
+        },
+        include: ApartmentIncludeConfig,
+        orderBy: [
+          {
+            clientViews: {
+              _count: "desc",
+            },
+          },
+          { title: "asc" },
+        ],
+      });
+      return apartments;
+    } catch (error) {
+      throw new NotFoundException("Объекты не найдены!");
+    }
+  }
+
   async findOne(id: string) {
     try {
       const apartment = await this.dbService.apartment.findUnique({

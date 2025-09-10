@@ -63,6 +63,11 @@ export class ApartmentsController {
     return this.apartmentsService.findForCollection(collectionId, pagination);
   }
 
+  @Get("for-collection/all")
+  findAllForCollection(@Query("collectionId") collectionId: string) {
+    return this.apartmentsService.findAllForCollection(collectionId);
+  }
+
   @Auth({ roles: ["PROSUBSCRIBER"] })
   @Get("ai")
   getApartmentInfoFromAi(@Query("url") url: string) {

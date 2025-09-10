@@ -152,5 +152,41 @@ export function getShortNumber(num: number) {
   return num.toString();
 }
 
+export function getMapBounds(coordinates: number[][]) {
+  let minLat = Infinity,
+    minLng = Infinity;
+  let maxLat = -Infinity,
+    maxLng = -Infinity;
+
+  for (const coords of coordinates) {
+    const lat = coords[1];
+    const lng = coords[0];
+
+    if (lat < minLat) minLat = lat;
+    if (lat > maxLat) maxLat = lat;
+    if (lng < minLng) minLng = lng;
+    if (lng > maxLng) maxLng = lng;
+  }
+
+  return [
+    [minLng, minLat],
+    [maxLng, maxLat],
+  ];
+}
+
+export function isInMapBounds(coords: number[], bounds: number[][]) {
+  if (!bounds || bounds.length !== 2) return false;
+
+  const [southWest, northEast] = bounds;
+  const [lat, lng] = coords;
+
+  return (
+    lat >= southWest[0] &&
+    lat <= northEast[0] &&
+    lng >= southWest[1] &&
+    lng <= northEast[1]
+  );
+}
+
 export const TIPTAP_EMPTY_DOC =
   '{"type":"doc","content":[{"type":"paragraph","attrs":{"textAlign":null}}]}';

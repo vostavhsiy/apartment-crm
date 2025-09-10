@@ -90,14 +90,13 @@ export const CollectionClientHeader: FC<Props> = ({
                   {activeLink?.text}
                 </div>
               </div>
-              <div className="flex max-md:flex-row shrink-0 items-center flex-col gap-2 max-md:gap-5">
+              <div className="flex shrink-0 md:items-center flex-col gap-2 max-md:gap-5">
                 <UserSocialMediaButton
                   linkType="whatsapp"
                   user={link.collection.user}
                   collectionLink={PublicRoutes.CLIENT_COLLECTION(
                     collectionClientLinkId,
                   )}
-                  className="max-md:!size-12"
                 />
                 <UserSocialMediaButton
                   linkType="telegram"
@@ -105,7 +104,6 @@ export const CollectionClientHeader: FC<Props> = ({
                   collectionLink={PublicRoutes.CLIENT_COLLECTION(
                     collectionClientLinkId,
                   )}
-                  className="max-md:!size-12"
                 />
                 <UserSocialMediaButton
                   linkType="email"
@@ -113,15 +111,14 @@ export const CollectionClientHeader: FC<Props> = ({
                   collectionLink={PublicRoutes.CLIENT_COLLECTION(
                     collectionClientLinkId,
                   )}
-                  className="max-md:!size-12"
                 />
               </div>
             </div>
           )}
           {!user && (
-            <div className="flex gap-5 h-[8rem]">
-              <Skeleton className="w-[19.75rem] h-full" />
-              <Skeleton className="w-[2.25rem] h-full" />
+            <div className="flex max-md:flex-col max-md:w-[13.75rem] gap-5 h-[8rem] max-md:h-auto">
+              <Skeleton className="w-[19.75rem] max-md:w-full h-full max-md:h-[5rem]" />
+              <Skeleton className="w-[2.25rem] max-md:w-full h-full max-md:h-[13.125rem]" />
             </div>
           )}
         </div>

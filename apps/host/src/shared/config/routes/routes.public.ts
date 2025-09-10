@@ -17,6 +17,10 @@ export class PublicRoutes {
     return this.CLIENT_COLLECTION(id, true) + `/mortgage`;
   }
 
+  static CLIENT_COLLECTION_MAP(id: string) {
+    return this.CLIENT_COLLECTION(id, true) + `/map`;
+  }
+
   static CLIENT_APARTMENT(collectionClientId: string, id: string) {
     return this.CLIENT_COLLECTION(collectionClientId) + `/ap/${id}`;
   }

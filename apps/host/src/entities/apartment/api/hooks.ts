@@ -86,6 +86,18 @@ export function useFindApartmentsForCollectionPerPage(
   });
 }
 
+export function useFindAllApartmentsForCollection(
+  collectionId: string,
+  options = {},
+) {
+  return useQuery({
+    queryKey: [...APARTMENT_QUERY_KEYS.apartments],
+    queryFn: () => ApartmentApi.findAllForCollection(collectionId),
+    enabled: !!collectionId,
+    ...options,
+  });
+}
+
 export function useFindApartmentsForClient(
   clientId: string,
   dto: Partial<PaginationQueryDto>,
