@@ -7,15 +7,17 @@ import { FC } from "react";
 
 interface Props {
   apartment: ApartmentWithRelations;
+  showButtons?: boolean;
 }
 
-export const ApartmentImages: FC<Props> = ({ apartment }) => {
+export const ApartmentImages: FC<Props> = ({ apartment, showButtons }) => {
   return (
     <div className="w-full mb-8">
       <ApartmentFilesDialog
         files={apartment.files}
         title={apartment.title}
         previewSlider
+        showButtons={showButtons}
       />
     </div>
   );

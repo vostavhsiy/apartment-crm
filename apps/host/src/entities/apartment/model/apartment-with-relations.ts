@@ -1,3 +1,4 @@
+import { User } from "@/entities/user/model/user";
 import {
   ApartmentClient,
   ApartmentCollection,
@@ -14,4 +15,5 @@ export interface ApartmentWithRelations extends Apartment {
   collectionsLinks: ApartmentCollection[];
   clientViews: ClientApartmentView[];
   clientsLikes: ApartmentClient[];
+  user: User;
 }

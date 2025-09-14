@@ -1,31 +1,34 @@
+import { ApartmentWithRelations } from "@/entities/apartment/model/apartment-with-relations";
 import { useToggleApartmentToClient } from "@/entities/client/api/hooks";
-import { ClientWithRelations } from "@/entities/client/model/client-with-relations";
 import { cn } from "@/shared/lib/utils";
 import { Button, ButtonProps } from "@/shared/ui/button";
 import { Heart } from "lucide-react";
 
-import { FC } from "react";
+import { FC, MouseEvent } from "react";
 
 interface Props extends ButtonProps {
-  client: ClientWithRelations;
-  apartmentId: string;
+  apartment: ApartmentWithRelations;
+  clientId: string;
 }
 
 export const ApartmentLikeButton: FC<Props> = ({
-  client,
-  apartmentId,
+  apartment,
+  clientId,
   ...props
 }) => {
   const { mutate: toggleLike, isPending } = useToggleApartmentToClient();
 
-  const connect = client.likes?.some((a) => a.apartmentId === apartmentId);
+  const connect = apartment.clientsLikes?.some(
+    (like) => like.clientId === clientId,
+  );
 
-  const handleLike = () => {
+  const handleLike = (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
     if (isPending) return;
     toggleLike({
-      id: client.id,
+      id: clientId,
       dto: {
-        apartmentId,
+        apartmentId: apartment.id,
         connect: !connect,
       },
     });

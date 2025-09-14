@@ -187,7 +187,6 @@ export const CollectionClientMap: FC<Props> = ({ collectionClientLink }) => {
               ),
             ) || []
         }
-        client={client}
         collectionClientLink={collectionClientLink}
       />
       {mapRef.current && (

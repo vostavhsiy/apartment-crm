@@ -1,5 +1,4 @@
 import { FindCollectionLinkResponse } from "@/entities/client/api/api";
-import { ClientWithRelations } from "@/entities/client/model/client-with-relations";
 import { ApartmentFilesDialog } from "@/features/apartment-files-dialog/apartment-files-dialog";
 import { ApartmentLikeButton } from "@/features/apartment-like-button/apartment-like-button";
 import { PublicRoutes } from "@/shared/config/routes/routes.public";
@@ -17,13 +16,11 @@ import { ApartmentWithRelations } from "../model/apartment-with-relations";
 interface Props {
   apartment: ApartmentWithRelations;
   collectionClientLink: FindCollectionLinkResponse;
-  client: ClientWithRelations;
 }
 
 export const ApartmentCard: FC<Props> = ({
   apartment,
   collectionClientLink,
-  client,
 }) => {
   return (
     <Card className="w-full max-w-md mx-auto pt-0 shadow-lg">
@@ -75,7 +72,10 @@ export const ApartmentCard: FC<Props> = ({
         </div>
 
         <div className="w-full flex flex-col items-center gap-5 px-4">
-          <ApartmentLikeButton apartmentId={apartment.id} client={client} />
+          <ApartmentLikeButton
+            apartment={apartment}
+            clientId={collectionClientLink.clientId}
+          />
         </div>
       </CardContent>
     </Card>

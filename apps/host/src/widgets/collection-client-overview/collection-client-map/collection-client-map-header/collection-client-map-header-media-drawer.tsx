@@ -6,6 +6,7 @@ import { PublicRoutes } from "@/shared/config/routes/routes.public";
 import { Button } from "@/shared/ui/button";
 import {
   Drawer,
+  DrawerClose,
   DrawerContent,
   DrawerTitle,
   DrawerTrigger,
@@ -25,13 +26,15 @@ export const CollectionClientMapHeaderMediaDrawer: FC<Props> = ({
 }) => {
   const [open, setOpen] = useState(false);
 
+  const Slot = open ? DrawerClose : DrawerTrigger;
+
   return (
     <Drawer direction="top" onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
+      <Slot asChild>
         <Button size={"icon"} variant={open ? "outline" : "default"}>
           <MessageCircleMore />
         </Button>
-      </DrawerTrigger>
+      </Slot>
       <DrawerContent className="pt-30 pb-5 px-5">
         <DrawerTitle></DrawerTitle>
         <div className="flex flex-col gap-2">

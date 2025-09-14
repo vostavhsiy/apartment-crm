@@ -1,5 +1,4 @@
 import { FindCollectionLinkResponse } from "@/entities/client/api/api";
-import { ClientWithRelations } from "@/entities/client/model/client-with-relations";
 import { Heading } from "@/shared/ui/heading";
 
 import { FC } from "react";
@@ -10,13 +9,11 @@ import { ApartmentCard, ApartmentCardSkeleton } from "./apartment-card";
 interface Props {
   apartments: ApartmentWithRelations[];
   collectionClientLink: FindCollectionLinkResponse;
-  client: ClientWithRelations;
 }
 
 export const ApartmentSheet: FC<Props> = ({
   apartments,
   collectionClientLink,
-  client,
 }) => {
   return (
     <div className="w-full grid max-md:grid-cols-1 grid-cols-3 gap-5">
@@ -26,7 +23,6 @@ export const ApartmentSheet: FC<Props> = ({
             <ApartmentCard
               key={apartment.id}
               apartment={apartment}
-              client={client}
               collectionClientLink={collectionClientLink}
             />
           );

@@ -58,7 +58,6 @@ export const CollectionClientApartments: FC<Props> = ({
       <QueryParamsFilters />
       {!pending && client && (
         <ApartmentSheet
-          client={client}
           collectionClientLink={collectionClientLink}
           apartments={apartmentsData?.pages?.flatMap((page) => page.data) || []}
         />

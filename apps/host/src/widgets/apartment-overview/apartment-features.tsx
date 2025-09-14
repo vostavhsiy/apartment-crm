@@ -29,10 +29,12 @@ export const AparmentFeatures: FC<Props> = ({ apartment }) => {
           {features.map((feature, index) => (
             <li
               key={index}
-              className="max-w-full pb-3 overflow-hidden text-ellipsis"
+              className="max-w-full pb-3 flex items-baseline before:block before:grow-1 before:order-1 before:border-b before:border-dashed before:border-muted-foreground before:min-w-10 max-md:text-sm"
             >
-              <span className="text-muted-foreground">{feature.name}:</span>{" "}
-              {feature.value}
+              <span className="text-muted-foreground shrink-0">
+                {feature.name}
+              </span>{" "}
+              <span className="order-2">{feature.value}</span>
             </li>
           ))}
         </ul>

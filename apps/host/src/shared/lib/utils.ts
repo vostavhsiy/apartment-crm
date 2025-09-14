@@ -188,5 +188,43 @@ export function isInMapBounds(coords: number[], bounds: number[][]) {
   );
 }
 
+export function extractNumbers(input?: string | null) {
+  if (!input) return 0;
+  const n = input?.replace(/\D/g, "");
+  return n && isNaN(+n) ? 0 : +n;
+}
+
+export function formatNumberWithSpaces(num: number | null) {
+  return num
+    ? new Intl.NumberFormat("fr-FR", {
+        maximumFractionDigits: 2,
+      })
+        .format(num)
+        .replace(/\s/g, "\u00A0")
+    : "";
+}
+
+export function getMortgageInfo(props: {
+  price: number;
+  firstPayment: number;
+  creditPeriod: number;
+  creditRate: number;
+}) {
+  const creditSum = props.price - props.firstPayment;
+  const monthlyRate = props.creditRate / 12 / 100;
+  const creditMonthsCount = props.creditPeriod * 12;
+  const Ka =
+    (monthlyRate * (1 + monthlyRate) ** creditMonthsCount) /
+    ((1 + monthlyRate) ** creditMonthsCount - 1);
+  const montlyPayment = creditSum * Ka;
+  const overPayment = montlyPayment * creditMonthsCount - creditSum;
+
+  return {
+    montlyPayment: formatNumberWithSpaces(Math.round(montlyPayment)),
+    creditSum: formatNumberWithSpaces(Math.round(creditSum)),
+    overPayment: formatNumberWithSpaces(Math.round(overPayment)),
+  };
+}
+
 export const TIPTAP_EMPTY_DOC =
   '{"type":"doc","content":[{"type":"paragraph","attrs":{"textAlign":null}}]}';

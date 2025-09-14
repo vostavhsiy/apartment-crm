@@ -3,6 +3,7 @@
 import { Button } from "@/shared/ui/button";
 import {
   Drawer,
+  DrawerClose,
   DrawerContent,
   DrawerTitle,
   DrawerTrigger,
@@ -20,16 +21,18 @@ export const CollectionClientMapHeaderFilterDrawer: FC<Props> = ({
 }) => {
   const [open, setOpen] = useState(false);
 
+  const Slot = open ? DrawerClose : DrawerTrigger;
+
   return (
-    <Drawer direction="top" onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
+    <Drawer direction="top" open={open} onOpenChange={setOpen}>
+      <Slot asChild>
         <Button size={"icon"} variant={open ? "outline" : "default"}>
           <Settings2 />
         </Button>
-      </DrawerTrigger>
+      </Slot>
       <DrawerContent className="pt-25 pb-5 px-5">
         <DrawerTitle></DrawerTitle>
-        {children}
+        <div onClick={() => setOpen(false)}>{children}</div>
         <div className="mx-auto w-1/3 bg-muted-foreground/30 h-2 rounded-full mt-10"></div>
       </DrawerContent>
     </Drawer>

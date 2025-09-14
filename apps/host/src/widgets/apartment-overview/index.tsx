@@ -1,7 +1,6 @@
 "use client";
 
 import { useFindApartment } from "@/entities/apartment/api/hooks";
-import { ClientWithRelations } from "@/entities/client/model/client-with-relations";
 import { ApartmentLikeButton } from "@/features/apartment-like-button/apartment-like-button";
 import { ApartmentToCollectionDialog } from "@/features/apartment-to-collection-dialog/apartment-to-collection-dialog";
 import { AuthRoutes } from "@/shared/config/routes/routes.auth";
@@ -21,13 +20,13 @@ import { ApartmentPrice } from "./apartment-price";
 
 interface Props {
   apartmentId: string;
-  client?: ClientWithRelations;
+  clientId?: string;
   inAdmin?: boolean;
 }
 
 export const ApartmentOverview: FC<Props> = ({
   apartmentId,
-  client,
+  clientId,
   inAdmin,
 }) => {
   const { data: apartment, isPending } = useFindApartment(apartmentId);
@@ -68,9 +67,9 @@ export const ApartmentOverview: FC<Props> = ({
       )}
       {apartment.address && <ApartmentMap apartment={apartment} />}
       {apartment.description && <ApartmentDescription apartment={apartment} />}
-      {client && (
+      {clientId && (
         <div className="mt-5">
-          <ApartmentLikeButton client={client} apartmentId={apartment.id} />
+          <ApartmentLikeButton clientId={clientId} apartment={apartment} />
         </div>
       )}
     </div>

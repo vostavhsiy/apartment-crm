@@ -131,6 +131,17 @@
     @apply flex flex-col bg-background text-foreground;
   }
 
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Hide arrows in Firefox */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
   *.ymaps-2-1-79-hint,
   *.ymaps-2-1-79-hint__text {
     @apply !bg-transparent !p-0 !shadow-none !border-none !outline-0;

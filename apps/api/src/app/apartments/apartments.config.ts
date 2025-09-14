@@ -10,4 +10,5 @@ export const ApartmentIncludeConfig: Prisma.ApartmentInclude = {
   },
   clientViews: true,
   clientsLikes: true,
+  user: true,
 };

@@ -1,7 +1,6 @@
 import { ApartmentWithRelations } from "@/entities/apartment/model/apartment-with-relations";
 import { ApartmentCard } from "@/entities/apartment/ui/apartment-card";
 import { FindCollectionLinkResponse } from "@/entities/client/api/api";
-import { ClientWithRelations } from "@/entities/client/model/client-with-relations";
 import { ApartmentFilesDialog } from "@/features/apartment-files-dialog/apartment-files-dialog";
 import { ApartmentLikeButton } from "@/features/apartment-like-button/apartment-like-button";
 import { MOBILE_BREAKPOINT, useIsMobile } from "@/shared/lib/hooks/use-mobile";
@@ -15,7 +14,6 @@ import { FC, useState } from "react";
 
 interface Props {
   apartments: ApartmentWithRelations[];
-  client: ClientWithRelations;
   collectionClientLink: FindCollectionLinkResponse;
   selectedApartment: ApartmentWithRelations | null;
   setSelectedApartment: (apartment: ApartmentWithRelations | null) => void;
@@ -23,7 +21,6 @@ interface Props {
 
 export const CollectionClientMapObjects: FC<Props> = ({
   apartments,
-  client,
   collectionClientLink,
   selectedApartment,
   setSelectedApartment,
@@ -75,7 +72,7 @@ export const CollectionClientMapObjects: FC<Props> = ({
                   <CollectionClientObjectsItem
                     key={apartment.id}
                     apartment={apartment}
-                    client={client}
+                    clientId={collectionClientLink.clientId}
                     onSelect={setSelectedApartment}
                   />
                 ))}
@@ -92,7 +89,6 @@ export const CollectionClientMapObjects: FC<Props> = ({
             <div className="pr-6">
               <ApartmentCard
                 apartment={selectedApartment}
-                client={client}
                 collectionClientLink={collectionClientLink}
               />
             </div>
@@ -105,9 +101,9 @@ export const CollectionClientMapObjects: FC<Props> = ({
 
 const CollectionClientObjectsItem: FC<{
   apartment: ApartmentWithRelations;
-  client: ClientWithRelations;
+  clientId: string;
   onSelect: (apartment: ApartmentWithRelations) => void;
-}> = ({ apartment, client, onSelect }) => {
+}> = ({ apartment, clientId, onSelect }) => {
   return (
     <Card
       onClick={() => onSelect(apartment)}
@@ -141,8 +137,8 @@ const CollectionClientObjectsItem: FC<{
           )}
           <ApartmentLikeButton
             size={"icon"}
-            apartmentId={apartment.id}
-            client={client}
+            apartment={apartment}
+            clientId={clientId}
             className="absolute top-2 right-2"
           />
           <CardTitle>
