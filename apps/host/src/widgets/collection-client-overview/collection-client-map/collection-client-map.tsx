@@ -153,7 +153,7 @@ export const CollectionClientMap: FC<Props> = ({ collectionClientLink }) => {
       <Button
         variant={"outline"}
         size={"lg"}
-        className="fixed z-10 bottom-22 left-[5%] rounded-full"
+        className="md:hidden fixed z-10 bottom-22 left-[5%] rounded-full"
         asChild
       >
         <Link href={PublicRoutes.CLIENT_COLLECTION(collectionClientLink.id)}>
