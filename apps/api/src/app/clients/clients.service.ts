@@ -256,7 +256,7 @@ export class ClientsService {
           await this.notificationsService.create(userId, {
             title: `Клиенту понравился объект "${apartmentClientRelation.apartment.title}"`,
             body: `Клиенту "${client.name}" понравился объект "${apartmentClientRelation.apartment.title}"`,
-            link: `${CLIENT_URL}/ap/${apartmentId}`,
+            link: `${CLIENT_URL}/dashboard/apartments/${apartmentId}`,
           });
           this.webSocketsGateway.sendToUser(userId, WebSocketEvents.MESSAGE, {
             message: `Клиенту "${client.name}" понравился объект "${apartmentClientRelation.apartment.title}"`,
