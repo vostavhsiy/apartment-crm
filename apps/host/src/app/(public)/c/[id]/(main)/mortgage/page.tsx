@@ -1,4 +1,5 @@
 import { findCollectionClientLinkAction } from "@/entities/client/api/actions";
+import { CollectionClientMortgage } from "@/widgets/collection-client-overview/collection-client-mortgage/collection-client-mortgage";
 import { notFound } from "next/navigation";
 
 export const revalidate = 3600;
@@ -14,5 +15,9 @@ export default async function PublicCollectionMortgagePage(props: Props) {
 
   if (!collectionClientLink) return notFound();
 
-  return <div className="w-full"></div>;
+  return (
+    <div className="w-full">
+      <CollectionClientMortgage />
+    </div>
+  );
 }

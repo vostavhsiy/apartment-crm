@@ -1,31 +1,25 @@
 "use client";
 
-import {
-  extractNumbers,
-  formatNumberWithSpaces,
-  getMortgageInfo,
-} from "@/shared/lib/utils";
-import { Input } from "@/shared/ui/input";
-import { Label } from "@/shared/ui/label";
+import { getMortgageInfo } from "@/shared/lib/utils";
+import { Button } from "@/shared/ui/button";
+import { Plus } from "lucide-react";
 
 import { FC, useState } from "react";
 
-import { MortgageCalculatorSlider } from "../../mortgage-calculator-slider";
+import { MortgageCalculatorSlider } from "../mortgage-calculator-slider";
+import { MortgageItem } from "./mortgage.store";
 
 interface Props {
-  priceString?: string | null;
+  onAdding: (item: MortgageItem) => void;
 }
 
-export const CollectionClientApartmentMortgageCalculator: FC<Props> = ({
-  priceString,
-}) => {
+export const CollectionClientMortgageCalculator: FC<Props> = ({ onAdding }) => {
+  const [price, setPrice] = useState(() => 5500000);
   const [firstPayment, setFirstPayment] = useState(() =>
-    Math.round(extractNumbers(priceString) * 0.2),
+    Math.round(price * 0.2),
   );
   const [creditPeriod, setCreditPeriod] = useState(25);
   const [creditRate, setCreditRate] = useState(8);
-
-  const price = extractNumbers(priceString);
 
   const { montlyPayment, creditSum, overPayment } = getMortgageInfo({
     firstPayment,
@@ -35,19 +29,19 @@ export const CollectionClientApartmentMortgageCalculator: FC<Props> = ({
   });
 
   return (
-    <div className="md:sticky md:top-5 space-y-8 bg-background p-5 rounded-lg">
+    <div className="space-y-8 bg-background p-5 rounded-lg">
       <p className="text-lg font-semibold">Ипотечный калькулятор</p>
       <div className="space-y-8">
-        <Label className="flex-col items-start">
-          Стоимость объекта
-          <Input
-            value={priceString ? formatNumberWithSpaces(price) : ""}
-            placeholder="Цена объекта"
-            disabled
-            readOnly
-            className="disabled:opacity-100 disabled:bg-muted [word-spacing:0.3125rem] h-12"
-          />
-        </Label>
+        <MortgageCalculatorSlider
+          value={price}
+          setValue={setPrice}
+          label="Стоимость объекта"
+          placeholder="1 000 000"
+          inputLabel="₽"
+          onlyValue
+          min={100000}
+          max={1000000000}
+        />
         <MortgageCalculatorSlider
           value={firstPayment}
           setValue={setFirstPayment}
@@ -86,10 +80,29 @@ export const CollectionClientApartmentMortgageCalculator: FC<Props> = ({
           <span>{creditSum || "-"}</span>
         </div>
         <div className="flex items-center justify-between gap-5 py-2">
-          <span>Переплата по процентам</span>
+          <span>
+            Переплата
+            <br /> по процентам
+          </span>
           <span>{overPayment || "-"}</span>
         </div>
       </div>
+      <Button
+        className="w-full"
+        onClick={() =>
+          onAdding({
+            price,
+            firstPayment,
+            creditPeriod,
+            creditRate,
+            montlyPayment,
+            creditSum,
+            overPayment,
+          })
+        }
+      >
+        <Plus /> К сравнению
+      </Button>
     </div>
   );
 };

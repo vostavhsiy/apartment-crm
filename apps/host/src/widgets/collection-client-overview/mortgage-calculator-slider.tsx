@@ -17,7 +17,7 @@ interface Props {
   inputLabel?: string;
 }
 
-export const CollectionClientApartmentMortgageCalculatorSlider: FC<Props> = ({
+export const MortgageCalculatorSlider: FC<Props> = ({
   value,
   setValue,
   label,

@@ -1,3 +1,4 @@
+import { months as monthsList } from "@apartment-crm/constants";
 import { type ClassValue, clsx } from "clsx";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
@@ -225,6 +226,133 @@ export function getMortgageInfo(props: {
     overPayment: formatNumberWithSpaces(Math.round(overPayment)),
   };
 }
+
+type ScheduleOptions = {
+  principal?: number;
+  price?: number;
+  downPayment?: number;
+  years: number;
+  annualRate: number;
+};
+
+export function getMortgageSchedule(opts: ScheduleOptions): PaymentRow[] {
+  const { principal, price, downPayment, years, annualRate } = opts;
+
+  const startDate = new Date();
+
+  let P: number;
+  if (typeof principal === "number") {
+    P = principal;
+  } else if (typeof price === "number" && typeof downPayment === "number") {
+    P = price - downPayment;
+  } else {
+    throw new Error("Укажи либо principal, либо price и downPayment.");
+  }
+
+  const months = years * 12;
+  const i = annualRate / 12 / 100; // месячная ставка
+  const pow = Math.pow(1 + i, months);
+  const monthlyPayment = (P * (i * pow)) / (pow - 1); // аннуитетный платёж (как число, не округляем для расчётов)
+
+  const schedule: PaymentRow[] = [];
+  let balance = P;
+
+  for (let k = 1; k <= months; k++) {
+    const currentDate = new Date(startDate);
+    currentDate.setMonth(currentDate.getMonth() + k); // первый платёж = следующий месяц
+
+    const year = currentDate.getFullYear();
+    const monthIdx = currentDate.getMonth(); // 0..11
+    const month = monthIdx + 1;
+    const monthName = monthsList[monthIdx];
+
+    // проценты за месяц (по текущему остатку до платежа)
+    const interestExact = balance * i;
+    // часть в счёт тела кредита
+    let principalExact = monthlyPayment - interestExact;
+
+    // если остаток меньше principalExact (последний платёж) — погашаем остаток полностью
+    let paymentExact = monthlyPayment;
+    if (principalExact > balance) {
+      principalExact = balance;
+      paymentExact = interestExact + principalExact;
+      balance = 0;
+    } else {
+      balance = balance - principalExact;
+      // чтобы избежать очень маленьких отрицательных чисел из-за FP
+      if (Math.abs(balance) < 1e-8) balance = 0;
+    }
+
+    // Округляем для вывода (банки обычно показывают в копейках/рублях; тут — целые рубли)
+    schedule.push({
+      year,
+      month: monthName,
+      payment: Math.round(monthlyPayment),
+      interest: Math.round(interestExact),
+      principal: Math.round(principalExact),
+      balance: Math.round(balance),
+    });
+
+    if (balance <= 0) break;
+  }
+
+  return schedule;
+}
+
+export type PaymentRow = {
+  year: number;
+  month: string;
+  payment: number;
+  interest: number;
+  principal: number;
+  balance: number;
+};
+
+// export function getMortgageSchedule(
+//   loanAmount: number,
+//   initialPayment: number,
+//   years: number,
+//   annualRate: number,
+// ): PaymentRow[] {
+//   const schedule: PaymentRow[] = [];
+//   const months = years * 12;
+//   const monthlyRate = annualRate / 12 / 100;
+
+//   let balance = loanAmount - initialPayment;
+
+//   // считаем аннуитетный платёж
+//   const monthlyPayment =
+//     balance *
+//     (monthlyRate * Math.pow(1 + monthlyRate, months)) /
+//     (Math.pow(1 + monthlyRate, months) - 1);
+
+//   for (let i = 1; i <= months; i++) {
+//     const currentDate = new Date();
+//     currentDate.setMonth(currentDate.getMonth() + i);
+
+//     const year = currentDate.getFullYear();
+//     const month = currentDate.getMonth() + 1;
+
+//     const interest = balance * monthlyRate;
+//     const principal = monthlyPayment - interest;
+//     balance -= principal;
+
+//     if (balance < 0) balance = 0;
+
+//     schedule.push({
+//       year,
+//       month: monthsList[month],
+//       payment: Math.round(monthlyPayment),
+//       interest: Math.round(interest),
+//       principal: Math.round(principal),
+//       balance: Math.round(balance),
+//     });
+
+//     if (balance <= 0) break;
+//   }
+
+//   return schedule;
+// }
 
 export const TIPTAP_EMPTY_DOC =
   '{"type":"doc","content":[{"type":"paragraph","attrs":{"textAlign":null}}]}';

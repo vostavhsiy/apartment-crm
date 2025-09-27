@@ -146,4 +146,16 @@
   *.ymaps-2-1-79-hint__text {
     @apply !bg-transparent !p-0 !shadow-none !border-none !outline-0;
   }
+
+  .mortgage *::-webkit-scrollbar {
+    @apply appearance-none rounded-full h-2;
+  }
+
+  .mortgage *::-webkit-scrollbar-track {
+    @apply bg-foreground/10 rounded-full;
+  }
+
+  .mortgage *::-webkit-scrollbar-thumb {
+    @apply bg-primary/30 rounded-full;
+  }
 }

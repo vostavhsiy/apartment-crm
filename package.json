@@ -67,6 +67,7 @@
     "cuid": "^3.0.0",
     "embla-carousel-react": "^8.6.0",
     "jose": "^6.0.12",
+    "jspdf": "^3.0.3",
     "lodash.throttle": "^4.1.1",
     "lucide-react": "^0.539.0",
     "next": "~15.2.4",
