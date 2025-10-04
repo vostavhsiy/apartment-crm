@@ -159,3 +159,27 @@
     @apply bg-primary/30 rounded-full;
   }
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.fade-in-left {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.fade-in-right {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.scale-in {
+  opacity: 0;
+  transform: scale(0.95);
+}

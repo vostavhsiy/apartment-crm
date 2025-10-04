@@ -13,23 +13,51 @@ export const authInstance = axios.create({
   withCredentials: true,
 });
 
+let isRefreshing = false;
+let refreshSubscribers: (() => void)[] = [];
+
+function subscribeTokenRefresh(cb: () => void) {
+  refreshSubscribers.push(cb);
+}
+
+function onRefreshed() {
+  refreshSubscribers.forEach((cb) => cb());
+  refreshSubscribers = [];
+}
+
 authInstance.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   async (error) => {
-    try {
-      const { status } = error.response;
-      if (status == 401 && !error.config._retry) {
-        error.config._retry = true;
-        const res = await publicInstance.get(
-          ROUTES.auth.refreshAccessToken.path,
-        );
-        return authInstance.request(error.config);
+    const originalRequest = error.config as any;
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      if (!isRefreshing) {
+        isRefreshing = true;
+
+        try {
+          const res = await publicInstance.get(
+            ROUTES.auth.refreshAccessToken.path,
+          );
+
+          isRefreshing = false;
+          onRefreshed();
+
+          return authInstance(originalRequest);
+        } catch (err) {
+          isRefreshing = false;
+          return Promise.reject(err);
+        }
       }
-    } catch {
-      throw error;
+
+      return new Promise((resolve) => {
+        subscribeTokenRefresh(() => {
+          resolve(authInstance(originalRequest));
+        });
+      });
     }
-    throw error;
+
+    return Promise.reject(error);
   },
 );

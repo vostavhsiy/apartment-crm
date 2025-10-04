@@ -1,7 +1,5 @@
-export default function Home() {
-  return (
-    <div className="flex flex-col items-center justify-center grow">
-      <div>page</div>
-    </div>
-  );
+import { Home } from "@/widgets/home";
+
+export default function HomePage() {
+  return <Home />;
 }
