@@ -8,6 +8,13 @@ export class PublicRoutes {
   static MAIL_RESET_PASSWORD_SUCCESS = "/auth/mail-reset-password/success";
 
   static HOME = "/";
+  static OFFER = "/offer";
+  static USER_AGREEMENT = "/user-agreement";
+  static PRIVACY_POLICY = "/privacy-policy";
+
+  static EMAIL = "mailto:";
+  static TELEGRAM = "https://t.me/reelookcrm";
+  static VK = "https://vk.com/reelookcrm";
 
   static CLIENT_COLLECTION(id: string, relative?: boolean) {
     return (!relative ? settings.NEXT_PUBLIC_DOMAIN_URL : "") + `/c/${id}`;

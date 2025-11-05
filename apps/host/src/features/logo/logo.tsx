@@ -1,5 +1,7 @@
+import { PublicRoutes } from "@/shared/config/routes/routes.public";
 import { cn } from "@/shared/lib/utils";
 import Image, { ImageProps } from "next/image";
+import Link from "next/link";
 
 import { FC } from "react";
 
@@ -7,13 +9,15 @@ interface Props extends Omit<ImageProps, "src" | "alt"> {}
 
 export const Logo: FC<Props> = (props) => {
   return (
-    <Image
-      src={"/logo.png"}
-      alt="logo"
-      width={200}
-      height={200}
-      {...props}
-      className={cn("block w-full h-full rounded-sm", props.className)}
-    />
+    <Link href={PublicRoutes.HOME}>
+      <Image
+        src={"/logo.svg"}
+        alt="logo"
+        width={127}
+        height={47}
+        {...props}
+        className={cn("block", props.className)}
+      />
+    </Link>
   );
 };

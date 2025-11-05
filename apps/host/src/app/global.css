@@ -8,15 +8,19 @@
 :root {
   --header-height: 4rem;
 
-  --background: oklch(1 0 0);
+  --dark: #444343;
+  --light: #fff;
+
+  --background: #f4f6fa;
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
+  --primary: #6c58ff;
+  --primary-foreground: #5e52b5;
+  --secondary: #747474;
+  --light-secondary: #d9d9d9;
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
@@ -44,15 +48,14 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.145 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.145 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
+  --primary: #6c58ff;
+  --primary-foreground: #5e52b5;
+  --secondary: #747474;
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
@@ -79,6 +82,9 @@
 }
 
 @theme inline {
+  --color-dark: var(--dark);
+  --color-light: var(--light);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -88,6 +94,7 @@
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
+  --color-light-secondary: var(--light-secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
@@ -129,6 +136,14 @@
   }
   body {
     @apply flex flex-col bg-background text-foreground;
+  }
+
+  .app-container {
+    @apply max-w-[90rem] px-5 w-full mx-auto;
+  }
+
+  .inner-container {
+    @apply max-w-[55.625rem] w-full mx-auto;
   }
 
   input[type="number"]::-webkit-outer-spin-button,

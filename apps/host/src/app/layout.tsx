@@ -1,10 +1,13 @@
 import { Providers } from "@/shared/config/providers";
 import { cn } from "@/shared/lib/utils";
-import { Inter } from "next/font/google";
+import { Open_Sans } from "next/font/google";
 
 import "./global.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const poppins = Open_Sans({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+});
 
 export const metadata = {
   title: "Welcome to host",
@@ -18,7 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(inter.className)}>
+      <body className={cn(poppins.className)}>
         <Providers>{children}</Providers>
       </body>
     </html>
