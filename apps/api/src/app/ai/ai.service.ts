@@ -31,8 +31,7 @@ export class AiService {
         messages,
       });
 
-      const response: string | undefined =
-        completion?.choices[0]?.message?.content;
+      const response: string | null = completion?.choices[0]?.message?.content;
 
       if (!response) return null;
 
