@@ -1,14 +1,13 @@
-- добавить сервис https://youtu.be/jLSOE97bJX8?si=24CpIPaNE8w8QLI4&t=3906, чтобы риелторы плюсом переписывались с клиентами прямо в crm.
-- (изменить ссылки в уведомлениях)
-- (добавить способы отправки подборки через Whatsapp, Telegram, Почту)
-- (добавить страницу клиента в дашборде)
-- (исправить поиск клиентов в collection-to-client-dialog.tsx)
-- (исправить вид диалоге при экране ожидания отправки в collection-to-client-dialog.tsx)
-- (добавить страницы отправленной клиенту подборки) ?
-- добавить домашнюю страницу ?
-- добавить подтверждение использования кук
-- заменить получение по url из ai на расширения в браузер
-- настроить ISR, SSG, SSR
-- настроить SEO
-- настроить CI/CD
+- (update links in notifications)
+- (add methods to send property listings via WhatsApp, Telegram, Email)
+- (add client page to the dashboard)
+- (fix client search in collection-to-client-dialog.tsx)
+- (fix dialog view during loading state in collection-to-client-dialog.tsx)
+- (add pages for property listings sent to clients) ?
+- (add home page) ?
+- add cookie consent notice
+- replace URL-based retrieval from AI with browser extensions
+- (configure ISR, SSG, SSR)
+- configure SEO
+- configure CI/CD
 	

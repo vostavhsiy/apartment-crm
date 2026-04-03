@@ -68,7 +68,7 @@ export const Home = () => {
           </nav>
           <div className="w-1/3 flex items-center justify-end gap-[0.625rem]">
             <Button variant={"outline"} asChild>
-              <Link href={PublicRoutes.SIGN_UP}>Войти</Link>
+              <Link href={PublicRoutes.SIGN_IN}>Войти</Link>
             </Button>
             <Button asChild>
               <Link href={PublicRoutes.SIGN_UP}>Зарегистрироваться</Link>
